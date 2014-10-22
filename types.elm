@@ -21,7 +21,7 @@ type Gate = {
       location : (Float, Float)
     , inputs : [Bool]
     , outputs : [Bool]
-    , changing : Bool
+    , spinning : SpinDirection
     , img : String
     , imgSize : (Int, Int)
     , timeDelta : Float
@@ -40,3 +40,5 @@ data RunState = Designing | Simulating
 data GameInput = InputOn | InputOff
 
 data GameOutput = OutputOn | OutputOff
+
+data SpinDirection = None | CW | CCW

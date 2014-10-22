@@ -1,6 +1,8 @@
 import Window
 import Mouse
 import Graphics.Element as Element
+import Graphics.Input (Input, input, button)
+import Debug (log)
 import Types (..)
 
 {----------------------------------------------------------
@@ -17,11 +19,13 @@ xorGate = {
     location = (0,0)
   , inputs = [False, False]
   , outputs = [False]
-  , spinning = None
+  , spinning = None 
   , img = "/XOR.png"
   , imgSize = (100,100)
   , timeDelta = 0
   }
+xorSpinning : Input SpinDirection
+xorSpinning = input None
 
 defaultGame : GameState
 defaultGame = { 
@@ -51,10 +55,17 @@ display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
   let
     gatesElement = collage w h (map drawGate gameState.gates)
+    buttons = flow right 
+      [ button xorSpinning.handle (None) "None"
+      , button xorSpinning.handle (CW) "Clockwise"
+      , button xorSpinning.handle (CCW) "Counterclockwise"
+      ]
     otherElements = 
       flow down [
         asText gameState.mousePos
       , asText (w,h)
+      , buttons
+      , asText gameState.gates
       ]
     element = layers [otherElements , gatesElement]
   in
@@ -63,23 +74,40 @@ display (w,h) gameState =
 {---------------------------------------------------------- 
     Game processing 
 ----------------------------------------------------------}
-updateGateTime gate = { gate | timeDelta <- gate.timeDelta + 1/25 }
+updateGates : [Gate] -> SpinDirection -> [Gate]
+updateGates gates spinDir = 
+  case gates of 
+    [] -> []
+    only :: [] -> 
+      let td = if | spinDir == CW -> -1/25
+                         | spinDir == CCW -> 1/25
+                         | otherwise -> 0
+      in
+        [{ only | spinning <- spinDir 
+                , timeDelta <- only.timeDelta + td}]
+    first :: rest -> 
+      let
+        newFirst = { first | spinning <- spinDir }
+        newRest = updateGates rest spinDir
+      in 
+        newFirst :: newRest
 
-stepGame : (Float, (Int, Int)) -> GameState -> GameState
-stepGame (time, pos) gameState = 
+stepGame : (Float, (Int, Int), SpinDirection) -> GameState -> GameState
+stepGame (time, pos, spinDir) gameState =  
   let
-    updatedGates = map updateGateTime gameState.gates
-  in 
-    { gameState | mousePos <- pos
-                , gates <- updatedGates }
+    oldGates = gameState.gates
+    newGates = updateGates oldGates spinDir
+  in
+    { gameState | mousePos <- pos 
+                , gates <- newGates }
 
 -- For physics
 delta : Signal Float
 delta = lift (\t -> t / 20) (fps 25)
 
 -- For grabbing inputs
-gameInput : Signal (Float, (Int, Int))
-gameInput = sampleOn delta (lift2 (,) delta Mouse.position)
+--gameInput : Signal (Float, (Int, Int))
+gameInput = sampleOn delta (lift3 (,,) delta Mouse.position xorSpinning.signal)
 
 -- Driver
 main : Signal Element
