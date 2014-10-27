@@ -1,3 +1,7 @@
+{--
+  Controller.elm
+  Updates GameState based on inputs
+--}
 module Controller where
 
 import Window
@@ -27,23 +31,31 @@ updateGates gates spinDir =
       in 
         newFirst :: newRest
 
-stepGame : (Float, (Int, Int), SpinDirection) -> GameState -> GameState
-stepGame (time, pos, spinDir) gameState =  
+{-------------------------------------------------}
+type UserInput = { mousePos:(Float,Float)}
+
+userInput : Signal UserInput
+userInput = constant { mousePos=(0,0) }
+
+type GameInput = { timeDelta:Float, userInput:UserInput }
+{-------------------------------------------------}
+
+stepGame : GameInput -> GameState -> GameState
+stepGame {timeDelta, userInput} gameState = 
   let
     oldGates = gameState.gates
-    newGates = updateGates oldGates spinDir
+    newGates = updateGates oldGates CW
   in
-    { gameState | mousePos <- pos 
-                , gates <- newGates }
+    { gameState | gates <- newGates }
 
 -- For physics
 delta : Signal Float
 delta = lift (\t -> t / 20) (fps 25)
 
 -- Driver
-mainDriver : ((Float, (Int, Int), SpinDirection) -> GameState -> GameState) -> GameState -> Signal SpinDirection -> Signal Element
-mainDriver step game inputSignal= 
+mainDriver : (GameInput -> GameState -> GameState) -> GameState -> Signal Element
+mainDriver step game = 
   let 
-    gameInput = sampleOn delta (lift3 (,,) delta Mouse.position inputSignal)
+    gameInput = sampleOn delta (lift2 GameInput delta userInput)
   in
     lift2 display Window.dimensions (foldp step game gameInput)
