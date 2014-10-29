@@ -28,6 +28,7 @@ display (w,h) gameState =
       flow down [
         asText (w,h)
       , asText gameState.gates
+      --, button xorSpinning.handle (None) "None"
       ]
     element = layers [otherElements , gatesElement]
   in

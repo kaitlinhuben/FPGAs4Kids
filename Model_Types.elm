@@ -4,9 +4,12 @@
 --}
 module Model_Types where
 
+type GameInput = { timeDelta:Float, userInput:UserInput }
+type UserInput = { mousePos:(Float,Float), gameMode:Mode}
+
 type GameState = { 
-      inputs : [GameInput]
-    , outputs : [GameOutput] 
+      inputs : [Input]
+    , outputs : [Output] 
     , gates : [Gate]
     , paths : [Net]
     , displayMode : Mode
@@ -33,8 +36,8 @@ data Mode = Game | Schematic
 
 data RunState = Designing | Simulating
 
-data GameInput = InputOn | InputOff
+data Input = InputOn | InputOff
 
-data GameOutput = OutputOn | OutputOff
+data Output = OutputOn | OutputOff
 
 data SpinDirection = None | CW | CCW

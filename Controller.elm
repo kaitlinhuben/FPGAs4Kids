@@ -31,20 +31,12 @@ updateGates gates spinDir =
       in 
         newFirst :: newRest
 
-{-------------------------------------------------}
-type UserInput = { mousePos:(Float,Float)}
-
-userInput : Signal UserInput
-userInput = constant { mousePos=(0,0) }
-
-type GameInput = { timeDelta:Float, userInput:UserInput }
-{-------------------------------------------------}
-
+-- Changes the game at each fps step
 stepGame : GameInput -> GameState -> GameState
-stepGame {timeDelta, userInput} gameState = 
+stepGame gameInput gameState = 
   let
     oldGates = gameState.gates
-    newGates = updateGates oldGates CW
+    newGates = updateGates oldGates None
   in
     { gameState | gates <- newGates }
 
@@ -52,10 +44,14 @@ stepGame {timeDelta, userInput} gameState =
 delta : Signal Float
 delta = lift (\t -> t / 20) (fps 25)
 
+-- To pick up user input
+gatherInput : Signal UserInput -> Signal GameInput
+gatherInput userIn = sampleOn delta (lift2 GameInput delta userIn)
+
+-- Updates the game state
+foldGame : GameState -> Signal UserInput -> Signal GameState
+foldGame game userIn = foldp stepGame game (gatherInput userIn)
+
 -- Driver
-mainDriver : (GameInput -> GameState -> GameState) -> GameState -> Signal Element
-mainDriver step game = 
-  let 
-    gameInput = sampleOn delta (lift2 GameInput delta userInput)
-  in
-    lift2 display Window.dimensions (foldp step game gameInput)
+mainDriver : GameState -> Signal UserInput -> Signal Element
+mainDriver game userIn = lift2 display Window.dimensions (foldGame game userIn)

@@ -7,18 +7,25 @@ import Model_Types (..)
 imgPath : String
 imgPath = "resources/img/"
 
-defaultInput : GameInput 
+
+defaultUserInput : Signal UserInput
+defaultUserInput = constant { mousePos=(0,0), gameMode=Game }
+
+defaultInput : Input 
 defaultInput = InputOff
 
-defaultOutput : GameOutput
+defaultOutput : Output
 defaultOutput = OutputOn 
+
+defaultMode : Mode 
+defaultMode = Game
 
 xorGate : Gate 
 xorGate = { 
     location = (0,0)
   , inputs = []
   , outputs = []
-  , spinning = CW 
+  , spinning = None
   , img = imgPath ++ "XOR.png"
   , imgSize = (100,100)
   , timeDelta = 0

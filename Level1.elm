@@ -5,4 +5,4 @@ import View (..)
 import Controller (..)
 import Mouse
 
-main = mainDriver stepGame defaultGame
+main = mainDriver defaultGame defaultUserInput
