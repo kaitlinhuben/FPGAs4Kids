@@ -1,5 +1,6 @@
 module Model_Level_1 where
 import Model_Types (..)
+import Controller (..)
 
 {----------------------------------------------------------
   Set up default values
@@ -40,3 +41,6 @@ defaultGame = {
   , displayMode = Game
   , runMode = Designing
   }
+
+
+main = mainDriver defaultGame defaultUserInput
