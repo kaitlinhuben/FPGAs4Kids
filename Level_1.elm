@@ -39,11 +39,24 @@ gameXOR = {
   , timeDelta = 0
   }
 
+gameXOR2 : Gate
+gameXOR2 = { 
+    location = (75,75)
+  , inputs = []
+  , outputs = []
+  , spinning = None
+  , gameImg = xorGate.gameImg
+  , schematicImg = xorGate.schematicImg
+  , img = xorGate.gameImg
+  , imgSize = (100,100)
+  , timeDelta = 0
+  }
+
 thisGame : GameState
 thisGame = { 
     inputs = [levelInput]
   , outputs = [levelOutput]
-  , gates = [gameXOR]
+  , gates = [gameXOR, gameXOR2]
   , paths = []
   , displayMode = Game
   , displayInput = modeInput

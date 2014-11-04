@@ -11,31 +11,47 @@ import View (..)
 {---------------------------------------------------------- 
   Game processing 
 ----------------------------------------------------------}
-updateGates : [Gate] -> SpinDirection -> [Gate]
-updateGates gates spinDir = 
+-- Update a single gate
+updateGate : Gate -> Mode -> Gate
+updateGate gate m = 
+  let
+    newImg = if | m == Game -> gate.gameImg
+                | m == Schematic -> gate.schematicImg
+  in
+    { gate | img <- newImg }
+
+-- Update an array of gates
+updateGates : [Gate] -> Mode -> [Gate]
+updateGates gates m = 
   case gates of 
+    -- if empty array, return empty
     [] -> []
-    only :: [] -> 
-      let td = if | spinDir == CW -> -1/25
-                         | spinDir == CCW -> 1/25
-                         | otherwise -> 0
-      in
-        [{ only | spinning <- spinDir 
-                , timeDelta <- only.timeDelta + td}]
-    first :: rest -> 
+
+    -- if one element in array, update that element
+    hd :: [] ->
       let
-        newFirst = { first | spinning <- spinDir }
-        newRest = updateGates rest spinDir
-      in 
-        newFirst :: newRest
+        newHd = updateGate hd m
+      in
+        newHd :: []
+
+    -- if more than one element in array, update head element and tail array
+    hd :: tl ->
+      let 
+        newHd = updateGate hd m
+        newTl = updateGates tl m
+      in
+        newHd :: newTl
 
 -- Changes the game at each fps step
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
   let
-    oldGates = gameState.gates
-    newGates = updateGates oldGates None
+    -- figure out which mode we're in
     newMode = gameInput.userInput.display
+
+    -- update gates
+    oldGates = gameState.gates
+    newGates = updateGates oldGates newMode
   in
     { gameState | gates <- newGates
                 , displayMode <- newMode }
