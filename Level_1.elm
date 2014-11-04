@@ -46,6 +46,7 @@ thisGame = {
   , gates = [gameXOR]
   , paths = []
   , displayMode = Game
+  , displayInput = modeInput
   , runMode = Designing
   }
 

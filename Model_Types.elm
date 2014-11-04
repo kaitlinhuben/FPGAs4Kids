@@ -4,6 +4,8 @@
 --}
 module Model_Types where
 
+import Graphics.Input as GInput
+
 type GameInput = { timeDelta:Float, userInput:UserInput }
 
 type UserInput = { mousePos:(Int,Int), display:Mode }
@@ -14,6 +16,7 @@ type GameState = {
     , gates : [Gate]
     , paths : [Net]
     , displayMode : Mode
+    , displayInput : GInput.Input Mode
     , runMode : RunState
 }
 

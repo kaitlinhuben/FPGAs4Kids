@@ -4,7 +4,7 @@
 --}
 module View where
 
---import Graphics.Input (Input, input, button)
+import Graphics.Input (Input, input, button)
 import Model_Types (..)
 
 {---------------------------------------------------------- 
@@ -23,12 +23,18 @@ drawGate gate =
 display : (Int, Int) -> UserInput -> GameState -> Element
 display (w,h) userInput gameState = 
   let
+    modeInput = gameState.displayInput
     gatesElement = collage w h (map drawGate gameState.gates)
+    buttonsElement =
+      flow right [
+        button modeInput.handle Game "Game Mode"
+      , button modeInput.handle Schematic "Schematic Mode"
+      ]
     otherElements = 
       flow down [
-        asText (w,h)
-      , asText gameState.gates
-      , asText userInput.mousePos
+        asText userInput.mousePos
+      , buttonsElement
+      , asText gameState.displayMode
       ]
     element = layers [otherElements , gatesElement]
   in

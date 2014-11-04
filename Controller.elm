@@ -35,8 +35,10 @@ stepGame gameInput gameState =
   let
     oldGates = gameState.gates
     newGates = updateGates oldGates None
+    newMode = gameInput.userInput.display
   in
-    { gameState | gates <- newGates }
+    { gameState | gates <- newGates
+                , displayMode <- newMode }
 
 -- For physics
 delta : Signal Float

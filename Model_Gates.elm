@@ -1,3 +1,7 @@
+{--
+    Model_Gates.elm
+    Sets up all gates for game
+--}
 module Model_Gates where
 
 import Model_Types (..)
