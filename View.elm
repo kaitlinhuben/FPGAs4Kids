@@ -20,15 +20,15 @@ drawGate gate =
     rotate gate.timeDelta <| move gate.location imgForm
 
 -- Display everything
---display : (Int, Int) -> GameState -> Element
-display (w,h) gameState = 
+display : (Int, Int) -> UserInput -> GameState -> Element
+display (w,h) userInput gameState = 
   let
     gatesElement = collage w h (map drawGate gameState.gates)
     otherElements = 
       flow down [
         asText (w,h)
       , asText gameState.gates
-      --, button xorSpinning.handle (None) "None"
+      , asText userInput.mousePos
       ]
     element = layers [otherElements , gatesElement]
   in

@@ -11,7 +11,7 @@ import Model_Types (..)
 import View (..)
 
 {---------------------------------------------------------- 
-    Game processing 
+  Game processing 
 ----------------------------------------------------------}
 updateGates : [Gate] -> SpinDirection -> [Gate]
 updateGates gates spinDir = 
@@ -46,12 +46,14 @@ delta = lift (\t -> t / 20) (fps 25)
 
 -- To pick up user input
 gatherInput : Signal UserInput -> Signal GameInput
-gatherInput userIn = sampleOn delta (lift2 GameInput delta userIn)
+gatherInput userInput = 
+  sampleOn delta (lift2 GameInput delta userInput)
 
 -- Updates the game state
 foldGame : GameState -> Signal UserInput -> Signal GameState
-foldGame game userIn = foldp stepGame game (gatherInput userIn)
+foldGame game userInput = foldp stepGame game (gatherInput userInput)
 
 -- Driver
 mainDriver : GameState -> Signal UserInput -> Signal Element
-mainDriver game userIn = lift2 display Window.dimensions (foldGame game userIn)
+mainDriver game userInput = 
+  display <~ Window.dimensions ~ userInput ~ (foldGame game userInput)

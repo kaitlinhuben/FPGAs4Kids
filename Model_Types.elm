@@ -5,7 +5,7 @@
 module Model_Types where
 
 type GameInput = { timeDelta:Float, userInput:UserInput }
-type UserInput = { mousePos:(Float,Float), gameMode:Mode}
+type UserInput = { mousePos:(Int,Int) }
 
 type GameState = { 
       inputs : [Input]

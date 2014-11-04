@@ -1,6 +1,7 @@
 module Model_Level_1 where
 import Model_Types (..)
 import Controller (..)
+import Mouse
 
 {----------------------------------------------------------
   Set up default values
@@ -8,9 +9,8 @@ import Controller (..)
 imgPath : String
 imgPath = "resources/img/"
 
-
 defaultUserInput : Signal UserInput
-defaultUserInput = constant { mousePos=(0,0), gameMode=Game }
+defaultUserInput = lift UserInput Mouse.position
 
 defaultInput : Input 
 defaultInput = InputOff
@@ -42,5 +42,8 @@ defaultGame = {
   , runMode = Designing
   }
 
-
+{----------------------------------------------------------
+  Run level
+----------------------------------------------------------}
+main : Signal Element
 main = mainDriver defaultGame defaultUserInput
