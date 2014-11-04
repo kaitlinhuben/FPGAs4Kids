@@ -46,15 +46,24 @@ updateGates gates m =
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
   let
+    -- extract user input from game input
+    ui = gameInput.userInput 
+
     -- figure out which mode we're in
-    newMode = gameInput.userInput.display
+    newMode = ui.display
 
     -- update gates
     oldGates = gameState.gates
     newGates = updateGates oldGates newMode
+
+    -- get mouse position
+    newMousePos = ui.mousePos
+    
+  -- update game state
   in
     { gameState | gates <- newGates
-                , displayMode <- newMode }
+                , displayMode <- newMode
+                , mousePos <- newMousePos }
 
 -- For physics
 delta : Signal Float
@@ -73,4 +82,4 @@ foldGame game userInput =
 -- Driver
 mainDriver : GameState -> Signal UserInput -> Signal Element
 mainDriver game userInput = 
-  display <~ Window.dimensions ~ userInput ~ (foldGame game userInput)
+  display <~ Window.dimensions ~ (foldGame game userInput)

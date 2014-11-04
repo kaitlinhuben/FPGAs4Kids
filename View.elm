@@ -20,8 +20,8 @@ drawGate gate =
     rotate gate.timeDelta <| move gate.location imgForm
 
 -- Display everything
-display : (Int, Int) -> UserInput -> GameState -> Element
-display (w,h) userInput gameState = 
+display : (Int, Int) -> GameState -> Element
+display (w,h) gameState = 
   let
     modeInput = gameState.displayInput
     gatesElement = collage w h (map drawGate gameState.gates)
@@ -32,7 +32,7 @@ display (w,h) userInput gameState =
       ]
     otherElements = 
       flow down [
-        asText userInput.mousePos
+        asText gameState.mousePos
       , buttonsElement
       , asText gameState.displayMode
       ]

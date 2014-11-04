@@ -61,6 +61,7 @@ thisGame = {
   , displayMode = Game
   , displayInput = modeInput
   , runMode = Designing
+  , mousePos = (0,0)
   }
 
 {----------------------------------------------------------

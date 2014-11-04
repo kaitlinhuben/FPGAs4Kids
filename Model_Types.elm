@@ -18,6 +18,7 @@ type GameState = {
     , displayMode : Mode
     , displayInput : GInput.Input Mode
     , runMode : RunState
+    , mousePos : (Int,Int)
 }
 
 type Gate = {
