@@ -1,42 +1,49 @@
-module Model_Level_1 where
-import Model_Types (..)
-import Controller (..)
+module Level_1 where
+
 import Mouse
+import Graphics.Input as GInput
+import Model_Types (..)
+import Model_Gates (..)
+import Controller (..)
 
 {----------------------------------------------------------
   Set up default values
 ----------------------------------------------------------}
-imgPath : String
-imgPath = "resources/img/"
 
-defaultUserInput : Signal UserInput
-defaultUserInput = lift UserInput Mouse.position
+userInput : Signal UserInput
+userInput = 
+  UserInput <~ Mouse.position ~ modeInput.signal
 
-defaultInput : Input 
-defaultInput = InputOff
+modeInput : GInput.Input Mode
+modeInput = GInput.input Game 
 
-defaultOutput : Output
-defaultOutput = OutputOn 
+levelInput : Input 
+levelInput = InputOff
+
+levelOutput : Output
+levelOutput = OutputOn 
 
 defaultMode : Mode 
 defaultMode = Game
 
-xorGate : Gate 
-xorGate = { 
+gameXOR : Gate 
+gameXOR = { 
     location = (0,0)
   , inputs = []
   , outputs = []
   , spinning = None
-  , img = imgPath ++ "XOR.png"
+  , gameImg = xorGate.gameImg
+  , schematicImg = xorGate.schematicImg
+  , img = xorGate.gameImg
   , imgSize = (100,100)
   , timeDelta = 0
   }
 
-defaultGame : GameState
-defaultGame = { 
-    inputs = [defaultInput]
-  , outputs = [defaultOutput]
-  , gates = [xorGate]
+thisGame : GameState
+thisGame = { 
+    inputs = [levelInput]
+  , outputs = [levelOutput]
+  , gates = [gameXOR]
   , paths = []
   , displayMode = Game
   , runMode = Designing
@@ -46,4 +53,4 @@ defaultGame = {
   Run level
 ----------------------------------------------------------}
 main : Signal Element
-main = mainDriver defaultGame defaultUserInput
+main = mainDriver thisGame userInput

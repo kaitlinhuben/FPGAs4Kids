@@ -5,7 +5,8 @@
 module Model_Types where
 
 type GameInput = { timeDelta:Float, userInput:UserInput }
-type UserInput = { mousePos:(Int,Int) }
+
+type UserInput = { mousePos:(Int,Int), display:Mode }
 
 type GameState = { 
       inputs : [Input]
@@ -21,6 +22,8 @@ type Gate = {
     , inputs : [Net]
     , outputs : [Net]
     , spinning : SpinDirection
+    , gameImg : String
+    , schematicImg : String
     , img : String
     , imgSize : (Int, Int)
     , timeDelta : Float

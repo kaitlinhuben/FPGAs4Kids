@@ -4,14 +4,14 @@
 --}
 module View where
 
-import Graphics.Input (Input, input, button)
+--import Graphics.Input (Input, input, button)
 import Model_Types (..)
 
 {---------------------------------------------------------- 
   Display functions 
 ----------------------------------------------------------}
 -- Draw an individual gate
---drawGate : Gate -> Form
+drawGate : Gate -> Form
 drawGate gate = 
   let
     (w,h) = gate.imgSize

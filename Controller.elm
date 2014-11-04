@@ -5,8 +5,6 @@
 module Controller where
 
 import Window
-import Mouse
-import Graphics.Element as Element
 import Model_Types (..)
 import View (..)
 
@@ -51,7 +49,8 @@ gatherInput userInput =
 
 -- Updates the game state
 foldGame : GameState -> Signal UserInput -> Signal GameState
-foldGame game userInput = foldp stepGame game (gatherInput userInput)
+foldGame game userInput = 
+  foldp stepGame game (gatherInput userInput)
 
 -- Driver
 mainDriver : GameState -> Signal UserInput -> Signal Element
