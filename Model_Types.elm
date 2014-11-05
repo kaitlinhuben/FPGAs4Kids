@@ -8,13 +8,12 @@ import Graphics.Input as GInput
 
 type GameInput = { timeDelta:Float, userInput:UserInput }
 
-type UserInput = { mousePos:(Int,Int), display:Mode }
+type UserInput = { mousePos:(Int,Int), display:Mode, topInput:Bool }
 
 type GameState = { 
-      inputs : [Input]
-    , outputs : [Output] 
+      inputs : [Gate]
+    , outputs : [Gate] 
     , gates : [Gate]
-    , paths : [Net]
     , displayMode : Mode
     , displayInput : GInput.Input Mode
     , runMode : RunState
@@ -43,10 +42,6 @@ data Mode = Game | Schematic
 
 data RunState = Designing | Simulating
 
-data Input = InputOn | InputOff
-
-data Output = OutputOn | OutputOff
-
 data SpinDirection = None | CW | CCW
 
 {----------------------------------------------------------
@@ -54,6 +49,32 @@ data SpinDirection = None | CW | CCW
 ----------------------------------------------------------}
 imgPath : String
 imgPath = "resources/img/"
+
+inputGate : Gate
+inputGate = { 
+    location = (0,0)
+  , inputs = []
+  , outputs = []
+  , spinning = None
+  , gameImg = imgPath ++ "input.png"
+  , schematicImg = imgPath ++ "input.png"
+  , img = imgPath ++ "input.png"
+  , imgSize = (0,0)
+  , timeDelta = 0
+  }
+
+outputGate : Gate
+outputGate = { 
+    location = (0,0)
+  , inputs = []
+  , outputs = []
+  , spinning = None
+  , gameImg = imgPath ++ "output.png"
+  , schematicImg = imgPath ++ "output.png"
+  , img = imgPath ++ "output.png"
+  , imgSize = (0,0)
+  , timeDelta = 0
+  }
 
 xorGate : Gate 
 xorGate = { 

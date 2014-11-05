@@ -25,6 +25,13 @@ display (w,h) gameState =
   let
     modeInput = gameState.displayInput
     gatesElement = collage w h (map drawGate gameState.gates)
+    inputsElement = collage w h (map drawGate gameState.inputs)
+    outputsElement = collage w h (map drawGate gameState.outputs)
+    allGatesElement = collage w h [
+          toForm gatesElement 
+        , toForm inputsElement
+        , toForm outputsElement
+      ]
     buttonsElement =
       flow right [
         button modeInput.handle Game "Game Mode"
@@ -36,6 +43,6 @@ display (w,h) gameState =
       , buttonsElement
       , flow right [plainText "Mode: ", asText gameState.displayMode]
       ]
-    element = layers [otherElements , gatesElement]
+    element = layers [otherElements , allGatesElement]
   in
     color lightBrown <| container w h middle element
