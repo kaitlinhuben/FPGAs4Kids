@@ -34,7 +34,7 @@ display (w,h) gameState =
       flow down [
         asText gameState.mousePos
       , buttonsElement
-      , asText gameState.displayMode
+      , flow right [plainText "Mode: ", asText gameState.displayMode]
       ]
     element = layers [otherElements , gatesElement]
   in

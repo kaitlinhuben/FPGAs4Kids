@@ -48,3 +48,22 @@ data Input = InputOn | InputOff
 data Output = OutputOn | OutputOff
 
 data SpinDirection = None | CW | CCW
+
+{----------------------------------------------------------
+  Set up actual gates
+----------------------------------------------------------}
+imgPath : String
+imgPath = "resources/img/"
+
+xorGate : Gate 
+xorGate = { 
+    location = (0,0)
+  , inputs = []
+  , outputs = []
+  , spinning = None
+  , gameImg = imgPath ++ "XOR.png"
+  , schematicImg = imgPath ++ "xor-schematic.png"
+  , img = imgPath ++ "XOR.png"
+  , imgSize = (0,0)
+  , timeDelta = 0
+  }

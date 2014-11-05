@@ -3,7 +3,6 @@ module Level_1 where
 import Mouse
 import Graphics.Input as GInput
 import Model_Types (..)
-import Model_Gates (..)
 import Controller (..)
 
 {----------------------------------------------------------
