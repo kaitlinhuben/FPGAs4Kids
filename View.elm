@@ -19,14 +19,30 @@ drawGate gate =
   in
     rotate gate.timeDelta <| move gate.location imgForm
 
+drawInputGate : InputGate -> Form
+drawInputGate gate = 
+  let
+    (w,h) = gate.imgSize
+    imgForm = toForm(image w h gate.img)
+  in
+    rotate gate.timeDelta <| move gate.location imgForm
+
+drawOutputGate : OutputGate -> Form
+drawOutputGate gate = 
+  let
+    (w,h) = gate.imgSize
+    imgForm = toForm(image w h gate.img)
+  in
+    rotate gate.timeDelta <| move gate.location imgForm
+
 -- Display everything
 display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
   let
     modeInput = gameState.displayInput
     gatesElement = collage w h (map drawGate gameState.gates)
-    inputsElement = collage w h (map drawGate gameState.inputs)
-    outputsElement = collage w h (map drawGate gameState.outputs)
+    inputsElement = collage w h (map drawInputGate gameState.inputs)
+    outputsElement = collage w h (map drawOutputGate gameState.outputs)
     allGatesElement = collage w h [
           toForm gatesElement 
         , toForm inputsElement

@@ -5,14 +5,15 @@
 module Model_Types where
 
 import Graphics.Input as GInput
+import Either (..)
 
 type GameInput = { timeDelta:Float, userInput:UserInput }
 
 type UserInput = { mousePos:(Int,Int), display:Mode, topInput:Bool }
 
 type GameState = { 
-      inputs : [Gate]
-    , outputs : [Gate] 
+      inputs : [InputGate]
+    , outputs : [OutputGate] 
     , gates : [Gate]
     , displayMode : Mode
     , displayInput : GInput.Input Mode
@@ -32,10 +33,37 @@ type Gate = {
     , timeDelta : Float
 }
 
+type InputGate = {
+      location : (Float, Float)
+    , status : Bool
+    , outputTo : Maybe Net
+    , gameImgOn : String
+    , gameImgOff : String
+    , schematicImgOn : String
+    , schematicImgOff : String
+    , img : String
+    , imgSize : (Int, Int)
+    , timeDelta : Float
+}
+
+type OutputGate = {
+      location : (Float, Float)
+    , status : Bool
+    , inputFrom : Maybe Net
+    , gameImgOn : String
+    , gameImgOff : String
+    , schematicImgOn : String
+    , schematicImgOff : String
+    , img : String
+    , imgSize : (Int, Int)
+    , timeDelta : Float
+}
+
 data Net = Net {
       status : Bool
     , location : (Float, Float)
-    , gates : [Gate]
+    , inputGate : Either InputGate Gate
+    , outputGate : Either OutputGate Gate
 }
 
 data Mode = Game | Schematic
@@ -50,30 +78,32 @@ data SpinDirection = None | CW | CCW
 imgPath : String
 imgPath = "resources/img/"
 
-inputGate : Gate
-inputGate = { 
-    location = (0,0)
-  , inputs = []
-  , outputs = []
-  , spinning = None
-  , gameImg = imgPath ++ "input.png"
-  , schematicImg = imgPath ++ "input.png"
-  , img = imgPath ++ "input.png"
-  , imgSize = (0,0)
-  , timeDelta = 0
+inputGate : InputGate
+inputGate = {
+      location = (0, 0)
+    , status = False
+    , outputTo = Nothing
+    , gameImgOn = imgPath ++ "input-on.png"
+    , gameImgOff = imgPath ++ "input-off.png"
+    , schematicImgOn = imgPath ++ "input-on.png"
+    , schematicImgOff = imgPath ++ "input-off.png"
+    , img = imgPath ++ "input-off.png"
+    , imgSize = (0, 0)
+    , timeDelta = 0
   }
 
-outputGate : Gate
-outputGate = { 
-    location = (0,0)
-  , inputs = []
-  , outputs = []
-  , spinning = None
-  , gameImg = imgPath ++ "output.png"
-  , schematicImg = imgPath ++ "output.png"
-  , img = imgPath ++ "output.png"
-  , imgSize = (0,0)
-  , timeDelta = 0
+outputGate : OutputGate
+outputGate = {
+      location = (0,0)
+    , status = False
+    , inputFrom = Nothing
+    , gameImgOn = imgPath ++ "output-on.png"
+    , gameImgOff = imgPath ++ "output-off.png"
+    , schematicImgOn = imgPath ++ "output-on.png"
+    , schematicImgOff = imgPath ++ "output-off.png"
+    , img = imgPath ++ "output-off.png"
+    , imgSize = (0,0)
+    , timeDelta = 0
   }
 
 xorGate : Gate 
