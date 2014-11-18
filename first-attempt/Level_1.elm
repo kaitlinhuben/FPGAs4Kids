@@ -11,14 +11,13 @@ import Either (..)
 ----------------------------------------------------------}
 
 userInput : Signal UserInput
-userInput = 
-  UserInput <~ Mouse.position ~ modeInput.signal ~ topInput.signal
+userInput = UserInput <~ Mouse.position ~ modeInput.signal
 
 modeInput : GInput.Input Mode
 modeInput = GInput.input Game 
 
-topInput : GInput.Input Bool
-topInput = GInput.input False
+topInput : [GInput.Input Bool]
+topInput = [GInput.input False]
 
 defaultMode : Mode 
 defaultMode = Game
@@ -47,7 +46,7 @@ net_xor_output1 = Net {
 
 gameInput1 : InputGate
 gameInput1 = {
-      location = (-100,50)
+      location = (-150,50)
     , status = False
     , outputTo = Just net_input1_xor
     , gameImgOn = inputGate.gameImgOn
@@ -60,7 +59,7 @@ gameInput1 = {
   }
 gameInput2 : InputGate
 gameInput2 = {
-      location = (-100,-50)
+      location = (-150,-50)
     , status = False
     , outputTo = Just net_input2_xor
     , gameImgOn = inputGate.gameImgOn
@@ -74,7 +73,7 @@ gameInput2 = {
 
 gameOutput1 : OutputGate
 gameOutput1 = {
-      location = (100,0)
+      location = (150,0)
     , status = False
     , inputFrom = Just net_xor_output1
     , gameImgOn = outputGate.gameImgOn
@@ -101,9 +100,10 @@ gameXOR = {
 
 thisGame : GameState
 thisGame = { 
-    inputs = [gameInput1, gameInput2]
-  , outputs = [gameOutput1]
+    inputGates = [gameInput1, gameInput2]
+  , outputGates = [gameOutput1]
   , gates = [gameXOR]
+  , nets = [net_input1_xor, net_input2_xor, net_xor_output1]
   , displayMode = Game
   , displayInput = modeInput
   , runMode = Designing

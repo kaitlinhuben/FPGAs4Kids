@@ -6,6 +6,7 @@ module View where
 
 import Graphics.Input (Input, input, button)
 import Model_Types (..)
+import Either(..)
 
 {---------------------------------------------------------- 
   Display functions 
@@ -35,19 +36,32 @@ drawOutputGate gate =
   in
     rotate gate.timeDelta <| move gate.location imgForm
 
+drawNet : Net -> Form
+drawNet net = 
+  let
+    inGate = net
+    --inGate = net.inputGate 
+    {--outGate = net.outputGate
+    (w,h) = inGate.location
+    (w',h') = outGate.location--}
+    netLine = segment (-150,50) (0,0)
+  in
+    traced (solid black) netLine
+
 -- Display everything
 display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
   let
-    modeInput = gameState.displayInput
+    netsElement = collage w h (map drawNet gameState.nets)
     gatesElement = collage w h (map drawGate gameState.gates)
-    inputsElement = collage w h (map drawInputGate gameState.inputs)
-    outputsElement = collage w h (map drawOutputGate gameState.outputs)
+    inputsElement = collage w h (map drawInputGate gameState.inputGates)
+    outputsElement = collage w h (map drawOutputGate gameState.outputGates)
     allGatesElement = collage w h [
           toForm gatesElement 
         , toForm inputsElement
         , toForm outputsElement
       ]
+    modeInput = gameState.displayInput
     buttonsElement =
       flow right [
         button modeInput.handle Game "Game Mode"
@@ -59,6 +73,6 @@ display (w,h) gameState =
       , buttonsElement
       , flow right [plainText "Mode: ", asText gameState.displayMode]
       ]
-    element = layers [otherElements , allGatesElement]
+    element = layers [otherElements, netsElement, allGatesElement]
   in
     color lightBrown <| container w h middle element

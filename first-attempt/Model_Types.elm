@@ -9,12 +9,16 @@ import Either (..)
 
 type GameInput = { timeDelta:Float, userInput:UserInput }
 
-type UserInput = { mousePos:(Int,Int), display:Mode, topInput:Bool }
+type UserInput = { 
+      mousePos:(Int,Int)
+    , display:Mode
+  }
 
 type GameState = { 
-      inputs : [InputGate]
-    , outputs : [OutputGate] 
+      inputGates : [InputGate]
+    , outputGates : [OutputGate] 
     , gates : [Gate]
+    , nets : [Net]
     , displayMode : Mode
     , displayInput : GInput.Input Mode
     , runMode : RunState
