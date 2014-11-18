@@ -1,0 +1,15 @@
+State: dict of String->Bool
+
+Gate: names of inputs, name(s) of output(s), logic function
+
+Network: [Gate]
+
+simulate: Network -> Inputs -> Outputs
+
+foldl simGate initialState gates
+
+simGate: Gate -> State -> State
+simGate gate s0 = 
+# get inputs
+gate.logic inputs
+# return updated state
