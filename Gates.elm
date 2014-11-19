@@ -3,15 +3,27 @@
 --}
 module Gates where
 
-data GateType = InputGate | NormalGate | OutputGate
+import Array as A
+
+data GateType = InputGate | NormalGate | OutputGate | DebugGate
 
 type Gate = {
       name : String
     , gateType : GateType
     , status : Bool
-    , inputs : [String]
-    , outputs : [String]
+    , inputs : A.Array String
+    , outputs : A.Array String
     , logic : Bool -> Bool -> Bool
+  }
+
+-- Debugging gate --
+debugGate = {
+      name = "debugGate"
+    , gateType = DebugGate
+    , status = False
+    , inputs = A.fromList []
+    , outputs = A.fromList []
+    , logic = inputLogic
   }
 
 -- Logic functions for gates
