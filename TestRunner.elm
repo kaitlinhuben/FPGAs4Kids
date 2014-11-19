@@ -5,6 +5,7 @@ import Array as A
 import Gates (..)
 import State (..)
 
+-- Set up gates for level
 andGate : Gate
 andGate = {
       name = "andGate"
@@ -19,7 +20,7 @@ input1 : Gate
 input1 = {
       name = "input1"
     , gateType = InputGate
-    , status = False
+    , status = True
     , inputs = []
     , outputs = ["andGate"]
     , logic = inputLogic
@@ -29,7 +30,7 @@ input2 : Gate
 input2 = {
       name = "input2"
     , gateType = InputGate
-    , status = False
+    , status = True
     , inputs = []
     , outputs = ["andGate"]
     , logic = inputLogic
@@ -45,23 +46,18 @@ output = {
     , logic = inputLogic
   }
 
+-- set up network
 network : [Gate]
 network = [input1,input2,andGate,output] 
 
-startState : D.Dict String Bool
+-- initialize state of network
+startState : State
 startState = initState emptyState network 
-    {--let
-        initState = emptyState
-        addFirst = addGate emptyState input1
-        addSecond = addGate addFirst input2
-        addThird = addGate addSecond output
-    in 
-        addGate addThird andGate --}
 
+-- run level (show text)
 main : Element
 main = 
     flow down [
-      asText input1
-    , asText andGate
+      asText "Start state:"
     , asText startState
     ]

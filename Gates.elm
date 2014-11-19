@@ -1,3 +1,6 @@
+{--
+    Stores data, types, and methods for gates
+--}
 module Gates where
 
 data GateType = InputGate | NormalGate | OutputGate
@@ -11,6 +14,7 @@ type Gate = {
     , logic : Bool -> Bool -> Bool
   }
 
+-- Logic functions for gates
 andLogic : Bool -> Bool -> Bool
 andLogic input1 input2 = 
     input1 && input2

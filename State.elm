@@ -1,13 +1,18 @@
+{--
+    Stores information for circuit state
+--}
 module State where
 
 import Dict as D
 import Array as A
 import Gates (..)
 
-emptyState : D.Dict String Bool
+type State = D.Dict String Bool
+
+emptyState : State
 emptyState = D.empty 
 
-initState : D.Dict String Bool -> [Gate] -> D.Dict String Bool
+initState : State -> [Gate] -> State
 initState state network = 
     case network of 
         [] -> state
@@ -18,6 +23,6 @@ initState state network =
             in
                 initState statePlusHd tl
 
-addGate : D.Dict String Bool -> Gate -> D.Dict String Bool
+addGate : State -> Gate -> State
 addGate state gate = 
     D.insert gate.name gate.status state
