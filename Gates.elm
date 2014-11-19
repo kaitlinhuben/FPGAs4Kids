@@ -20,6 +20,10 @@ andLogic : Bool -> Bool -> Bool
 andLogic input1 input2 = 
     input1 && input2
 
+orLogic : Bool -> Bool -> Bool
+orLogic input1 input2 = 
+    input1 || input2
+
 inputLogic : Bool -> Bool -> Bool
 inputLogic input1 input2 = 
     input1
