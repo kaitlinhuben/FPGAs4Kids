@@ -11,8 +11,8 @@ andGate = {
       name = "andGate"
     , gateType = NormalGate
     , status = False
-    , inputs = ["input1", "input2"]
-    , outputs = ["output"]
+    , inputs = A.fromList ["input1", "input2"]
+    , outputs = A.fromList ["output"]
     , logic = andLogic
   }
 
@@ -21,8 +21,8 @@ input1 = {
       name = "input1"
     , gateType = InputGate
     , status = True
-    , inputs = []
-    , outputs = ["andGate"]
+    , inputs = A.empty
+    , outputs = A.fromList ["andGate"]
     , logic = inputLogic
   }
 
@@ -31,8 +31,8 @@ input2 = {
       name = "input2"
     , gateType = InputGate
     , status = True
-    , inputs = []
-    , outputs = ["andGate"]
+    , inputs = A.empty
+    , outputs = A.fromList ["andGate"]
     , logic = inputLogic
   }
 
@@ -41,8 +41,8 @@ output = {
       name = "output"
     , gateType = OutputGate
     , status = False
-    , inputs = ["andGate"]
-    , outputs = []
+    , inputs = A.fromList ["andGate"]
+    , outputs = A.empty
     , logic = inputLogic
   }
 
@@ -50,13 +50,16 @@ output = {
 network : Network
 network = [input1,input2,andGate,output] 
 
+networkNames : [String]
+networkNames = ["input1","input2","andGate","output"]
+
 -- initialize state of network
 startState : State
 startState = initState emptyState network 
 
 -- update state
 updatedState : State
-updatedState = updateState startState network
+updatedState = updateState startState networkNames
 
 -- run level (show text)
 main : Element

@@ -3,13 +3,14 @@
 --}
 module State where
 
+import Debug (..)
 import Dict as D
 import Array as A
 import Gates (..)
 
 type Network = [Gate]
 
-type State = D.Dict String Bool
+type State = D.Dict String Gate
 
 {-- Initialize state with gates in network --}
 emptyState : State
@@ -28,29 +29,45 @@ initState state network =
 
 addGate : State -> Gate -> State
 addGate state gate = 
-    D.insert gate.name gate.status state
+    D.insert gate.name gate state
 
 {-- Update state with network information --}
-updateState : State -> Network -> State
-updateState state network =
-    foldl (updateGate) state network
+updateState : State -> [String] -> State
+updateState state netNames =
+    foldl (updateGate) state netNames
 
-updateGate : Gate -> State -> State
-updateGate gate state = 
-    let
-        gateName = gate.name
-        oldStatus = gate.status
-        evaluatedGate = simulateGate gate state
-        newStatus = evaluatedGate.status
-        removedState = D.remove gateName oldStatus state
-    in 
-        addGate removedState evaluatedGate
+updateGate : String -> State -> State
+updateGate gateName state = 
+    let 
+        gateToSim = D.getOrElse debugGate gateName state
+        simulatedGate = simGate gateToSim state
 
-updateValue : Maybe a -> Maybe a
-updateValue val = val
+        stateMinusGate = D.remove gateName state
+    in
+        addGate stateMinusGate simulatedGate
 
-simulateGate : Gate -> State -> Gate
-simulateGate gate state = 
-    if | gate.gateType == NormalGate -> gate
+simGate : Gate -> State -> Gate
+simGate gate state = 
+    if | gate.gateType == NormalGate -> simNormalGate gate state
        | gate.gateType == InputGate -> gate
        | gate.gateType == OutputGate -> gate
+       | gate.gateType == DebugGate -> gate
+
+simNormalGate : Gate -> State -> Gate
+simNormalGate gate state = 
+    let
+        logicFunction = gate.logic
+
+        inputNames = gate.inputs
+        input1Name = A.getOrElse "" 0 inputNames
+        input2Name = A.getOrElse "" 1 inputNames
+
+        input1Gate = D.getOrElse debugGate input1Name state
+        input2Gate = D.getOrElse debugGate input2Name state
+
+        input1Status = input1Gate.status
+        input2Status = input2Gate.status
+
+        result = logicFunction input1Status input2Status
+    in
+        { gate | status <- (log "simNormalGate result" result) } 
