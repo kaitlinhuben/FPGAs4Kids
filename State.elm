@@ -50,9 +50,11 @@ simGate : Gate -> State -> Gate
 simGate gate state = 
     if | gate.gateType == NormalGate -> simNormalGate gate state
        | gate.gateType == InputGate -> gate
-       | gate.gateType == OutputGate -> gate
+       | gate.gateType == OutputGate -> simOutputGate gate state
        | gate.gateType == DebugGate -> gate
 
+-- Simulate a non-input, non-output gate 
+-- (e.g. AND, OR, XOR, etc.)
 simNormalGate : Gate -> State -> Gate
 simNormalGate gate state = 
     let
@@ -68,6 +70,17 @@ simNormalGate gate state =
         input1Status = input1Gate.status
         input2Status = input2Gate.status
 
+        -- actually run the logic function
         result = logicFunction input1Status input2Status
     in
         { gate | status <- (log "simNormalGate result" result) } 
+
+simOutputGate : Gate -> State -> Gate
+simOutputGate gate state = 
+    let
+        inputNames = gate.inputs
+        inputName = A.getOrElse "" 0 inputNames
+        inputGate = D.getOrElse debugGate inputName state
+        inputStatus = inputGate.status
+    in
+        { gate | status <- (log "simOutputGate result" inputStatus) }

@@ -12,7 +12,6 @@ type Gate = {
     , gateType : GateType
     , status : Bool
     , inputs : A.Array String
-    , outputs : A.Array String
     , logic : Bool -> Bool -> Bool
   }
 
@@ -22,7 +21,6 @@ debugGate = {
     , gateType = DebugGate
     , status = False
     , inputs = A.fromList []
-    , outputs = A.fromList []
     , logic = inputLogic
   }
 

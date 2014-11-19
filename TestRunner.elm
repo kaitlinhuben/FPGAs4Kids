@@ -12,7 +12,6 @@ andGate = {
     , gateType = NormalGate
     , status = False
     , inputs = A.fromList ["input1", "input2"]
-    , outputs = A.fromList ["output"]
     , logic = andLogic
   }
 
@@ -22,7 +21,6 @@ input1 = {
     , gateType = InputGate
     , status = True
     , inputs = A.empty
-    , outputs = A.fromList ["andGate"]
     , logic = inputLogic
   }
 
@@ -32,7 +30,6 @@ input2 = {
     , gateType = InputGate
     , status = True
     , inputs = A.empty
-    , outputs = A.fromList ["andGate"]
     , logic = inputLogic
   }
 
@@ -42,7 +39,6 @@ output = {
     , gateType = OutputGate
     , status = False
     , inputs = A.fromList ["andGate"]
-    , outputs = A.empty
     , logic = inputLogic
   }
 
