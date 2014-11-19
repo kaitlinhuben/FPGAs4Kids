@@ -39,7 +39,7 @@ updateState state netNames =
 updateGate : String -> State -> State
 updateGate gateName state = 
     let 
-        gateToSim = D.getOrElse debugGate gateName state
+        gateToSim = D.getOrFail gateName state
         simulatedGate = simGate gateToSim state
 
         stateMinusGate = D.remove gateName state
@@ -49,9 +49,8 @@ updateGate gateName state =
 simGate : Gate -> State -> Gate
 simGate gate state = 
     if | gate.gateType == NormalGate -> simNormalGate gate state
-       | gate.gateType == InputGate -> gate
+       | gate.gateType == InputGate -> gate -- TODO
        | gate.gateType == OutputGate -> simOutputGate gate state
-       | gate.gateType == DebugGate -> gate
 
 -- Simulate a non-input, non-output gate 
 -- (e.g. AND, OR, XOR, etc.)
@@ -61,26 +60,40 @@ simNormalGate gate state =
         logicFunction = gate.logic
 
         inputNames = gate.inputs
-        input1Name = A.getOrElse "" 0 inputNames
-        input2Name = A.getOrElse "" 1 inputNames
+        input1Name = A.getOrFail 0 inputNames
+        input2Name = A.getOrFail 1 inputNames
 
-        input1Gate = D.getOrElse debugGate input1Name state
-        input2Gate = D.getOrElse debugGate input2Name state
+        input1Gate = D.getOrFail input1Name state
+        input2Gate = D.getOrFail input2Name state
 
         input1Status = input1Gate.status
         input2Status = input2Gate.status
 
-        -- actually run the logic function
+        -- run the logic function on inputs
         result = logicFunction input1Status input2Status
     in
         { gate | status <- (log "simNormalGate result" result) } 
 
+-- "Simulate" an output gate (get value of connected gate)
 simOutputGate : Gate -> State -> Gate
 simOutputGate gate state = 
     let
         inputNames = gate.inputs
-        inputName = A.getOrElse "" 0 inputNames
-        inputGate = D.getOrElse debugGate inputName state
+        inputName = A.getOrFail 0 inputNames
+        inputGate = D.getOrFail inputName state
         inputStatus = inputGate.status
     in
         { gate | status <- (log "simOutputGate result" inputStatus) }
+
+
+{-- Debugging --}
+getStatusBool : [(String,Gate)] -> [(String,Bool)]
+getStatusBool stateList = 
+    map getStatusOnly stateList
+
+getStatusOnly : (String, Gate) -> (String,Bool)
+getStatusOnly (name,gate) = 
+    let 
+        status = gate.status
+    in
+        (name,status)

@@ -60,9 +60,13 @@ updatedState = updateState startState networkNames
 -- run level (show text)
 main : Element
 main = 
-    flow down [
-      asText "Start state:"
-    , asText startState
-    , asText "Updated state:"
-    , asText updatedState
-    ]
+    let
+      startStateBool = getStatusBool (D.toList startState)
+      updatedStateBool = getStatusBool (D.toList updatedState)
+    in
+      flow down [
+        asText "Start state:"
+      , asText startStateBool
+      , asText "Updated state:"
+      , asText updatedStateBool
+      ]
