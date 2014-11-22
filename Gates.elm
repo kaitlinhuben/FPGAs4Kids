@@ -16,18 +16,26 @@ type Gate = {
   }
 
 -- Logic functions for gates
-andLogic : Bool -> Bool -> Bool
-andLogic input1 input2 = 
-    input1 && input2
-
-orLogic : Bool -> Bool -> Bool
-orLogic input1 input2 = 
-    input1 || input2
-
 inputLogic : Bool -> Bool -> Bool
-inputLogic input1 input2 = 
-    input1
+inputLogic input mockInput = input
 
 outputLogic : Bool -> Bool -> Bool
-outputLogic input1 input2 = 
-    input1
+outputLogic input mockInput = input
+
+andLogic : Bool -> Bool -> Bool
+andLogic input1 input2 = input1 && input2
+
+orLogic : Bool -> Bool -> Bool
+orLogic input1 input2 = input1 || input2
+
+xorLogic : Bool -> Bool -> Bool
+xorLogic input1 input2 = xor input1 input2
+
+notLogic : Bool -> Bool -> Bool
+notLogic input mockInput = not input
+
+nandLogic : Bool -> Bool -> Bool
+nandLogic input1 input2 = not (input1 && input2)
+
+norLogic : Bool -> Bool -> Bool
+norLogic input1 input2 = not (input1 || input2)
