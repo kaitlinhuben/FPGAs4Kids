@@ -1,23 +1,41 @@
 {--
     Stores information for circuit state
 --}
-module State where
+module StateInfo where
 
-import Debug (..)
 import Dict as D
 import Array as A
 import Gates (..)
 
+{-- Meta game information --}
+type GameInput = {
+    timeDelta : Float
+  , userInput : UserInput
+  }
+type UserInput = {
+    mousePos : (Int, Int)
+  }
+
+data GameMode = Game | Schematic
+
+type GameState = {
+    networkNames : [String]
+  , initialNetwork : Network 
+  , circuitState : CircuitState
+  , gameMode : GameMode
+  , mousePos : (Int, Int)
+  }
+
+{-- Circuit information --}
 type Network = [Gate]
 
-type State = D.Dict String Gate
+type CircuitState = D.Dict String Gate
 
-{-- Initialize state with gates in network --}
-emptyState : State
-emptyState = D.empty 
+emptyCircuitState : CircuitState
+emptyCircuitState = D.empty 
 
-initState : State -> Network -> State
-initState state network = 
+initCircuitState : CircuitState -> Network -> CircuitState
+initCircuitState state network = 
     case network of 
         [] -> state
         hd :: [] -> addGate state hd
@@ -25,18 +43,27 @@ initState state network =
             let
                 statePlusHd = addGate state hd 
             in
-                initState statePlusHd tl
+                initCircuitState statePlusHd tl
 
-addGate : State -> Gate -> State
+addGate : CircuitState -> Gate -> CircuitState
 addGate state gate = 
     D.insert gate.name gate state
 
 {-- Update state with network information --}
-updateState : State -> [String] -> State
-updateState state netNames =
+updateGameState : GameState -> GameState
+updateGameState gameState = 
+    let
+        netNames = gameState.networkNames
+        cs = gameState.circuitState
+        newCircuitState = updateCircuitState cs netNames
+    in
+        { gameState | circuitState <- newCircuitState}
+
+updateCircuitState : CircuitState -> [String] -> CircuitState
+updateCircuitState state netNames =
     foldl (updateGate) state netNames
 
-updateGate : String -> State -> State
+updateGate : String -> CircuitState -> CircuitState
 updateGate gateName state = 
     let 
         gateToSim = D.getOrFail gateName state
@@ -46,7 +73,7 @@ updateGate gateName state =
     in
         addGate stateMinusGate simulatedGate
 
-simGate : Gate -> State -> Gate
+simGate : Gate -> CircuitState -> Gate
 simGate gate state = 
     if | gate.gateType == NormalGate -> simNormalGate gate state
        | gate.gateType == InputGate -> gate -- TODO
@@ -54,7 +81,7 @@ simGate gate state =
 
 -- Simulate a non-input, non-output gate 
 -- (e.g. AND, OR, XOR, etc.)
-simNormalGate : Gate -> State -> Gate
+simNormalGate : Gate -> CircuitState -> Gate
 simNormalGate gate state = 
     let
         logicFunction = gate.logic
@@ -72,10 +99,10 @@ simNormalGate gate state =
         -- run the logic function on inputs
         result = logicFunction input1Status input2Status
     in
-        { gate | status <- (log "simNormalGate result" result) } 
+        { gate | status <- result } 
 
 -- "Simulate" an output gate (get value of connected gate)
-simOutputGate : Gate -> State -> Gate
+simOutputGate : Gate -> CircuitState -> Gate
 simOutputGate gate state = 
     let
         inputNames = gate.inputs
@@ -83,7 +110,7 @@ simOutputGate gate state =
         inputGate = D.getOrFail inputName state
         inputStatus = inputGate.status
     in
-        { gate | status <- (log "simOutputGate result" inputStatus) }
+        { gate | status <- inputStatus }
 
 
 {-- Debugging --}

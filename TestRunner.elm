@@ -1,11 +1,13 @@
 module TestRunner where
 
+import Mouse
 import Debug (..)
 import Dict as D
 import Array as A
 import Gates (..)
-import State (..)
+import StateInfo (..)
 import View (..)
+import Controller (..)
 
 -- Set up gates for level
 andGate : Gate
@@ -75,8 +77,8 @@ output = {
 network : Network
 network = [input1,input2,input3,andGate,andGate2,orGate,output] 
 
-networkNames : [String]
-networkNames = [
+netNames : [String]
+netNames = [
     "input1"
   , "input2"
   , "input3"
@@ -86,23 +88,23 @@ networkNames = [
   , "output"
   ]
 
--- initialize state of network
-startState : State
-startState = initState emptyState network
+-- Put everything into GameState
+gameState : GameState
+gameState = {
+    networkNames = netNames
+  , initialNetwork = network 
+  , circuitState = initCircuitState emptyCircuitState network
+  , gameMode = Schematic
+  , mousePos = (0,0)
+  }
 
 -- update state
-updatedState : State
-updatedState = updateState startState networkNames
+updatedGameState : GameState
+updatedGameState = updateGameState gameState
+
+userInput : Signal UserInput
+userInput = UserInput <~ Mouse.position
 
 -- run level (show text)
-main : Element
-main = 
-  let
-      updatedStateBool = getStatusBool (D.toList updatedState)
-  in
-    flow down [
-        [markdown|## Simulated State|]
-      , asText updatedStateBool
-      , plainText "   "
-      , drawThis updatedState
-    ]
+main : Signal Element
+main = mainDriver updatedGameState userInput
