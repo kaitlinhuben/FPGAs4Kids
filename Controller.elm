@@ -7,24 +7,26 @@ import Window
 import StateInfo (..)
 import View (..)
 
+-- Every time the page refreshes, gather needed inputs and update game state
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
     let
+        updatedGameState = updateGameState gameState
         ui = gameInput.userInput
         newMousePos = ui.mousePos
     in 
-        { gameState | mousePos <- newMousePos}
+        { updatedGameState | mousePos <- newMousePos }
 
 -- For physics
 delta : Signal Float
-delta = lift (\t -> t / 20) (fps 25)
+delta = lift (\t -> t / 20) (fps 1) --TODO change to 25
 
--- To pick up user input
+-- At the fps rate in delta, pick up user input
 gatherInput : Signal UserInput -> Signal GameInput
 gatherInput userInput = 
   sampleOn delta (lift2 GameInput delta userInput)
 
--- Updates the game state
+-- Updates the game state given the user input
 foldGame : GameState -> Signal UserInput -> Signal GameState
 foldGame game userInput = 
   foldp stepGame game (gatherInput userInput)

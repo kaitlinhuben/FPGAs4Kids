@@ -74,8 +74,8 @@ output = {
   }
 
 -- set up network
-network : Network
-network = [input1,input2,input3,andGate,andGate2,orGate,output] 
+gates : [Gate]
+gates = [input1,input2,input3,andGate,andGate2,orGate,output] 
 
 netNames : [String]
 netNames = [
@@ -92,19 +92,14 @@ netNames = [
 gameState : GameState
 gameState = {
     networkNames = netNames
-  , initialNetwork = network 
-  , circuitState = initCircuitState emptyCircuitState network
+  , circuitState = initCircuitState D.empty gates
   , gameMode = Schematic
   , mousePos = (0,0)
   }
-
--- update state
-updatedGameState : GameState
-updatedGameState = updateGameState gameState
 
 userInput : Signal UserInput
 userInput = UserInput <~ Mouse.position
 
 -- run level (show text)
 main : Signal Element
-main = mainDriver updatedGameState userInput
+main = mainDriver gameState userInput
