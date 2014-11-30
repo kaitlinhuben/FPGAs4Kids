@@ -95,6 +95,9 @@ inputNetNames = ["input1"]
 inputBool1 : I.Input Bool 
 inputBool1 = I.input False
 
+inputSignals : [I.Input Bool]
+inputSignals = [inputBool1]
+
 -- Put everything into GameState
 gameState : GameState
 gameState = {
@@ -103,7 +106,8 @@ gameState = {
   , circuitState = initCircuitState D.empty gates
   , gameMode = Schematic
   , mousePos = (0,0)
-  , userInputBools = D.empty
+  , userInputBools = D.singleton "input1" False
+  , inputSignals = inputBool1
   }
 
 userInputs : Signal (D.Dict String Bool)

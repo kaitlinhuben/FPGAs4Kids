@@ -29,6 +29,7 @@ type GameState = {
   , gameMode : GameMode
   , mousePos : (Int, Int)
   , userInputBools : D.Dict String Bool
+  , inputSignals : I.Input Bool
   }
 
 {----------------------------------------------------------
