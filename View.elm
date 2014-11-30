@@ -3,11 +3,9 @@
 --}
 module View where 
 
-import Array as A
 import Dict as D
 import Graphics.Input as I
-import Gates (..)
-import StateInfo (..)
+import Model (..)
 
 -- Display the entire page
 display : (Int, Int) -> GameState -> Element

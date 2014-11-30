@@ -1,41 +1,12 @@
 {--
-    Stores information for circuit state
+    Functions for creating and simulating circuits
 --}
-module StateInfo where
+module CircuitFunctions where
 
 import Dict as D
 import Array as A
 import Graphics.Input as I
-import Gates (..)
-
-{----------------------------------------------------------
-    Meta game information 
-----------------------------------------------------------}
-type GameInput = {
-    timeDelta : Float
-  , userInput : UserInput
-  }
-type UserInput = {
-    mousePos : (Int, Int)
-  , inputBools : D.Dict String Bool
-  }
-
-data GameMode = Game | Schematic
-
-type GameState = {
-    networkNames : [String]
-  , inputNames : [String]
-  , circuitState : CircuitState
-  , gameMode : GameMode
-  , mousePos : (Int, Int)
-  , userInputBools : D.Dict String Bool
-  , inputSignals : I.Input Bool
-  }
-
-{----------------------------------------------------------
-    Circuit information 
-----------------------------------------------------------}
-type CircuitState = D.Dict String Gate
+import Model (..)
 
 -- Recursively initialize circuit state given array of gates
 initCircuitState : CircuitState -> [Gate] -> CircuitState
