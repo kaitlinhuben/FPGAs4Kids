@@ -64,25 +64,39 @@ updateGameState gameState =
         userInputBools = gameState.userInputBools
         circuitStateUpdatedInputs = updateInputs circuitState inputNames userInputBools
 
-        -- next, simulate the circuit
+        -- next, simulate the circuit with updated user inputs
         netNames = gameState.networkNames
         simulatedCircuitState = foldl (updateGate) circuitStateUpdatedInputs netNames
     in
         { gameState | circuitState <- simulatedCircuitState }
 
--- Get status of gate from state's userInputBools
+-- Update inputs with userInputBools
 updateInputs : CircuitState -> [String] -> D.Dict String Bool -> CircuitState
 updateInputs state inputNames userInputBools = 
     case inputNames of 
+        -- if empty, return state as-is
         [] -> state
-        name :: [] ->
+
+        -- if a single input, update that input
+        name :: [] -> updateStateWithInput state name userInputBools
+            
+        -- if more than single input, update that input and call on tail
+        name :: tl ->
             let
-                inputStatus = D.getOrFail name userInputBools
-                inputGate = D.getOrFail name state
-                updatedInputGate = { inputGate | status <- inputStatus}
-                stateMinusGate = D.remove name state
+                updatedState = updateStateWithInput state name userInputBools
             in
-                D.insert name updatedInputGate stateMinusGate
+                updateInputs updatedState tl userInputBools
+
+-- Update circuit state with single input change
+updateStateWithInput : CircuitState -> String -> D.Dict String Bool -> CircuitState
+updateStateWithInput state name userInputBools = 
+    let
+        inputStatus = D.getOrFail name userInputBools
+        inputGate = D.getOrFail name state
+        updatedInputGate = { inputGate | status <- inputStatus }
+        stateMinusInput = D.remove name state
+    in
+        D.insert name updatedInputGate stateMinusInput
 
 -- Update a single gate in the CircuitState
 updateGate : String -> CircuitState -> CircuitState

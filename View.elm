@@ -22,28 +22,9 @@ display (w,h) gameState =
             ]
     in
         container w h middle everything
-
-drawCircuit : GameState -> Element
-drawCircuit gs = 
-  let 
-    -- get the input gates
-    input1 = D.getOrFail "input1" gs.circuitState
-
-    -- get the checkbox Inputs for input gates
-    {--check1Input = D.getOrFail "input1" gs.gateInputs
-    check1 = check1Input.input
-
-    -- set up the checkboxes
-    checkbox1 = I.checkbox check1.handle identity input1.status--}
-
-  in
-    flow right [
-      {--checkbox1,--} drawGate input1
-    ]
     
-
 -- Draw the circuit and put it in an element
-{--drawCircuit : GameState -> Element
+drawCircuit : GameState -> Element
 drawCircuit gs = 
   let 
     -- get the input gates
@@ -52,21 +33,21 @@ drawCircuit gs =
     input3 = D.getOrFail "input3" gs.circuitState
 
     -- get the checkbox Inputs for input gates
-    check1 = D.getOrFail "input1" gs.gateInputs
+    {--check1 = D.getOrFail "input1" gs.gateInputs
     check2 = D.getOrFail "input1" gs.gateInputs
     check3 = D.getOrFail "input1" gs.gateInputs
 
     -- set up the checkboxes
     checkbox1 = I.checkbox check1.handle identity input1.status
     checkbox2 = I.checkbox check2.handle identity input2.status
-    checkbox3 = I.checkbox check3.handle identity input3.status
+    checkbox3 = I.checkbox check3.handle identity input3.status--}
 
     -- put everything together
     inputsElement = 
       flow right [
-        checkbox1, drawGate input1, plainText "    "
-      , checkbox2, drawGate input2, plainText "    "
-      , checkbox3, drawGate input3
+        drawGate input1, plainText "    "
+      , drawGate input2, plainText "    "
+      , drawGate input3
       ]
     andElement = drawGate (D.getOrFail "andGate" gs.circuitState)
     and2Element = 
@@ -83,7 +64,7 @@ drawCircuit gs =
     , and2Element
     , orElement
     , outputElement
-    ]--}
+    ]
 
 -- Draw a single gate
 drawGate : Gate -> Element
