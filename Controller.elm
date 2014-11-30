@@ -12,10 +12,11 @@ import View (..)
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
     let
-        ui = gameInput.userInput -- log here
+        ui = gameInput.userInput
         inputs = ui.inputBools
         gameStateWithInputs = { gameState | userInputBools <- inputs}
         updatedGameState = updateGameState gameStateWithInputs
+        
         newMousePos = ui.mousePos
     in 
         { updatedGameState | mousePos <- newMousePos }
