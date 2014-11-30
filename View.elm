@@ -3,6 +3,7 @@
 --}
 module View where 
 
+import Array as A
 import Dict as D
 import Graphics.Input as I
 import Gates (..)
@@ -22,24 +23,45 @@ display (w,h) gameState =
     in
         container w h middle everything
 
-check1 : I.Input Bool 
-check1 = I.input True
-
-check2 : I.Input Bool 
-check2 = I.input True
-
-check3 : I.Input Bool 
-check3 = I.input True
--- Draw the circuit and put it in an element
 drawCircuit : GameState -> Element
 drawCircuit gs = 
   let 
+    -- get the input gates
+    input1 = D.getOrFail "input1" gs.circuitState
+
+    -- get the checkbox Inputs for input gates
+    {--check1Input = D.getOrFail "input1" gs.gateInputs
+    check1 = check1Input.input
+
+    -- set up the checkboxes
+    checkbox1 = I.checkbox check1.handle identity input1.status--}
+
+  in
+    flow right [
+      {--checkbox1,--} drawGate input1
+    ]
+    
+
+-- Draw the circuit and put it in an element
+{--drawCircuit : GameState -> Element
+drawCircuit gs = 
+  let 
+    -- get the input gates
     input1 = D.getOrFail "input1" gs.circuitState
     input2 = D.getOrFail "input2" gs.circuitState
     input3 = D.getOrFail "input3" gs.circuitState
+
+    -- get the checkbox Inputs for input gates
+    check1 = D.getOrFail "input1" gs.gateInputs
+    check2 = D.getOrFail "input1" gs.gateInputs
+    check3 = D.getOrFail "input1" gs.gateInputs
+
+    -- set up the checkboxes
     checkbox1 = I.checkbox check1.handle identity input1.status
     checkbox2 = I.checkbox check2.handle identity input2.status
     checkbox3 = I.checkbox check3.handle identity input3.status
+
+    -- put everything together
     inputsElement = 
       flow right [
         checkbox1, drawGate input1, plainText "    "
@@ -61,7 +83,7 @@ drawCircuit gs =
     , and2Element
     , orElement
     , outputElement
-    ]
+    ]--}
 
 -- Draw a single gate
 drawGate : Gate -> Element

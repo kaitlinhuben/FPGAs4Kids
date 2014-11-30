@@ -5,6 +5,7 @@ module StateInfo where
 
 import Dict as D
 import Array as A
+import Graphics.Input as I
 import Gates (..)
 
 {----------------------------------------------------------
@@ -16,15 +17,18 @@ type GameInput = {
   }
 type UserInput = {
     mousePos : (Int, Int)
+  , inputBools : D.Dict String Bool
   }
 
 data GameMode = Game | Schematic
 
 type GameState = {
     networkNames : [String]
+  , inputNames : [String]
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)
+  , userInputBools : D.Dict String Bool
   }
 
 {----------------------------------------------------------
@@ -54,11 +58,31 @@ initCircuitState state network =
 updateGameState : GameState -> GameState
 updateGameState gameState = 
     let
-        netNames = gameState.networkNames
+        -- first, update circuit with user inputs
         circuitState = gameState.circuitState
-        newCircuitState = foldl (updateGate) circuitState netNames
+        inputNames = gameState.inputNames
+        userInputBools = gameState.userInputBools
+        circuitStateUpdatedInputs = updateInputs circuitState inputNames userInputBools
+
+        -- next, simulate the circuit
+        netNames = gameState.networkNames
+        simulatedCircuitState = foldl (updateGate) circuitStateUpdatedInputs netNames
     in
-        { gameState | circuitState <- newCircuitState }
+        { gameState | circuitState <- simulatedCircuitState }
+
+-- Get status of gate from state's userInputBools
+updateInputs : CircuitState -> [String] -> D.Dict String Bool -> CircuitState
+updateInputs state inputNames userInputBools = 
+    case inputNames of 
+        [] -> state
+        name :: [] ->
+            let
+                inputStatus = D.getOrFail name userInputBools
+                inputGate = D.getOrFail name state
+                updatedInputGate = { inputGate | status <- inputStatus}
+                stateMinusGate = D.remove name state
+            in
+                D.insert name updatedInputGate stateMinusGate
 
 -- Update a single gate in the CircuitState
 updateGate : String -> CircuitState -> CircuitState
@@ -67,7 +91,7 @@ updateGate gateName state =
         -- get the gate to simulate
         gateToSim = D.getOrFail gateName state
         -- simulate the gate
-        simulatedGate = simGate gateToSim state
+        simulatedGate = simGate gateToSim state 
         -- take the old (name,gate) entry out
         stateMinusGate = D.remove gateName state
     in
@@ -78,7 +102,7 @@ updateGate gateName state =
 simGate : Gate -> CircuitState -> Gate
 simGate gate state = 
     if | gate.gateType == NormalGate -> simNormalGate gate state
-       | gate.gateType == InputGate -> gate -- TODO
+       | gate.gateType == InputGate -> gate -- this should already be updated
        | gate.gateType == OutputGate -> simOutputGate gate state
 
 -- Simulate a non-input, non-output gate (e.g. AND, OR, XOR, etc.)

@@ -3,6 +3,7 @@
 --}
 module Controller where
 
+import Debug (..)
 import Window
 import StateInfo (..)
 import View (..)
@@ -11,8 +12,10 @@ import View (..)
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
     let
-        updatedGameState = updateGameState gameState
-        ui = gameInput.userInput
+        ui = gameInput.userInput -- log here
+        inputs = ui.inputBools
+        gameStateWithInputs = { gameState | userInputBools <- inputs}
+        updatedGameState = updateGameState gameStateWithInputs
         newMousePos = ui.mousePos
     in 
         { updatedGameState | mousePos <- newMousePos }

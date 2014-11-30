@@ -4,6 +4,7 @@ import Mouse
 import Debug (..)
 import Dict as D
 import Array as A
+import Graphics.Input as I
 import Gates (..)
 import StateInfo (..)
 import View (..)
@@ -88,17 +89,35 @@ netNames = [
   , "output"
   ]
 
+inputNetNames : [String]
+inputNetNames = ["input1"]
+
+inputBool1 : I.Input Bool 
+inputBool1 = I.input False
+
 -- Put everything into GameState
 gameState : GameState
 gameState = {
     networkNames = netNames
+  , inputNames = inputNetNames
   , circuitState = initCircuitState D.empty gates
   , gameMode = Schematic
   , mousePos = (0,0)
+  , userInputBools = D.empty
   }
 
+userInputs : Signal (D.Dict String Bool)
+userInputs = liftToList <~ inputBool1.signal
+
+liftToList : Bool -> D.Dict String Bool
+liftToList bool1 = 
+  let
+    emptyDict = D.empty 
+  in 
+    D.insert "input1" bool1 emptyDict
+
 userInput : Signal UserInput
-userInput = UserInput <~ Mouse.position
+userInput = UserInput <~ Mouse.position ~ userInputs
 
 -- run level (show text)
 main : Signal Element
