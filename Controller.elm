@@ -5,7 +5,8 @@ module Controller where
 
 import Debug (..)
 import Window
-import StateInfo (..)
+import Model (..)
+import CircuitFunctions (..)
 import View (..)
 
 -- Every time the page refreshes, gather needed inputs and update game state
@@ -16,7 +17,7 @@ stepGame gameInput gameState =
         inputs = ui.inputBools
         gameStateWithInputs = { gameState | userInputBools <- inputs}
         updatedGameState = updateGameState gameStateWithInputs
-        
+
         newMousePos = ui.mousePos
     in 
         { updatedGameState | mousePos <- newMousePos }

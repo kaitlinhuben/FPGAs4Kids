@@ -5,9 +5,8 @@ import Debug (..)
 import Dict as D
 import Array as A
 import Graphics.Input as I
-import Gates (..)
-import StateInfo (..)
-import View (..)
+import Model (..)
+import CircuitFunctions (..)
 import Controller (..)
 
 -- Set up gates for level
