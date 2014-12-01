@@ -8,7 +8,6 @@ import Graphics.Input as I
 import Model (..)
 import CircuitFunctions (..)
 import Controller (..)
-import TestRunner_View (..)
 
 -- Set up gates for level
 andGate : Gate
@@ -18,6 +17,7 @@ andGate = {
     , status = False
     , inputs = A.fromList ["input1", "input2"]
     , logic = andLogic
+    , location = (-100,50)
   }
 
 andGate2 : Gate
@@ -27,6 +27,7 @@ andGate2 = {
     , status = True
     , inputs = A.fromList ["input3", "andGate"]
     , logic = andLogic
+    , location = (0,-50)
   }
 
 orGate : Gate
@@ -36,6 +37,7 @@ orGate = {
     , status = False
     , inputs = A.fromList ["andGate", "andGate2"]
     , logic = orLogic
+    , location = (100,0)
   }
 
 input1 : Gate
@@ -45,6 +47,7 @@ input1 = {
     , status = True
     , inputs = A.empty
     , logic = inputLogic
+    , location = (-200,100)
   }
 
 input2 : Gate
@@ -54,6 +57,7 @@ input2 = {
     , status = True
     , inputs = A.empty
     , logic = inputLogic
+    , location = (-200,0)
   }
 
 input3 : Gate
@@ -63,6 +67,7 @@ input3 = {
     , status = False
     , inputs = A.empty
     , logic = inputLogic
+    , location = (-200,-100)
   }
 
 output : Gate
@@ -72,6 +77,7 @@ output = {
     , status = False
     , inputs = A.fromList ["orGate"]
     , logic = inputLogic
+    , location = (175,0)
   }
 
 -- set up network
@@ -123,7 +129,6 @@ gameState = {
   , mousePos = (0,0)
   , userInputBools = D.fromList inputBoolsPreDict
   , inputSignals = D.fromList inputSignalsPreDict
-  , viewInfo = viewInfo
   }
 
 

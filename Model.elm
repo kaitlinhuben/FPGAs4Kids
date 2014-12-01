@@ -18,12 +18,8 @@ type Gate = {
     , status : Bool
     , inputs : A.Array String
     , logic : Bool -> Bool -> Bool
+    , location : (Float, Float)
   }
-
-type GateView = {
-      name : String
-    , location : (Float,Float)
-}
 
 -- Logic functions for gates
 inputLogic : Bool -> Bool -> Bool
@@ -72,7 +68,6 @@ type GameState = {
   , mousePos : (Int, Int)
   , userInputBools : D.Dict String Bool
   , inputSignals : D.Dict String (I.Input Bool)
-  , viewInfo : D.Dict String GateView
   }
 
 type CircuitState = D.Dict String Gate
