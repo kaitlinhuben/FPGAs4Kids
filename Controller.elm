@@ -24,7 +24,7 @@ stepGame gameInput gameState =
 
 -- For physics
 delta : Signal Float
-delta = lift (\t -> t / 20) (fps 1) --TODO change to 25
+delta = lift (\t -> t / 20) (fps 25)
 
 -- At the fps rate in delta, pick up user input
 gatherInput : Signal UserInput -> Signal GameInput

@@ -20,6 +20,11 @@ type Gate = {
     , logic : Bool -> Bool -> Bool
   }
 
+type GateView = {
+      name : String
+    , location : (Float,Float)
+}
+
 -- Logic functions for gates
 inputLogic : Bool -> Bool -> Bool
 inputLogic input mockInput = input
@@ -66,7 +71,8 @@ type GameState = {
   , gameMode : GameMode
   , mousePos : (Int, Int)
   , userInputBools : D.Dict String Bool
-  , inputSignals : I.Input Bool
+  , inputSignals : D.Dict String (I.Input Bool)
+  , viewInfo : D.Dict String GateView
   }
 
 type CircuitState = D.Dict String Gate
