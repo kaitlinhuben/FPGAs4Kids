@@ -8,6 +8,7 @@ import Graphics.Input as I
 import Model (..)
 import CircuitFunctions (..)
 import Controller (..)
+import TestRunner_View (..)
 
 -- Set up gates for level
 andGate : Gate
@@ -89,13 +90,28 @@ netNames = [
   ]
 
 inputNetNames : [String]
-inputNetNames = ["input1"]
+inputNetNames = ["input1","input2","input3"]
 
 inputBool1 : I.Input Bool 
-inputBool1 = I.input False
+inputBool1 = I.input input1.status
+inputBool2 : I.Input Bool 
+inputBool2 = I.input input2.status
+inputBool3 : I.Input Bool 
+inputBool3 = I.input input3.status
 
-inputSignals : [I.Input Bool]
-inputSignals = [inputBool1]
+inputSignalsPreDict : [ (String, I.Input Bool) ]
+inputSignalsPreDict = 
+  [ ("input1", inputBool1)
+  , ("input2", inputBool2)
+  , ("input3", inputBool3)
+  ]
+
+inputBoolsPreDict : [ (String,Bool) ]
+inputBoolsPreDict = 
+  [ ("input1", input1.status)
+  , ("input2", input2.status)
+  , ("input3", input3.status)
+  ]
 
 -- Put everything into GameState
 gameState : GameState
@@ -105,22 +121,28 @@ gameState = {
   , circuitState = initCircuitState D.empty gates
   , gameMode = Schematic
   , mousePos = (0,0)
-  , userInputBools = D.singleton "input1" False
-  , inputSignals = inputBool1
+  , userInputBools = D.fromList inputBoolsPreDict
+  , inputSignals = D.fromList inputSignalsPreDict
+  , viewInfo = viewInfo
   }
 
-userInputs : Signal (D.Dict String Bool)
-userInputs = liftToList <~ inputBool1.signal
 
-liftToList : Bool -> D.Dict String Bool
-liftToList bool1 = 
+userInputs : Signal (D.Dict String Bool)
+userInputs = liftToList <~ inputBool1.signal ~ inputBool2.signal ~ inputBool3.signal
+
+liftToList : Bool -> Bool -> Bool -> D.Dict String Bool
+liftToList bool1 bool2 bool3 = 
   let
     emptyDict = D.empty 
+    dict1 = D.insert "input1" bool1 emptyDict
+    dict2 = D.insert "input2" bool2 dict1
   in 
-    D.insert "input1" bool1 emptyDict
+    D.insert "input3" bool3 dict2
+    
 
 userInput : Signal UserInput
 userInput = UserInput <~ Mouse.position ~ userInputs
+
 
 -- run level (show text)
 main : Signal Element
