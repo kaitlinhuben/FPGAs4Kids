@@ -3,6 +3,7 @@
 --}
 module View where 
 
+import Debug (..)
 import Dict as D
 import Graphics.Input as I
 import Model (..)
@@ -25,70 +26,64 @@ display (w,h) gameState =
 drawCircuit : (Int,Int) -> GameState -> Element
 drawCircuit (w,h) gs = 
   let 
-    -- get gate view info
-    gv = gs.viewInfo
-
-    -- get the input gates
-    inputGate1 = D.getOrFail "input1" gs.circuitState
-    inputGate2 = D.getOrFail "input2" gs.circuitState
-    inputGate3 = D.getOrFail "input3" gs.circuitState
-
-    -- get the checkbox Inputs for input gates
-    input1 = D.getOrFail "input1" gs.inputSignals
-    input2 = D.getOrFail "input2" gs.inputSignals
-    input3 = D.getOrFail "input3" gs.inputSignals
-
-    -- set up the checkboxes
-    checkbox1 = I.checkbox input1.handle identity (D.getOrFail "input1" gs.userInputBools)
-    checkbox2 = I.checkbox input2.handle identity (D.getOrFail "input2" gs.userInputBools)
-    checkbox3 = I.checkbox input3.handle identity (D.getOrFail "input3" gs.userInputBools)
-   
-    -- put everything together
     inputsElement = 
-      collage w h [
-        drawInputGate inputGate1 gv checkbox1
-      , drawInputGate inputGate2 gv checkbox2
-      , drawInputGate inputGate3 gv checkbox3
-      ]
-    andElement = drawGate (D.getOrFail "andGate" gs.circuitState) gv
-    and2Element =  drawGate (D.getOrFail "andGate2" gs.circuitState) gv
-    orElement = drawGate (D.getOrFail "orGate" gs.circuitState) gv
-    outputElement = drawGate (D.getOrFail "output" gs.circuitState) gv
+      collage w h (drawInputGates gs.inputNames gs)
+
+    everythingElseElement = 
+      collage w h (map drawGate (D.values gs.circuitState))
   in
-    collage w h [
-      toForm inputsElement
-    , andElement
-    , and2Element
-    , orElement
-    , outputElement
-    ]
+    layers [everythingElseElement, inputsElement]
 
 -- Draw a single gate
-drawGate : Gate -> D.Dict String GateView -> Form
-drawGate gate viewInfo = 
+drawGate : Gate -> Form
+drawGate gate = 
+  if | gate.gateType == InputGate -> toForm (plainText "") --drawn separately
+     | otherwise ->
+        let
+          element = flow down 
+                    [ plainText gate.name
+                    , asText gate.status
+                    ]
+          fillColor = if | gate.status == True -> green
+                         | gate.status == False -> lightGrey
+
+          coloredElement = color fillColor element
+        in 
+          move gate.location (toForm coloredElement)
+
+-- Recursively draw all input gates
+drawInputGates : [String] -> GameState -> [Form]
+drawInputGates inputNames gs = 
+  case inputNames of 
+    [] -> []
+    name :: [] -> [drawInputGate name gs]
+    name :: tl -> 
+      let
+        gateForm = drawInputGate name gs
+        tlForms = drawInputGates tl gs
+      in
+        gateForm :: tlForms
+
+-- Draw a single input gate
+drawInputGate : String -> GameState -> Form
+drawInputGate name gs = 
   let
+    -- get the gate
+    gate = D.getOrFail name gs.circuitState
+    -- get the input associated with the gate
+    gateInput = D.getOrFail name gs.inputSignals
+    -- set up the checkbox 
+    gateCheckbox = I.checkbox gateInput.handle identity (D.getOrFail name gs.userInputBools)
+    
     element = flow down 
-              [ plainText gate.name
+              [ plainText name
+              , gateCheckbox
               , asText gate.status
               ]
-    theForm = toForm element
 
-    gateInfo = D.getOrFail gate.name viewInfo
-    location = gateInfo.location
+    fillColor = if | gate.status == True -> green
+                   | gate.status == False -> lightGrey
+
+    coloredElement = color fillColor element
   in 
-    move location theForm
-
-drawInputGate : Gate -> D.Dict String GateView -> Element -> Form
-drawInputGate gate viewInfo ckbox = 
-  let
-    element = flow down 
-              [ plainText gate.name
-              , ckbox
-              , asText gate.status
-              ]
-    theForm = toForm element
-
-    gateInfo = D.getOrFail gate.name viewInfo
-    location = gateInfo.location
-  in 
-    move location theForm
+    move gate.location (toForm coloredElement)
