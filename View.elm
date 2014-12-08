@@ -47,18 +47,25 @@ drawNets : String -> GameState -> Form
 drawNets name gs =
   let 
     circuit = gs.circuitState
+    -- get the location of this gate
     gate = D.getOrFail name circuit
     (x,y) = gate.location
+
+    -- get the location of the first input
     input1name = A.getOrFail 0 gate.inputs
     input1 = D.getOrFail input1name circuit
     (x1,y1) = input1.location
+
+    -- draw segment from first input to this gate
     segment1 = segment (x,y) (x1,y1)
     lineColor1 = if | input1.status == True -> green
                     | otherwise -> black
     input1segment = traced (solid lineColor1) segment1
+
   in
     if | A.length gate.inputs == 1 -> input1segment
        | otherwise ->
+          -- if there's a second input, draw that too
           let
             input2name = A.getOrFail 1 gate.inputs
             input2 = D.getOrFail input2name circuit
@@ -67,7 +74,7 @@ drawNets name gs =
             lineColor2 = if | input2.status == True -> green
                             | otherwise -> black
             input2segment = traced (solid lineColor2) segment2
-            both = collage 300 300 [input1segment,input2segment]
+            both = collage 300 300 [input1segment,input2segment] -- TODO don't hardcode size
           in 
             toForm both
 
@@ -87,6 +94,7 @@ drawInputGate name gs =
   let
     -- get the gate
     gate = D.getOrFail name gs.circuitState
+
     -- get the input associated with the gate
     gateInput = D.getOrFail name gs.inputSignals
     
@@ -94,15 +102,21 @@ drawInputGate name gs =
     (w,h) = gate.imgSize
     gateImage = image w h gate.imgName
 
+    -- if the input is currently True, a click should send False
+    -- if input currently False, click should send True
+    -- (values should switch)
     updateValue = if | gate.status==True -> False
                      | otherwise -> True
 
+    -- make the image a clickable element
     gateElement = I.clickable gateInput.handle updateValue gateImage
 
+    -- fill the background of the image with status color
     fillColor = if | gate.status == True -> green
                    | gate.status == False -> lightGrey
-
     coloredElement = color fillColor gateElement
+
+    -- make the clickable image a link so cursor switches to pointer
     linkedElement = link "#" coloredElement
   in 
     move gate.location (toForm linkedElement)

@@ -3,7 +3,6 @@
 --}
 module Controller where
 
-import Debug (..)
 import Window
 import Model (..)
 import CircuitFunctions (..)
@@ -13,11 +12,17 @@ import View (..)
 stepGame : GameInput -> GameState -> GameState
 stepGame gameInput gameState = 
     let
+        -- get the user's choices for inputs
         ui = gameInput.userInput
         inputs = ui.inputBools
+
+        -- update game state with user's inputs
         gameStateWithInputs = { gameState | userInputBools <- inputs}
+
+        -- update game state by simulating everything
         updatedGameState = updateGameState gameStateWithInputs
 
+        -- grab the new mouse position
         newMousePos = ui.mousePos
     in 
         { updatedGameState | mousePos <- newMousePos }

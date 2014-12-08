@@ -79,8 +79,10 @@ updateGate gateName state =
         -- simulate the gate
         simulatedGate = simGate gateToSim state
         -- update image for gate
-        simGateWithImg = if | simulatedGate.status == True -> { simulatedGate | imgName <- simulatedGate.imgOnName }
-                            | otherwise -> { simulatedGate | imgName <- simulatedGate.imgOffName }
+        simGateWithImg = if | simulatedGate.status == True -> 
+                                { simulatedGate | imgName <- simulatedGate.imgOnName }
+                            | otherwise -> 
+                                { simulatedGate | imgName <- simulatedGate.imgOffName }
         -- take the old (name,gate) entry out
         stateMinusGate = D.remove gateName state
     in
@@ -130,18 +132,3 @@ simOutputGate gate state =
         inputStatus = inputGate.status
     in
         { gate | status <- inputStatus }
-
-
-{----------------------------------------------------------
-    Debugging
-----------------------------------------------------------}
-getStatusBool : [(String,Gate)] -> [(String,Bool)]
-getStatusBool stateList = 
-    map getStatusOnly stateList
-
-getStatusOnly : (String, Gate) -> (String,Bool)
-getStatusOnly (name,gate) = 
-    let 
-        status = gate.status
-    in
-        (name,status)

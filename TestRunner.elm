@@ -1,7 +1,6 @@
 module TestRunner where
 
 import Mouse
-import Debug (..)
 import Dict as D
 import Array as A
 import Graphics.Input as I
@@ -90,7 +89,7 @@ input3 = {
     , location = (-200,-100)
     , imgName = inputOffName
     , imgOnName = inputOnName
-    , imgOffName = inputOnName
+    , imgOffName = inputOffName
     , imgSize = (75,75)
   }
 
@@ -149,7 +148,7 @@ inputBoolsPreDict =
   , ("input3", input3.status)
   ]
 
--- Put everything into GameState
+-- Put everything into initial GameState
 gameState : GameState
 gameState = {
     networkNames = netNames
@@ -162,7 +161,7 @@ gameState = {
   , inputSignals = D.fromList inputSignalsPreDict
   }
 
-
+-- lift all input signals into user input
 userInputs : Signal (D.Dict String Bool)
 userInputs = liftToList <~ inputBool1.signal ~ inputBool2.signal ~ inputBool3.signal
 
@@ -175,11 +174,11 @@ liftToList bool1 bool2 bool3 =
   in 
     D.insert "input3" bool3 dict2
     
-
+-- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
 userInput = UserInput <~ Mouse.position ~ userInputs
 
 
--- run level (show text)
+-- run level
 main : Signal Element
 main = mainDriver gameState userInput

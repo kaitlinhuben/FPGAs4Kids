@@ -8,6 +8,33 @@ import Dict as D
 import Graphics.Input as I
 
 {------------------------------------------------------------------------------
+    Game and circuit data and types
+------------------------------------------------------------------------------}
+type GameInput = {
+    timeDelta : Float
+  , userInput : UserInput
+  }
+type UserInput = {
+    mousePos : (Int, Int)
+  , inputBools : D.Dict String Bool
+  }
+
+data GameMode = Game | Schematic
+
+type GameState = {
+    networkNames : [String]
+  , inputNames : [String]
+  , nonInputNames : [String]
+  , circuitState : CircuitState
+  , gameMode : GameMode
+  , mousePos : (Int, Int)
+  , userInputBools : D.Dict String Bool
+  , inputSignals : D.Dict String (I.Input Bool)
+  }
+
+type CircuitState = D.Dict String Gate
+
+{------------------------------------------------------------------------------
     Gate data, types, and functions
 ------------------------------------------------------------------------------}
 data GateType = InputGate | NormalGate | OutputGate
@@ -50,6 +77,7 @@ nandLogic input1 input2 = not (input1 && input2)
 norLogic : Bool -> Bool -> Bool
 norLogic input1 input2 = not (input1 || input2)
 
+-- image names
 imgPath : String
 imgPath = "resources/img/"
 
@@ -65,29 +93,3 @@ outputOnName : String
 outputOnName = imgPath ++ "output-on.png"
 outputOffName : String
 outputOffName = imgPath ++ "output-off.png"
-{------------------------------------------------------------------------------
-    Game and circuit data and types
-------------------------------------------------------------------------------}
-type GameInput = {
-    timeDelta : Float
-  , userInput : UserInput
-  }
-type UserInput = {
-    mousePos : (Int, Int)
-  , inputBools : D.Dict String Bool
-  }
-
-data GameMode = Game | Schematic
-
-type GameState = {
-    networkNames : [String]
-  , inputNames : [String]
-  , nonInputNames : [String]
-  , circuitState : CircuitState
-  , gameMode : GameMode
-  , mousePos : (Int, Int)
-  , userInputBools : D.Dict String Bool
-  , inputSignals : D.Dict String (I.Input Bool)
-  }
-
-type CircuitState = D.Dict String Gate
