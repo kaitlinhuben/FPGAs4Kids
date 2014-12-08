@@ -129,5 +129,6 @@ drawInputGate name gs =
                    | gate.status == False -> lightGrey
 
     coloredElement = color fillColor gateElement
+    linkedElement = link "#" coloredElement
   in 
-    move gate.location (toForm coloredElement)
+    move gate.location (toForm linkedElement)
