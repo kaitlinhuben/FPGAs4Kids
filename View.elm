@@ -118,10 +118,12 @@ drawInputGate name gs =
     -- set up the checkbox 
     gateCheckbox = I.checkbox gateInput.handle identity (D.getOrFail name gs.userInputBools)
     
+    (w,h) = gate.imgSize
+    gateImage = image w h gate.imgName
+
     element = flow down 
-              [ plainText name
+              [ gateImage
               , gateCheckbox
-              , asText gate.status
               ]
 
     fillColor = if | gate.status == True -> green

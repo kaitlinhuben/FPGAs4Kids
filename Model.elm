@@ -53,6 +53,10 @@ norLogic input1 input2 = not (input1 || input2)
 imgPath : String
 imgPath = "resources/img/"
 
+inputOnName : String
+inputOnName = imgPath ++ "input-on.png"
+inputOffName : String
+inputOffName = imgPath ++ "input-off.png"
 andImageName : String
 andImageName = imgPath ++ "and-schematic.png"
 orImageName : String

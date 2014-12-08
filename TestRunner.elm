@@ -60,9 +60,9 @@ input1 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,100)
-    , imgName = ""
-    , imgOnName = ""
-    , imgOffName = ""
+    , imgName = inputOnName
+    , imgOnName = inputOnName
+    , imgOffName = inputOffName
     , imgSize = (75,75)
   }
 
@@ -74,9 +74,9 @@ input2 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,0)
-    , imgName = ""
-    , imgOnName = ""
-    , imgOffName = ""
+    , imgName = inputOnName
+    , imgOnName = inputOnName
+    , imgOffName = inputOffName
     , imgSize = (75,75)
   }
 
@@ -88,9 +88,9 @@ input3 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,-100)
-    , imgName = ""
-    , imgOnName = ""
-    , imgOffName = ""
+    , imgName = inputOffName
+    , imgOnName = inputOnName
+    , imgOffName = inputOnName
     , imgSize = (75,75)
   }
 
