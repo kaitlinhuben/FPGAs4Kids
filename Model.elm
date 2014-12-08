@@ -19,6 +19,10 @@ type Gate = {
     , inputs : A.Array String
     , logic : Bool -> Bool -> Bool
     , location : (Float, Float)
+    , imgName : String
+    , imgOnName : String
+    , imgOffName : String
+    , imgSize : (Int,Int)
   }
 
 -- Logic functions for gates
@@ -46,6 +50,17 @@ nandLogic input1 input2 = not (input1 && input2)
 norLogic : Bool -> Bool -> Bool
 norLogic input1 input2 = not (input1 || input2)
 
+imgPath : String
+imgPath = "resources/img/"
+
+andImageName : String
+andImageName = imgPath ++ "and-schematic.png"
+orImageName : String
+orImageName = imgPath ++ "or-schematic.png"
+outputOnName : String
+outputOnName = imgPath ++ "output-on.png"
+outputOffName : String
+outputOffName = imgPath ++ "output-off.png"
 {------------------------------------------------------------------------------
     Game and circuit data and types
 ------------------------------------------------------------------------------}

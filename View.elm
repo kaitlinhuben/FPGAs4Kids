@@ -89,16 +89,10 @@ drawGate : String -> GameState -> Form
 drawGate name gs = 
   let
     gate = D.getOrFail name gs.circuitState
-    element = flow down 
-              [ plainText name
-              , asText gate.status
-              ]
-    fillColor = if | gate.status == True -> green
-                   | gate.status == False -> lightGrey
-
-    coloredElement = color fillColor element
+    (w,h) = gate.imgSize
+    imgForm = toForm(image w h gate.imgName)
   in 
-    move gate.location (toForm coloredElement)
+    move gate.location imgForm
 
 -- Recursively draw all input gates
 drawInputGates : [String] -> GameState -> [Form]

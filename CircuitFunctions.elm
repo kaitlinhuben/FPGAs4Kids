@@ -77,12 +77,15 @@ updateGate gateName state =
         -- get the gate to simulate
         gateToSim = D.getOrFail gateName state
         -- simulate the gate
-        simulatedGate = simGate gateToSim state 
+        simulatedGate = simGate gateToSim state
+        -- update image for gate
+        simGateWithImg = if | simulatedGate.status == True -> { simulatedGate | imgName <- simulatedGate.imgOnName }
+                            | otherwise -> { simulatedGate | imgName <- simulatedGate.imgOffName }
         -- take the old (name,gate) entry out
         stateMinusGate = D.remove gateName state
     in
         -- replace with (name, newGate) entry
-        D.insert simulatedGate.name simulatedGate stateMinusGate
+        D.insert simulatedGate.name simGateWithImg stateMinusGate
 
 -- Simulate a single gate: decide which simulation function to use
 simGate : Gate -> CircuitState -> Gate

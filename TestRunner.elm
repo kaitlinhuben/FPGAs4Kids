@@ -18,6 +18,10 @@ andGate = {
     , inputs = A.fromList ["input1", "input2"]
     , logic = andLogic
     , location = (-100,50)
+    , imgName = andImageName
+    , imgOnName = andImageName
+    , imgOffName = andImageName
+    , imgSize = (75,75)
   }
 
 andGate2 : Gate
@@ -28,6 +32,10 @@ andGate2 = {
     , inputs = A.fromList ["input3", "andGate"]
     , logic = andLogic
     , location = (0,-50)
+    , imgName = andImageName
+    , imgOnName = andImageName
+    , imgOffName = andImageName
+    , imgSize = (75,75)
   }
 
 orGate : Gate
@@ -38,6 +46,10 @@ orGate = {
     , inputs = A.fromList ["andGate", "andGate2"]
     , logic = orLogic
     , location = (100,0)
+    , imgName = orImageName
+    , imgOnName = orImageName
+    , imgOffName = orImageName
+    , imgSize = (75,75)
   }
 
 input1 : Gate
@@ -48,6 +60,10 @@ input1 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,100)
+    , imgName = ""
+    , imgOnName = ""
+    , imgOffName = ""
+    , imgSize = (75,75)
   }
 
 input2 : Gate
@@ -58,6 +74,10 @@ input2 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,0)
+    , imgName = ""
+    , imgOnName = ""
+    , imgOffName = ""
+    , imgSize = (75,75)
   }
 
 input3 : Gate
@@ -68,6 +88,10 @@ input3 = {
     , inputs = A.empty
     , logic = inputLogic
     , location = (-200,-100)
+    , imgName = ""
+    , imgOnName = ""
+    , imgOffName = ""
+    , imgSize = (75,75)
   }
 
 output : Gate
@@ -78,6 +102,10 @@ output = {
     , inputs = A.fromList ["orGate"]
     , logic = inputLogic
     , location = (175,0)
+    , imgName = outputOffName
+    , imgOnName = outputOnName
+    , imgOffName = outputOffName
+    , imgSize = (75,75)
   }
 
 -- set up network
