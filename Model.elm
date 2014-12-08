@@ -63,6 +63,7 @@ data GameMode = Game | Schematic
 type GameState = {
     networkNames : [String]
   , inputNames : [String]
+  , nonInputNames : [String]
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)

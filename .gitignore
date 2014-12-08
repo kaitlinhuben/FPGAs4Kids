@@ -2,3 +2,4 @@ build/
 cabal.sandbox.config
 cache/
 .cabal-sandbox/
+random\ notes.txt

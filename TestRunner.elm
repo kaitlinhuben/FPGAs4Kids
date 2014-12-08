@@ -94,6 +94,8 @@ netNames = [
   , "orGate"
   , "output"
   ]
+nonInputNetNames : [String]
+nonInputNetNames = ["andGate", "andGate2", "orGate", "output"]
 
 inputNetNames : [String]
 inputNetNames = ["input1","input2","input3"]
@@ -124,6 +126,7 @@ gameState : GameState
 gameState = {
     networkNames = netNames
   , inputNames = inputNetNames
+  , nonInputNames = nonInputNetNames
   , circuitState = initCircuitState D.empty gates
   , gameMode = Schematic
   , mousePos = (0,0)
