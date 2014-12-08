@@ -115,20 +115,19 @@ drawInputGate name gs =
     gate = D.getOrFail name gs.circuitState
     -- get the input associated with the gate
     gateInput = D.getOrFail name gs.inputSignals
-    -- set up the checkbox 
-    gateCheckbox = I.checkbox gateInput.handle identity (D.getOrFail name gs.userInputBools)
     
+    -- get the size and set up the image
     (w,h) = gate.imgSize
     gateImage = image w h gate.imgName
 
-    element = flow down 
-              [ gateImage
-              , gateCheckbox
-              ]
+    updateValue = if | gate.status==True -> False
+                     | otherwise -> True
+
+    gateElement = I.clickable gateInput.handle updateValue gateImage
 
     fillColor = if | gate.status == True -> green
                    | gate.status == False -> lightGrey
 
-    coloredElement = color fillColor element
+    coloredElement = color fillColor gateElement
   in 
     move gate.location (toForm coloredElement)
