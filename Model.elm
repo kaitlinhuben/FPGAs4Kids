@@ -58,9 +58,9 @@ inputOnName = imgPath ++ "input-on.png"
 inputOffName : String
 inputOffName = imgPath ++ "input-off.png"
 andImageName : String
-andImageName = imgPath ++ "and-schematic.png"
+andImageName = imgPath ++ "and-schematic-filled.png"
 orImageName : String
-orImageName = imgPath ++ "or-schematic.png"
+orImageName = imgPath ++ "or-schematic-filled.png"
 outputOnName : String
 outputOnName = imgPath ++ "output-on.png"
 outputOffName : String
