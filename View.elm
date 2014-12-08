@@ -21,26 +21,26 @@ display (w,h) gameState =
 drawCircuit : (Int,Int) -> GameState -> Element
 drawCircuit (w,h) gs = 
   let 
-    netsForms = drawAllNets gs.nonInputNames gs
-    inputsForms = drawInputGates gs.inputNames gs
-    otherForms = drawGates gs.nonInputNames gs
+    netsForms = drawAll drawNets gs.nonInputNames gs 
+    inputsForms = drawAll drawInputGate gs.inputNames gs
+    otherForms = drawAll drawGate gs.nonInputNames gs
 
     allForms = netsForms ++ inputsForms ++ otherForms
   in
     collage w h allForms
 
--- Draw all incoming nets to all non-input gates
-drawAllNets : [String] -> GameState -> [Form]
-drawAllNets netNames gs = 
-  case netNames of 
+-- Recursively draw everything in names with drawSingle function
+drawAll : (String->GameState->Form) -> [String] -> GameState -> [Form]
+drawAll drawSingle names gs =
+  case names of 
     [] -> []
-    name :: [] -> [drawNets name gs]
+    name :: [] -> [drawSingle name gs]
     name :: tl -> 
       let
-        gateForm = drawNets name gs
-        tlForms = drawAllNets tl gs
+        singleForm = drawSingle name gs
+        tlForms = drawAll drawSingle tl gs 
       in
-        gateForm :: tlForms
+        singleForm :: tlForms
 
 -- Draw incoming nets to a gate
 drawNets : String -> GameState -> Form
@@ -71,19 +71,6 @@ drawNets name gs =
           in 
             toForm both
 
--- Draw all non-input gates
-drawGates : [String] -> GameState -> [Form]
-drawGates netNames gs = 
-  case netNames of 
-    [] -> []
-    name :: [] -> [drawGate name gs]
-    name :: tl -> 
-      let
-        gateForm = drawGate name gs
-        tlForms = drawGates tl gs
-      in
-        gateForm :: tlForms
-
 -- Draw a single gate
 drawGate : String -> GameState -> Form
 drawGate name gs = 
@@ -93,19 +80,6 @@ drawGate name gs =
     imgForm = toForm(image w h gate.imgName)
   in 
     move gate.location imgForm
-
--- Recursively draw all input gates
-drawInputGates : [String] -> GameState -> [Form]
-drawInputGates inputNames gs = 
-  case inputNames of 
-    [] -> []
-    name :: [] -> [drawInputGate name gs]
-    name :: tl -> 
-      let
-        gateForm = drawInputGate name gs
-        tlForms = drawInputGates tl gs
-      in
-        gateForm :: tlForms
 
 -- Draw a single input gate
 drawInputGate : String -> GameState -> Form
