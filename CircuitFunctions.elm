@@ -8,24 +8,6 @@ import Array as A
 import Graphics.Input as I
 import Model (..)
 
--- Recursively initialize circuit state given array of gates
-initCircuitState : CircuitState -> [Gate] -> CircuitState
-initCircuitState state network = 
-    case network of 
-        -- if empty, return state as-is
-        [] -> state
-
-        -- if single gate, insert (name,gate) into state
-        gate :: [] -> D.insert gate.name gate state
-
-        -- if more than one gate, insert (name,gate) into state
-        -- and then call again on the tail
-        gate :: tl -> 
-            let
-                statePlusGate = D.insert gate.name gate state
-            in
-                initCircuitState statePlusGate tl
-
 -- Update state with network information
 updateGameState : GameState -> GameState
 updateGameState gameState = 

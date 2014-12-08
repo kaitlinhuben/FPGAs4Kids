@@ -107,10 +107,19 @@ output = {
     , imgSize = (75,75)
   }
 
--- set up network
-gates : [Gate]
-gates = [input1,input2,input3,andGate,andGate2,orGate,output] 
+-- set up list of (String,Gate) to turn into dict
+gatesPreDict : [ (String,Gate) ]
+gatesPreDict = [
+    ("input1",input1)
+  , ("input2",input2)
+  , ("input3",input3)
+  , ("andGate",andGate)
+  , ("andGate2",andGate2)
+  , ("orGate",orGate)
+  , ("output",output)
+  ] 
 
+-- set up all network names
 netNames : [String]
 netNames = [
     "input1"
@@ -127,6 +136,7 @@ nonInputNetNames = ["andGate", "andGate2", "orGate", "output"]
 inputNetNames : [String]
 inputNetNames = ["input1","input2","input3"]
 
+-- set up all Inputs
 inputBool1 : I.Input Bool 
 inputBool1 = I.input input1.status
 inputBool2 : I.Input Bool 
@@ -134,13 +144,14 @@ inputBool2 = I.input input2.status
 inputBool3 : I.Input Bool 
 inputBool3 = I.input input3.status
 
+-- set up list of (String, Input Bool) to change to dict
 inputSignalsPreDict : [ (String, I.Input Bool) ]
 inputSignalsPreDict = 
   [ ("input1", inputBool1)
   , ("input2", inputBool2)
   , ("input3", inputBool3)
   ]
-
+-- set up list of (String, Bool) to change to dict
 inputBoolsPreDict : [ (String,Bool) ]
 inputBoolsPreDict = 
   [ ("input1", input1.status)
@@ -154,7 +165,7 @@ gameState = {
     networkNames = netNames
   , inputNames = inputNetNames
   , nonInputNames = nonInputNetNames
-  , circuitState = initCircuitState D.empty gates
+  , circuitState = D.fromList gatesPreDict
   , gameMode = Schematic
   , mousePos = (0,0)
   , userInputBools = D.fromList inputBoolsPreDict
