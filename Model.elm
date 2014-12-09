@@ -79,7 +79,7 @@ norLogic input1 input2 = not (input1 || input2)
 
 -- image names
 imgPath : String
-imgPath = "resources/img/"
+imgPath = "assets/img/"
 
 inputOnName : String
 inputOnName = imgPath ++ "input-on.png"
