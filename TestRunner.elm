@@ -4,9 +4,9 @@ import Mouse
 import Dict as D
 import Array as A
 import Graphics.Input as I
-import Model (..)
-import CircuitFunctions (..)
-import Controller (..)
+import Model.Model (..)
+import Model.CircuitFunctions (..)
+import Controller.Controller (..)
 
 -- Set up gates for level
 andGate : Gate

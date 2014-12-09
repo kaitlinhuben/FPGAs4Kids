@@ -1,13 +1,13 @@
 {--
     Contains all functions to render information
 --}
-module View where 
+module View.View where 
 
 import Debug (..)
 import Array as A
 import Dict as D
 import Graphics.Input as I
-import Model (..)
+import Model.Model (..)
 
 -- Display the entire page
 display : (Int, Int) -> GameState -> Element

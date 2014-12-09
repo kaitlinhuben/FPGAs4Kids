@@ -1,12 +1,12 @@
 {--
     Functions for creating and simulating circuits
 --}
-module CircuitFunctions where
+module Model.CircuitFunctions where
 
 import Dict as D
 import Array as A
 import Graphics.Input as I
-import Model (..)
+import Model.Model (..)
 
 -- Update state with network information
 updateGameState : GameState -> GameState

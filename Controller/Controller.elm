@@ -1,12 +1,12 @@
 {--
     Contains logic to run everything
 --}
-module Controller where
+module Controller.Controller where
 
 import Window
-import Model (..)
-import CircuitFunctions (..)
-import View (..)
+import Model.Model (..)
+import Model.CircuitFunctions (..)
+import View.View (..)
 
 -- Every time the page refreshes, gather needed inputs and update game state
 stepGame : GameInput -> GameState -> GameState

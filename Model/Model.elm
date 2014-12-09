@@ -1,7 +1,7 @@
 {--
     Stores data, types, and basic functions for gates, circuit, and game state
 --}
-module Model where
+module Model.Model where
 
 import Array as A
 import Dict as D
