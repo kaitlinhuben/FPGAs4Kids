@@ -159,6 +159,23 @@ inputBoolsPreDict =
   , ("input3", input3.status)
   ]
 
+-- lift all input signals into user input
+userInputs : Signal (D.Dict String Bool)
+userInputs = liftToDict <~ inputBool1.signal ~ inputBool2.signal ~ inputBool3.signal
+
+liftToDict : Bool -> Bool -> Bool -> D.Dict String Bool
+liftToDict bool1 bool2 bool3 = 
+  let
+    emptyDict = D.empty 
+    dict1 = D.insert "input1" bool1 emptyDict
+    dict2 = D.insert "input2" bool2 dict1
+  in 
+    D.insert "input3" bool3 dict2
+    
+-- lift mouse position and all input signals into UserInput
+userInput : Signal UserInput
+userInput = UserInput <~ Mouse.position ~ userInputs
+
 -- Put everything into initial GameState
 gameState : GameState
 gameState = {
@@ -171,23 +188,6 @@ gameState = {
   , userInputBools = D.fromList inputBoolsPreDict
   , inputSignals = D.fromList inputSignalsPreDict
   }
-
--- lift all input signals into user input
-userInputs : Signal (D.Dict String Bool)
-userInputs = liftToList <~ inputBool1.signal ~ inputBool2.signal ~ inputBool3.signal
-
-liftToList : Bool -> Bool -> Bool -> D.Dict String Bool
-liftToList bool1 bool2 bool3 = 
-  let
-    emptyDict = D.empty 
-    dict1 = D.insert "input1" bool1 emptyDict
-    dict2 = D.insert "input2" bool2 dict1
-  in 
-    D.insert "input3" bool3 dict2
-    
--- lift mouse position and all input signals into UserInput
-userInput : Signal UserInput
-userInput = UserInput <~ Mouse.position ~ userInputs
 
 
 -- run level

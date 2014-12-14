@@ -89,6 +89,8 @@ andImageName : String
 andImageName = imgPath ++ "and-schematic-filled.png"
 orImageName : String
 orImageName = imgPath ++ "or-schematic-filled.png"
+notImageName : String
+notImageName = imgPath ++ "not-schematic-filled.png"
 outputOnName : String
 outputOnName = imgPath ++ "output-on.png"
 outputOffName : String

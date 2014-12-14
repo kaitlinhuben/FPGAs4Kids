@@ -81,25 +81,44 @@ simGate gate state =
 -- Simulate a non-input, non-output gate (e.g. AND, OR, XOR, etc.)
 simNormalGate : Gate -> CircuitState -> Gate
 simNormalGate gate state = 
+    if | A.length gate.inputs == 1 -> simNotGate gate state
+       | otherwise ->
+        let
+            -- get the logic function for the gate (e.g. xor)
+            logicFunction = gate.logic
+
+            -- get the names of the inputs to this gate
+            inputNames = gate.inputs
+            input1Name = A.getOrFail 0 inputNames
+            input2Name = A.getOrFail 1 inputNames
+
+            -- get the actual gates that are inputs to this gate
+            input1Gate = D.getOrFail input1Name state
+            input2Gate = D.getOrFail input2Name state
+
+            -- get the status of the input gates
+            input1Status = input1Gate.status
+            input2Status = input2Gate.status
+
+            -- run the logic function on inputs
+            result = logicFunction input1Status input2Status
+        in
+            -- update the gate with its simulated result
+            { gate | status <- result } 
+
+-- NOT must be simulated separately because only one input
+simNotGate : Gate -> CircuitState -> Gate
+simNotGate gate state = 
     let
-        -- get the logic function for the gate (e.g. xor)
+        -- get logic function
         logicFunction = gate.logic
 
-        -- get the names of the inputs to this gate
         inputNames = gate.inputs
         input1Name = A.getOrFail 0 inputNames
-        input2Name = A.getOrFail 1 inputNames
-
-        -- get the actual gates that are inputs to this gate
         input1Gate = D.getOrFail input1Name state
-        input2Gate = D.getOrFail input2Name state
-
-        -- get the status of the input gates
         input1Status = input1Gate.status
-        input2Status = input2Gate.status
 
-        -- run the logic function on inputs
-        result = logicFunction input1Status input2Status
+        result = logicFunction input1Status input1Status
     in
         -- update the gate with its simulated result
         { gate | status <- result } 
