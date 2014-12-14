@@ -7,6 +7,7 @@ import Graphics.Input as I
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import Controller.Controller (..)
+import Controller.InstantiationHelper (..)
 
 -- Set up gates for level
 andGate : Gate
@@ -107,34 +108,17 @@ output = {
     , imgSize = (75,75)
   }
 
--- set up list of (String,Gate) to turn into dict
-gatesPreDict : [ (String,Gate) ]
-gatesPreDict = [
-    ("input1",input1)
-  , ("input2",input2)
-  , ("input3",input3)
-  , ("andGate",andGate)
-  , ("andGate2",andGate2)
-  , ("orGate",orGate)
-  , ("output",output)
+-- list of gates
+gates : [ Gate ]
+gates = [
+    input1
+  , input2
+  , input3
+  , andGate
+  , andGate2
+  , orGate
+  , output
   ] 
-
--- set up all network names
-netNames : [String]
-netNames = [
-    "input1"
-  , "input2"
-  , "input3"
-  , "andGate"
-  , "andGate2"
-  , "orGate"
-  , "output"
-  ]
-nonInputNetNames : [String]
-nonInputNetNames = ["andGate", "andGate2", "orGate", "output"]
-
-inputNetNames : [String]
-inputNetNames = ["input1","input2","input3"]
 
 -- set up all Inputs
 inputBool1 : I.Input Bool 
@@ -150,13 +134,6 @@ inputSignalsPreDict =
   [ ("input1", inputBool1)
   , ("input2", inputBool2)
   , ("input3", inputBool3)
-  ]
--- set up list of (String, Bool) to change to dict
-inputBoolsPreDict : [ (String,Bool) ]
-inputBoolsPreDict = 
-  [ ("input1", input1.status)
-  , ("input2", input2.status)
-  , ("input3", input3.status)
   ]
 
 -- lift all input signals into user input
@@ -178,16 +155,7 @@ userInput = UserInput <~ Mouse.position ~ userInputs
 
 -- Put everything into initial GameState
 gameState : GameState
-gameState = {
-    networkNames = netNames
-  , inputNames = inputNetNames
-  , nonInputNames = nonInputNetNames
-  , circuitState = D.fromList gatesPreDict
-  , gameMode = Schematic
-  , mousePos = (0,0)
-  , userInputBools = D.fromList inputBoolsPreDict
-  , inputSignals = D.fromList inputSignalsPreDict
-  }
+gameState = instantiateGameState gates inputSignalsPreDict
 
 
 -- run level
