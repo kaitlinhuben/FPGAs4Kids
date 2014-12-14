@@ -15,8 +15,8 @@ updateGameState gameState =
         -- first, update circuit with user inputs
         circuitState = gameState.circuitState
         inputNames = gameState.inputNames
-        userInputBools = gameState.userInputBools
-        circuitStateUpdatedInputs = updateInputs circuitState inputNames userInputBools
+        inputStatuses = gameState.inputStatuses
+        circuitStateUpdatedInputs = updateInputs circuitState inputNames inputStatuses
 
         -- next, simulate the circuit with updated user inputs
         netNames = gameState.networkNames
@@ -24,28 +24,28 @@ updateGameState gameState =
     in
         { gameState | circuitState <- simulatedCircuitState }
 
--- Update inputs with userInputBools
+-- Update inputs with inputStatuses
 updateInputs : CircuitState -> [String] -> D.Dict String Bool -> CircuitState
-updateInputs state inputNames userInputBools = 
+updateInputs state inputNames inputStatuses = 
     case inputNames of 
         -- if empty, return state as-is
         [] -> state
 
         -- if a single input, update that input
-        name :: [] -> updateStateWithInput state name userInputBools
+        name :: [] -> updateStateWithInput state name inputStatuses
             
         -- if more than single input, update that input and call on tail
         name :: tl ->
             let
-                updatedState = updateStateWithInput state name userInputBools
+                updatedState = updateStateWithInput state name inputStatuses
             in
-                updateInputs updatedState tl userInputBools
+                updateInputs updatedState tl inputStatuses
 
 -- Update circuit state with single input change
 updateStateWithInput : CircuitState -> String -> D.Dict String Bool -> CircuitState
-updateStateWithInput state name userInputBools = 
+updateStateWithInput state name inputStatuses = 
     let
-        inputStatus = D.getOrFail name userInputBools
+        inputStatus = D.getOrFail name inputStatuses
         inputGate = D.getOrFail name state
         updatedInputGate = { inputGate | status <- inputStatus }
         stateMinusInput = D.remove name state

@@ -17,7 +17,7 @@ stepGame gameInput gameState =
         inputs = ui.inputBools
 
         -- update game state with user's inputs
-        gameStateWithInputs = { gameState | userInputBools <- inputs}
+        gameStateWithInputs = { gameState | inputStatuses <- inputs}
 
         -- update game state by simulating everything
         updatedGameState = updateGameState gameStateWithInputs

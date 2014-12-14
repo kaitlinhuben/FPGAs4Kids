@@ -28,7 +28,7 @@ type GameState = {
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)
-  , userInputBools : D.Dict String Bool
+  , inputStatuses : D.Dict String Bool
   , inputSignals : D.Dict String (I.Input Bool)
   }
 
