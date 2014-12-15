@@ -52,7 +52,9 @@ type Gate = {
     , imgSize : (Int,Int)
   }
 
--- Logic functions for gates
+{------------------------------------------------------------------------------
+    Logic functions
+------------------------------------------------------------------------------}
 inputLogic : Bool -> Bool -> Bool
 inputLogic input mockInput = input
 
@@ -77,21 +79,29 @@ nandLogic input1 input2 = not (input1 && input2)
 norLogic : Bool -> Bool -> Bool
 norLogic input1 input2 = not (input1 || input2)
 
--- image names
+{------------------------------------------------------------------------------
+    Paths to images
+------------------------------------------------------------------------------}
 imgPath : String
 imgPath = "assets/img/"
 
 inputOnName : String
 inputOnName = imgPath ++ "input-on.png"
+
 inputOffName : String
 inputOffName = imgPath ++ "input-off.png"
+
 andImageName : String
 andImageName = imgPath ++ "and-schematic-filled.png"
+
 orImageName : String
 orImageName = imgPath ++ "or-schematic-filled.png"
+
 notImageName : String
 notImageName = imgPath ++ "not-schematic-filled.png"
+
 outputOnName : String
 outputOnName = imgPath ++ "output-on.png"
+
 outputOffName : String
 outputOffName = imgPath ++ "output-off.png"

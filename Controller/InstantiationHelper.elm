@@ -1,9 +1,16 @@
+{--
+    Helps instantiate a GameState by minimizing amount of parameters needed
+--}
 module Controller.InstantiationHelper where
 
 import Dict as D
 import Graphics.Input as I
 import Model.Model (..)
 
+{------------------------------------------------------------------------------
+    main function to instantiate a game state; utilizes helper functions
+    to extract all needed information
+------------------------------------------------------------------------------}
 instantiateGameState : [Gate] -> [ (String, I.Input Bool) ] -> GameState
 instantiateGameState gates inputSignalsPreDict = { 
       networkNames = extractGateNames gates
@@ -16,6 +23,10 @@ instantiateGameState gates inputSignalsPreDict = {
     , inputSignals = D.fromList inputSignalsPreDict
     }
 
+{------------------------------------------------------------------------------
+    helper extraction functions
+------------------------------------------------------------------------------}
+-- recursively extract gate names from list of gates
 extractGateNames : [Gate] -> [String]
 extractGateNames gates =
     case gates of 
@@ -23,6 +34,7 @@ extractGateNames gates =
         gate :: [] -> [gate.name]
         gate :: tl -> gate.name :: extractGateNames tl
 
+-- recursively extract input gate names from list of gates
 extractInputGateNames : [Gate] -> [String]
 extractInputGateNames gates = 
     case gates of 
@@ -34,6 +46,7 @@ extractInputGateNames gates =
             if | gate.gateType == InputGate -> gate.name :: extractInputGateNames tl
                | otherwise -> extractInputGateNames tl
 
+-- recursively extract non-input gate names from list of gates
 extractNonInputGateNames : [Gate] -> [String]
 extractNonInputGateNames gates = 
     case gates of 
@@ -45,6 +58,7 @@ extractNonInputGateNames gates =
             if | gate.gateType == InputGate -> extractNonInputGateNames tl
                | otherwise -> gate.name :: extractNonInputGateNames tl
 
+-- recursively build CircuitState (Dict String Gate) from list of gates
 extractCircuitState : [Gate] -> CircuitState -> CircuitState
 extractCircuitState gates cs = 
     case gates of 
@@ -56,6 +70,7 @@ extractCircuitState gates cs =
             in
                 D.insert gate.name gate updatedCS
 
+-- recursively build input statuses (Dict String Bool) from list of gates
 extractInputStatuses : [Gate] -> D.Dict String Bool -> D.Dict String Bool
 extractInputStatuses gates dict = 
     case gates of

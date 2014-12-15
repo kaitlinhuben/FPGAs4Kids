@@ -8,7 +8,10 @@ import Array as A
 import Graphics.Input as I
 import Model.Model (..)
 
--- Update state with network information
+{------------------------------------------------------------------------------
+    Update GameState by pulling statuses and updating/simulating circuit
+    (note that user inputs must have already been updated in GameState)
+------------------------------------------------------------------------------}
 updateGameState : GameState -> GameState
 updateGameState gameState = 
     let
@@ -24,7 +27,9 @@ updateGameState gameState =
     in
         { gameState | circuitState <- simulatedCircuitState }
 
--- Update inputs with inputStatuses
+{------------------------------------------------------------------------------
+    Recursively update CircuitState with new input statuses
+------------------------------------------------------------------------------}
 updateInputs : CircuitState -> [String] -> D.Dict String Bool -> CircuitState
 updateInputs state inputNames inputStatuses = 
     case inputNames of 
@@ -41,7 +46,7 @@ updateInputs state inputNames inputStatuses =
             in
                 updateInputs updatedState tl inputStatuses
 
--- Update circuit state with single input change
+-- helper function: update CircuitState with single input status
 updateStateWithInput : CircuitState -> String -> D.Dict String Bool -> CircuitState
 updateStateWithInput state name inputStatuses = 
     let
@@ -52,7 +57,9 @@ updateStateWithInput state name inputStatuses =
     in
         D.insert name updatedInputGate stateMinusInput
 
--- Update a single gate in the CircuitState
+{------------------------------------------------------------------------------
+    Update a gate in CircuitState by simulating it
+------------------------------------------------------------------------------}
 updateGate : String -> CircuitState -> CircuitState
 updateGate gateName state = 
     let 
@@ -71,7 +78,10 @@ updateGate gateName state =
         -- replace with (name, newGate) entry
         D.insert simulatedGate.name simGateWithImg stateMinusGate
 
--- Simulate a single gate: decide which simulation function to use
+{------------------------------------------------------------------------------
+    Gate simulation functions
+------------------------------------------------------------------------------}
+-- figure out which kind of gate we're updating
 simGate : Gate -> CircuitState -> Gate
 simGate gate state = 
     if | gate.gateType == NormalGate -> simNormalGate gate state

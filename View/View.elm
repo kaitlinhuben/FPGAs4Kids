@@ -9,7 +9,9 @@ import Dict as D
 import Graphics.Input as I
 import Model.Model (..)
 
--- Display the entire page
+{------------------------------------------------------------------------------
+    Display entire page
+------------------------------------------------------------------------------}
 display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
     let
@@ -17,7 +19,9 @@ display (w,h) gameState =
     in
         container w h middle circuitElement
     
--- Draw the circuit and put it in an element
+{------------------------------------------------------------------------------
+    Draw the whole circuit
+------------------------------------------------------------------------------}
 drawCircuit : (Int,Int) -> GameState -> Element
 drawCircuit (w,h) gs = 
   let 
@@ -29,7 +33,13 @@ drawCircuit (w,h) gs =
   in
     collage w h allForms
 
--- Recursively draw everything in names with drawSingle function
+{------------------------------------------------------------------------------
+    Generic recursive function that allows you to draw all of a certain thing
+    Takes as parameters:
+      - The function to draw a single item
+      - The List of names to iterate over
+      - The GameState to pass to the drawSingle function
+------------------------------------------------------------------------------}
 drawAll : (String->GameState->Form) -> [String] -> GameState -> [Form]
 drawAll drawSingle names gs =
   case names of 
@@ -61,7 +71,6 @@ drawNets name gs =
     lineColor1 = if | input1.status == True -> green
                     | otherwise -> black
     input1segment = traced (solid lineColor1) segment1
-
   in
     if | A.length gate.inputs == 1 -> input1segment
        | otherwise ->

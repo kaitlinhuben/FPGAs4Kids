@@ -64,6 +64,10 @@ inputBool = I.input inputGate.status
 inputSignalsPreDict : [ (String, I.Input Bool) ]
 inputSignalsPreDict = [ ("inputGate", inputBool) ]
 
+-- put everything into initial GameState
+gameState : GameState
+gameState = instantiateGameState gates inputSignalsPreDict
+
 -- lift input signals into user input
 userInputs : Signal (D.Dict String Bool)
 userInputs = liftToDict <~ inputBool.signal
@@ -75,9 +79,7 @@ liftToDict bool = D.insert "inputGate" bool D.empty
 userInput : Signal UserInput
 userInput = UserInput <~ Mouse.position ~ userInputs
 
--- put everything into initial GameState
-gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict
 
+-- Run main
 main : Signal Element
 main = mainDriver gameState userInput
