@@ -76,6 +76,9 @@ failedGetGate = {
 getGateName : Int -> A.Array String -> String
 getGateName index names = Maybe.withDefault "failedGetGate" (A.get index names)
 
+failedSignal : Signal.Channel Bool
+failedSignal = Signal.channel False
+
 {------------------------------------------------------------------------------
     Logic functions
 ------------------------------------------------------------------------------}
