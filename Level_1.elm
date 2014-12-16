@@ -4,6 +4,8 @@ import Mouse
 import Dict as D
 import Array as A
 import Graphics.Input as I
+import Signal
+import Graphics.Element (..)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import Controller.Controller (..)
@@ -53,15 +55,15 @@ outputGate = {
   }
 
 -- set up array of gates in correct order
-gates : [Gate]
+gates : List Gate
 gates = [inputGate, notGate, outputGate]
 
 -- set up all Inputs
-inputBool : I.Input Bool 
-inputBool = I.input inputGate.status
+inputBool : Signal.Channel Bool 
+inputBool = Signal.channel inputGate.status
 
 -- set up pre-dicts
-inputSignalsPreDict : [ (String, I.Input Bool) ]
+inputSignalsPreDict : List (String, Signal.Channel Bool)
 inputSignalsPreDict = [ ("inputGate", inputBool) ]
 
 -- put everything into initial GameState
@@ -70,14 +72,14 @@ gameState = instantiateGameState gates inputSignalsPreDict
 
 -- lift input signals into user input
 userInputs : Signal (D.Dict String Bool)
-userInputs = liftToDict <~ inputBool.signal
+userInputs = Signal.map liftToDict (Signal.subscribe inputBool)
 
 liftToDict : Bool -> D.Dict String Bool
 liftToDict bool = D.insert "inputGate" bool D.empty
 
 -- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
-userInput = UserInput <~ Mouse.position ~ userInputs
+userInput = Signal.map2 UserInput Mouse.position userInputs
 
 
 -- Run main
