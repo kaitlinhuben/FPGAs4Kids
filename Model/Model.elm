@@ -1,45 +1,47 @@
 {--
-    Stores data, types, and basic functions for gates, circuit, and game state
+    Stores type, type aliass, and basic functions for gates, circuit, and game state
 --}
 module Model.Model where
 
 import Array as A
 import Dict as D
-import Graphics.Input as I
+import List
+import Maybe
+import Signal
 
 {------------------------------------------------------------------------------
-    Game and circuit data and types
+    Game and circuit type and type aliases
 ------------------------------------------------------------------------------}
-type GameInput = {
+type alias GameInput = {
     timeDelta : Float
   , userInput : UserInput
   }
-type UserInput = {
+type alias UserInput = {
     mousePos : (Int, Int)
   , inputBools : D.Dict String Bool
   }
 
-data GameMode = Game | Schematic
+type GameMode = Game | Schematic
 
-type GameState = {
-    networkNames : [String]
-  , inputNames : [String]
-  , nonInputNames : [String]
+type alias GameState = {
+    networkNames : List String
+  , inputNames : List String
+  , nonInputNames : List String
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)
   , inputStatuses : D.Dict String Bool
-  , inputSignals : D.Dict String (I.Input Bool)
+  , inputSignals : D.Dict String (Signal.Channel Bool)
   }
 
-type CircuitState = D.Dict String Gate
+type alias CircuitState = D.Dict String Gate
 
 {------------------------------------------------------------------------------
-    Gate data, types, and functions
+    Gate type, type aliases, and functions
 ------------------------------------------------------------------------------}
-data GateType = InputGate | NormalGate | OutputGate
+type GateType = InputGate | NormalGate | OutputGate
 
-type Gate = {
+type alias Gate = {
       name : String
     , gateType : GateType
     , status : Bool
@@ -51,6 +53,28 @@ type Gate = {
     , imgOffName : String
     , imgSize : (Int,Int)
   }
+
+{------------------------------------------------------------------------------
+    Safe get methods and dummies
+------------------------------------------------------------------------------}
+getGate : String -> CircuitState -> Gate
+getGate name state = Maybe.withDefault failedGetGate (D.get name state)
+failedGetGate : Gate
+failedGetGate = {
+      name = "failedGetGate"
+    , gateType = InputGate
+    , status = False
+    , inputs = A.empty
+    , logic = inputLogic
+    , location = (0, 0)
+    , imgName = ""
+    , imgOnName = ""
+    , imgOffName = ""
+    , imgSize = (0,0)
+  }
+
+getGateName : Int -> A.Array String -> String
+getGateName index names = Maybe.withDefault "failedGetGate" (A.get index names)
 
 {------------------------------------------------------------------------------
     Logic functions

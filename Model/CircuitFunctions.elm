@@ -5,7 +5,8 @@ module Model.CircuitFunctions where
 
 import Dict as D
 import Array as A
-import Graphics.Input as I
+import List
+import Maybe
 import Model.Model (..)
 
 {------------------------------------------------------------------------------
@@ -23,14 +24,14 @@ updateGameState gameState =
 
         -- next, simulate the circuit with updated user inputs
         netNames = gameState.networkNames
-        simulatedCircuitState = foldl (updateGate) circuitStateUpdatedInputs netNames
+        simulatedCircuitState = List.foldl (updateGate) circuitStateUpdatedInputs netNames
     in
         { gameState | circuitState <- simulatedCircuitState }
 
 {------------------------------------------------------------------------------
     Recursively update CircuitState with new input statuses
 ------------------------------------------------------------------------------}
-updateInputs : CircuitState -> [String] -> D.Dict String Bool -> CircuitState
+updateInputs : CircuitState -> List String -> D.Dict String Bool -> CircuitState
 updateInputs state inputNames inputStatuses = 
     case inputNames of 
         -- if empty, return state as-is
@@ -50,8 +51,8 @@ updateInputs state inputNames inputStatuses =
 updateStateWithInput : CircuitState -> String -> D.Dict String Bool -> CircuitState
 updateStateWithInput state name inputStatuses = 
     let
-        inputStatus = D.getOrFail name inputStatuses
-        inputGate = D.getOrFail name state
+        inputStatus = Maybe.withDefault False (D.get name inputStatuses)
+        inputGate = getGate name state
         updatedInputGate = { inputGate | status <- inputStatus }
         stateMinusInput = D.remove name state
     in
@@ -64,7 +65,7 @@ updateGate : String -> CircuitState -> CircuitState
 updateGate gateName state = 
     let 
         -- get the gate to simulate
-        gateToSim = D.getOrFail gateName state
+        gateToSim = getGate gateName state
         -- simulate the gate
         simulatedGate = simGate gateToSim state
         -- update image for gate
@@ -99,12 +100,12 @@ simNormalGate gate state =
 
             -- get the names of the inputs to this gate
             inputNames = gate.inputs
-            input1Name = A.getOrFail 0 inputNames
-            input2Name = A.getOrFail 1 inputNames
+            input1Name = getGateName 0 inputNames
+            input2Name = getGateName 1 inputNames
 
             -- get the actual gates that are inputs to this gate
-            input1Gate = D.getOrFail input1Name state
-            input2Gate = D.getOrFail input2Name state
+            input1Gate = getGate input1Name state
+            input2Gate = getGate input2Name state
 
             -- get the status of the input gates
             input1Status = input1Gate.status
@@ -124,8 +125,8 @@ simNotGate gate state =
         logicFunction = gate.logic
 
         inputNames = gate.inputs
-        input1Name = A.getOrFail 0 inputNames
-        input1Gate = D.getOrFail input1Name state
+        input1Name = getGateName 0 inputNames
+        input1Gate = getGate input1Name state
         input1Status = input1Gate.status
 
         result = logicFunction input1Status input1Status
@@ -138,8 +139,8 @@ simOutputGate : Gate -> CircuitState -> Gate
 simOutputGate gate state = 
     let
         inputNames = gate.inputs
-        inputName = A.getOrFail 0 inputNames
-        inputGate = D.getOrFail inputName state
+        inputName = getGateName 0 inputNames
+        inputGate = getGate inputName state
         inputStatus = inputGate.status
     in
         { gate | status <- inputStatus }
