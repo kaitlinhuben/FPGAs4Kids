@@ -3,10 +3,10 @@
 --}
 module Model.CircuitFunctions where
 
-import Dict as D
-import Array as A
+import Dict
+import Array
 import List
-import Maybe
+import Maybe (withDefault)
 import Model.Model (..)
 
 {------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ updateGameState gameState =
 {------------------------------------------------------------------------------
     Recursively update CircuitState with new input statuses
 ------------------------------------------------------------------------------}
-updateInputs : CircuitState -> List String -> D.Dict String Bool -> CircuitState
+updateInputs : CircuitState -> List String -> InputsState -> CircuitState
 updateInputs state inputNames inputStatuses = 
     case inputNames of 
         -- if empty, return state as-is
@@ -48,15 +48,15 @@ updateInputs state inputNames inputStatuses =
                 updateInputs updatedState tl inputStatuses
 
 -- helper function: update CircuitState with single input status
-updateStateWithInput : CircuitState -> String -> D.Dict String Bool -> CircuitState
+updateStateWithInput : CircuitState -> String -> InputsState -> CircuitState
 updateStateWithInput state name inputStatuses = 
     let
-        inputStatus = Maybe.withDefault False (D.get name inputStatuses)
+        inputStatus = withDefault False (Dict.get name inputStatuses)
         inputGate = getGate name state
         updatedInputGate = { inputGate | status <- inputStatus }
-        stateMinusInput = D.remove name state
+        stateMinusInput = Dict.remove name state
     in
-        D.insert name updatedInputGate stateMinusInput
+        Dict.insert name updatedInputGate stateMinusInput
 
 {------------------------------------------------------------------------------
     Update a gate in CircuitState by simulating it
@@ -74,10 +74,10 @@ updateGate gateName state =
                             | otherwise -> 
                                 { simulatedGate | imgName <- simulatedGate.imgOffName }
         -- take the old (name,gate) entry out
-        stateMinusGate = D.remove gateName state
+        stateMinusGate = Dict.remove gateName state
     in
         -- replace with (name, newGate) entry
-        D.insert simulatedGate.name simGateWithImg stateMinusGate
+        Dict.insert simulatedGate.name simGateWithImg stateMinusGate
 
 {------------------------------------------------------------------------------
     Gate simulation functions
@@ -92,7 +92,7 @@ simGate gate state =
 -- Simulate a non-input, non-output gate (e.g. AND, OR, XOR, etc.)
 simNormalGate : Gate -> CircuitState -> Gate
 simNormalGate gate state = 
-    if | A.length gate.inputs == 1 -> simNotGate gate state
+    if | Array.length gate.inputs == 1 -> simNotGate gate state
        | otherwise ->
         let
             -- get the logic function for the gate (e.g. xor)

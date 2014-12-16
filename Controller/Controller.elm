@@ -4,9 +4,9 @@
 module Controller.Controller where
 
 import Window
-import Signal 
-import Time (..)
-import Graphics.Element (..)
+import Signal
+import Time (fps)
+import Graphics.Element (Element)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import View.View (..)

@@ -3,26 +3,25 @@
 --}
 module Controller.InstantiationHelper where
 
-import Dict as D
+import Dict
 import List ((::))
-import Signal
-import Graphics.Input as I
+import Signal (Channel)
 import Model.Model (..)
 
 {------------------------------------------------------------------------------
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-instantiateGameState : List Gate -> List (String, Signal.Channel Bool) -> GameState
+instantiateGameState : List Gate -> List (String, Channel Bool) -> GameState
 instantiateGameState gates inputChannelsPreDict = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
-    , circuitState = extractCircuitState gates D.empty
+    , circuitState = extractCircuitState gates Dict.empty
     , gameMode = Schematic
     , mousePos = (0,0)
-    , inputStatuses = extractInputStatuses gates D.empty
-    , inputChannels = D.fromList inputChannelsPreDict
+    , inputStatuses = extractInputStatuses gates Dict.empty
+    , inputChannels = Dict.fromList inputChannelsPreDict
     }
 
 {------------------------------------------------------------------------------
@@ -65,25 +64,25 @@ extractCircuitState : List Gate -> CircuitState -> CircuitState
 extractCircuitState gates cs = 
     case gates of 
         [] -> cs
-        gate :: [] -> D.insert gate.name gate cs
+        gate :: [] -> Dict.insert gate.name gate cs
         gate :: tl ->
             let
                 updatedCS = extractCircuitState tl cs
             in
-                D.insert gate.name gate updatedCS
+                Dict.insert gate.name gate updatedCS
 
 -- recursively build input statuses (Dict String Bool) from list of gates
-extractInputStatuses : List Gate -> D.Dict String Bool -> D.Dict String Bool
+extractInputStatuses : List Gate -> InputsState -> InputsState
 extractInputStatuses gates dict = 
     case gates of
         [] -> dict
         gate :: [] -> 
-            if | gate.gateType == InputGate -> D.insert gate.name gate.status dict
+            if | gate.gateType == InputGate -> Dict.insert gate.name gate.status dict
                | otherwise -> dict
         gate :: tl ->
             let 
                 updatedDict = extractInputStatuses tl dict
             in 
-                if | gate.gateType == InputGate -> D.insert gate.name gate.status updatedDict
+                if | gate.gateType == InputGate -> Dict.insert gate.name gate.status updatedDict
                    | otherwise -> updatedDict
     

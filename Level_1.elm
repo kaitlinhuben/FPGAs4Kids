@@ -1,11 +1,10 @@
 module Level_1 where
 
 import Mouse
-import Dict as D
-import Array as A
-import Graphics.Input as I
-import Signal
-import Graphics.Element (..)
+import Array
+import Dict
+import Signal (Signal, Channel, channel, subscribe, map, map2)
+import Graphics.Element (Element)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import Controller.Controller (..)
@@ -17,7 +16,7 @@ inputGate = {
       name = "inputGate"
     , gateType = InputGate
     , status = True
-    , inputs = A.empty
+    , inputs = Array.empty
     , logic = inputLogic
     , location = (-100,0)
     , imgName = inputOnName
@@ -31,7 +30,7 @@ notGate = {
       name = "notGate"
     , gateType = NormalGate
     , status = False
-    , inputs = A.fromList ["inputGate"]
+    , inputs = Array.fromList ["inputGate"]
     , logic = notLogic
     , location = (0,0)
     , imgName = notImageName
@@ -45,7 +44,7 @@ outputGate = {
       name = "outputGate"
     , gateType = OutputGate
     , status = False
-    , inputs = A.fromList ["notGate"]
+    , inputs = Array.fromList ["notGate"]
     , logic = inputLogic
     , location = (100,0)
     , imgName = outputOffName
@@ -59,11 +58,11 @@ gates : List Gate
 gates = [inputGate, notGate, outputGate]
 
 -- set up all Inputs
-inputChannel : Signal.Channel Bool 
-inputChannel = Signal.channel inputGate.status
+inputChannel : Channel Bool 
+inputChannel = channel inputGate.status
 
 -- set up pre-dicts
-inputSignalsPreDict : List (String, Signal.Channel Bool)
+inputSignalsPreDict : List (String, Channel Bool)
 inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 
 -- put everything into initial GameState
@@ -71,15 +70,15 @@ gameState : GameState
 gameState = instantiateGameState gates inputSignalsPreDict
 
 -- lift input signals into user input
-userInputs : Signal (D.Dict String Bool)
-userInputs = Signal.map liftToDict (Signal.subscribe inputChannel)
+userInputs : Signal (InputsState)
+userInputs = map liftToDict (subscribe inputChannel)
 
-liftToDict : Bool -> D.Dict String Bool
-liftToDict bool = D.insert "inputGate" bool D.empty
+liftToDict : Bool -> InputsState
+liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
 -- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
-userInput = Signal.map2 UserInput Mouse.position userInputs
+userInput = map2 UserInput Mouse.position userInputs
 
 
 -- Run main

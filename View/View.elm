@@ -3,16 +3,13 @@
 --}
 module View.View where 
 
-import Debug (..)
-import Array as A
-import Dict as D
+import Array
+import Dict
 import List ((::))
-import Graphics.Element (..)
-import Graphics.Collage (..)
-import Graphics.Input as I
+import Graphics.Element (Element, container, middle, image)
+import Graphics.Collage (Form, collage, segment, traced, solid, toForm, move)
 import Color (green, black, lightGrey)
-import Maybe
-import Signal
+import Maybe (withDefault)
 import Model.Model (..)
 
 {------------------------------------------------------------------------------
@@ -78,7 +75,7 @@ drawNets name gs =
                     | otherwise -> black
     input1segment = traced (solid lineColor1) segment1
   in
-    if | A.length gate.inputs == 1 -> input1segment
+    if | Array.length gate.inputs == 1 -> input1segment
        | otherwise ->
           -- if there's a second input, draw that too
           let
@@ -111,7 +108,7 @@ drawInputGate name gs =
     gate = getGate name gs.circuitState
 
     -- get the input channel associated with the gate
-    gateInput = Maybe.withDefault failedSignal (D.get name gs.inputChannels)
+    gateInput = withDefault failedSignal (Dict.get name gs.inputChannels)
     
     -- get the size and set up the image
     (w,h) = gate.imgSize

@@ -1,11 +1,10 @@
 module TestRunner where
 
 import Mouse
-import Dict as D
-import Array as A
-import Graphics.Input as I
-import Signal
-import Graphics.Element (..)
+import Array
+import Dict
+import Signal (Signal, Channel, channel, subscribe, map2, map3)
+import Graphics.Element (Element)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import Controller.Controller (..)
@@ -17,7 +16,7 @@ andGate = {
       name = "andGate"
     , gateType = NormalGate
     , status = False
-    , inputs = A.fromList ["input1", "input2"]
+    , inputs = Array.fromList ["input1", "input2"]
     , logic = andLogic
     , location = (-100,50)
     , imgName = andImageName
@@ -31,7 +30,7 @@ andGate2 = {
       name = "andGate2"
     , gateType = NormalGate
     , status = True
-    , inputs = A.fromList ["input3", "andGate"]
+    , inputs = Array.fromList ["input3", "andGate"]
     , logic = andLogic
     , location = (0,-50)
     , imgName = andImageName
@@ -45,7 +44,7 @@ orGate = {
       name = "orGate"
     , gateType = NormalGate
     , status = False
-    , inputs = A.fromList ["andGate", "andGate2"]
+    , inputs = Array.fromList ["andGate", "andGate2"]
     , logic = orLogic
     , location = (100,0)
     , imgName = orImageName
@@ -59,7 +58,7 @@ input1 = {
       name = "input1"
     , gateType = InputGate
     , status = True
-    , inputs = A.empty
+    , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,100)
     , imgName = inputOnName
@@ -73,7 +72,7 @@ input2 = {
       name = "input2"
     , gateType = InputGate
     , status = True
-    , inputs = A.empty
+    , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,0)
     , imgName = inputOnName
@@ -87,7 +86,7 @@ input3 = {
       name = "input3"
     , gateType = InputGate
     , status = False
-    , inputs = A.empty
+    , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,-100)
     , imgName = inputOffName
@@ -101,7 +100,7 @@ output = {
       name = "output"
     , gateType = OutputGate
     , status = False
-    , inputs = A.fromList ["orGate"]
+    , inputs = Array.fromList ["orGate"]
     , logic = inputLogic
     , location = (175,0)
     , imgName = outputOffName
@@ -123,15 +122,15 @@ gates = [
   ] 
 
 -- set up all Inputs
-inputChannel1 : Signal.Channel Bool 
-inputChannel1 = Signal.channel input1.status
-inputChannel2 : Signal.Channel Bool 
-inputChannel2 = Signal.channel input2.status
-inputChannel3 : Signal.Channel Bool 
-inputChannel3 = Signal.channel input3.status
+inputChannel1 : Channel Bool 
+inputChannel1 = channel input1.status
+inputChannel2 : Channel Bool 
+inputChannel2 = channel input2.status
+inputChannel3 : Channel Bool 
+inputChannel3 = channel input3.status
 
 -- set up list of (String, Input Bool) to change to dict
-inputChannelsPreDict : List (String, Signal.Channel Bool) 
+inputChannelsPreDict : List (String, Channel Bool) 
 inputChannelsPreDict = 
   [ ("input1", inputChannel1)
   , ("input2", inputChannel2)
@@ -139,21 +138,21 @@ inputChannelsPreDict =
   ]
 
 -- lift all input signals into user input
-userInputs : Signal (D.Dict String Bool)
-userInputs = Signal.map3 liftToDict (Signal.subscribe inputChannel1) (Signal.subscribe inputChannel2) (Signal.subscribe inputChannel3)
+userInputs : Signal (InputsState)
+userInputs = map3 liftToDict (subscribe inputChannel1) (subscribe inputChannel2) (subscribe inputChannel3)
 
-liftToDict : Bool -> Bool -> Bool -> D.Dict String Bool
+liftToDict : Bool -> Bool -> Bool -> InputsState
 liftToDict bool1 bool2 bool3 = 
   let
-    emptyDict = D.empty 
-    dict1 = D.insert "input1" bool1 emptyDict
-    dict2 = D.insert "input2" bool2 dict1
+    emptyDict = Dict.empty 
+    dict1 = Dict.insert "input1" bool1 emptyDict
+    dict2 = Dict.insert "input2" bool2 dict1
   in 
-    D.insert "input3" bool3 dict2
+    Dict.insert "input3" bool3 dict2
     
 -- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
-userInput = Signal.map2 UserInput Mouse.position userInputs
+userInput = map2 UserInput Mouse.position userInputs
 
 -- Put everything into initial GameState
 gameState : GameState

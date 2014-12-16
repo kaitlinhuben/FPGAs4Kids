@@ -3,11 +3,10 @@
 --}
 module Model.Model where
 
-import Array as A
-import Dict as D
-import List
-import Maybe
-import Signal
+import Array
+import Dict
+import Maybe (withDefault)
+import Signal (Channel, channel)
 
 {------------------------------------------------------------------------------
     Game and circuit type and type aliases
@@ -18,7 +17,7 @@ type alias GameInput = {
   }
 type alias UserInput = {
     mousePos : (Int, Int)
-  , inputBools : D.Dict String Bool
+  , inputBools : Dict.Dict String Bool
   }
 
 type GameMode = Game | Schematic
@@ -30,11 +29,13 @@ type alias GameState = {
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)
-  , inputStatuses : D.Dict String Bool
-  , inputChannels : D.Dict String (Signal.Channel Bool)
+  , inputStatuses : InputsState
+  , inputChannels : Dict.Dict String (Channel Bool)
   }
 
-type alias CircuitState = D.Dict String Gate
+type alias CircuitState = Dict.Dict String Gate
+
+type alias InputsState = Dict.Dict String Bool
 
 {------------------------------------------------------------------------------
     Gate type, type aliases, and functions
@@ -45,7 +46,7 @@ type alias Gate = {
       name : String
     , gateType : GateType
     , status : Bool
-    , inputs : A.Array String
+    , inputs : Array.Array String
     , logic : Bool -> Bool -> Bool
     , location : (Float, Float)
     , imgName : String
@@ -58,13 +59,13 @@ type alias Gate = {
     Safe get methods and dummies
 ------------------------------------------------------------------------------}
 getGate : String -> CircuitState -> Gate
-getGate name state = Maybe.withDefault failedGetGate (D.get name state)
+getGate name state = withDefault failedGetGate (Dict.get name state)
 failedGetGate : Gate
 failedGetGate = {
       name = "failedGetGate"
     , gateType = InputGate
     , status = False
-    , inputs = A.empty
+    , inputs = Array.empty
     , logic = inputLogic
     , location = (0, 0)
     , imgName = ""
@@ -73,11 +74,11 @@ failedGetGate = {
     , imgSize = (0,0)
   }
 
-getGateName : Int -> A.Array String -> String
-getGateName index names = Maybe.withDefault "failedGetGate" (A.get index names)
+getGateName : Int -> Array.Array String -> String
+getGateName index names = withDefault "failedGetGate" (Array.get index names)
 
-failedSignal : Signal.Channel Bool
-failedSignal = Signal.channel False
+failedSignal : Channel Bool
+failedSignal = channel False
 
 {------------------------------------------------------------------------------
     Logic functions
