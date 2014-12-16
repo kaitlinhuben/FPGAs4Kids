@@ -59,12 +59,12 @@ gates : List Gate
 gates = [inputGate, notGate, outputGate]
 
 -- set up all Inputs
-inputBool : Signal.Channel Bool 
-inputBool = Signal.channel inputGate.status
+inputChannel : Signal.Channel Bool 
+inputChannel = Signal.channel inputGate.status
 
 -- set up pre-dicts
 inputSignalsPreDict : List (String, Signal.Channel Bool)
-inputSignalsPreDict = [ ("inputGate", inputBool) ]
+inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 
 -- put everything into initial GameState
 gameState : GameState
@@ -72,7 +72,7 @@ gameState = instantiateGameState gates inputSignalsPreDict
 
 -- lift input signals into user input
 userInputs : Signal (D.Dict String Bool)
-userInputs = Signal.map liftToDict (Signal.subscribe inputBool)
+userInputs = Signal.map liftToDict (Signal.subscribe inputChannel)
 
 liftToDict : Bool -> D.Dict String Bool
 liftToDict bool = D.insert "inputGate" bool D.empty

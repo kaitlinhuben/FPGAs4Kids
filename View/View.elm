@@ -111,7 +111,7 @@ drawInputGate name gs =
     gate = getGate name gs.circuitState
 
     -- get the input channel associated with the gate
-    gateInput = Maybe.withDefault failedSignal (D.get name gs.inputSignals)
+    gateInput = Maybe.withDefault failedSignal (D.get name gs.inputChannels)
     
     -- get the size and set up the image
     (w,h) = gate.imgSize

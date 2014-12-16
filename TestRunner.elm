@@ -123,24 +123,24 @@ gates = [
   ] 
 
 -- set up all Inputs
-inputBool1 : Signal.Channel Bool 
-inputBool1 = Signal.channel input1.status
-inputBool2 : Signal.Channel Bool 
-inputBool2 = Signal.channel input2.status
-inputBool3 : Signal.Channel Bool 
-inputBool3 = Signal.channel input3.status
+inputChannel1 : Signal.Channel Bool 
+inputChannel1 = Signal.channel input1.status
+inputChannel2 : Signal.Channel Bool 
+inputChannel2 = Signal.channel input2.status
+inputChannel3 : Signal.Channel Bool 
+inputChannel3 = Signal.channel input3.status
 
 -- set up list of (String, Input Bool) to change to dict
-inputSignalsPreDict : List (String, Signal.Channel Bool) 
-inputSignalsPreDict = 
-  [ ("input1", inputBool1)
-  , ("input2", inputBool2)
-  , ("input3", inputBool3)
+inputChannelsPreDict : List (String, Signal.Channel Bool) 
+inputChannelsPreDict = 
+  [ ("input1", inputChannel1)
+  , ("input2", inputChannel2)
+  , ("input3", inputChannel3)
   ]
 
 -- lift all input signals into user input
 userInputs : Signal (D.Dict String Bool)
-userInputs = Signal.map3 liftToDict (Signal.subscribe inputBool1) (Signal.subscribe inputBool2) (Signal.subscribe inputBool3)
+userInputs = Signal.map3 liftToDict (Signal.subscribe inputChannel1) (Signal.subscribe inputChannel2) (Signal.subscribe inputChannel3)
 
 liftToDict : Bool -> Bool -> Bool -> D.Dict String Bool
 liftToDict bool1 bool2 bool3 = 
@@ -157,7 +157,7 @@ userInput = Signal.map2 UserInput Mouse.position userInputs
 
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict
+gameState = instantiateGameState gates inputChannelsPreDict
 
 
 -- run level

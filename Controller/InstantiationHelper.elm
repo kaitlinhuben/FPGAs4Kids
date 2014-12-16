@@ -14,7 +14,7 @@ import Model.Model (..)
     to extract all needed information
 ------------------------------------------------------------------------------}
 instantiateGameState : List Gate -> List (String, Signal.Channel Bool) -> GameState
-instantiateGameState gates inputSignalsPreDict = { 
+instantiateGameState gates inputChannelsPreDict = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -22,7 +22,7 @@ instantiateGameState gates inputSignalsPreDict = {
     , gameMode = Schematic
     , mousePos = (0,0)
     , inputStatuses = extractInputStatuses gates D.empty
-    , inputSignals = D.fromList inputSignalsPreDict
+    , inputChannels = D.fromList inputChannelsPreDict
     }
 
 {------------------------------------------------------------------------------
