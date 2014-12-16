@@ -4,6 +4,8 @@ import Mouse
 import Dict as D
 import Array as A
 import Graphics.Input as I
+import Signal
+import Graphics.Element (..)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
 import Controller.Controller (..)
@@ -109,7 +111,7 @@ output = {
   }
 
 -- list of gates
-gates : [ Gate ]
+gates : List Gate
 gates = [
     input1
   , input2
@@ -121,15 +123,15 @@ gates = [
   ] 
 
 -- set up all Inputs
-inputBool1 : I.Input Bool 
-inputBool1 = I.input input1.status
-inputBool2 : I.Input Bool 
-inputBool2 = I.input input2.status
-inputBool3 : I.Input Bool 
-inputBool3 = I.input input3.status
+inputBool1 : Signal.Channel Bool 
+inputBool1 = Signal.channel input1.status
+inputBool2 : Signal.Channel Bool 
+inputBool2 = Signal.channel input2.status
+inputBool3 : Signal.Channel Bool 
+inputBool3 = Signal.channel input3.status
 
 -- set up list of (String, Input Bool) to change to dict
-inputSignalsPreDict : [ (String, I.Input Bool) ]
+inputSignalsPreDict : List (String, Signal.Channel Bool) 
 inputSignalsPreDict = 
   [ ("input1", inputBool1)
   , ("input2", inputBool2)
@@ -138,7 +140,7 @@ inputSignalsPreDict =
 
 -- lift all input signals into user input
 userInputs : Signal (D.Dict String Bool)
-userInputs = liftToDict <~ inputBool1.signal ~ inputBool2.signal ~ inputBool3.signal
+userInputs = Signal.map3 liftToDict (Signal.subscribe inputBool1) (Signal.subscribe inputBool2) (Signal.subscribe inputBool3)
 
 liftToDict : Bool -> Bool -> Bool -> D.Dict String Bool
 liftToDict bool1 bool2 bool3 = 
@@ -151,7 +153,7 @@ liftToDict bool1 bool2 bool3 =
     
 -- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
-userInput = UserInput <~ Mouse.position ~ userInputs
+userInput = Signal.map2 UserInput Mouse.position userInputs
 
 -- Put everything into initial GameState
 gameState : GameState
