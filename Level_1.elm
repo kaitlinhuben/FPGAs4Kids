@@ -6,7 +6,6 @@ import Dict
 import Signal (Signal, Channel, channel, subscribe, map, map2)
 import Graphics.Element (Element)
 import Model.Model (..)
-import Model.CircuitFunctions (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 

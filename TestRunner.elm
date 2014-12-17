@@ -6,7 +6,6 @@ import Dict
 import Signal (Signal, Channel, channel, subscribe, map2, map3)
 import Graphics.Element (Element)
 import Model.Model (..)
-import Model.CircuitFunctions (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 
@@ -137,6 +136,10 @@ inputChannelsPreDict =
   , ("input3", inputChannel3)
   ]
 
+-- Put everything into initial GameState
+gameState : GameState
+gameState = instantiateGameState gates inputChannelsPreDict
+
 -- lift all input signals into user input
 userInputs : Signal (InputsState)
 userInputs = map3 liftToDict (subscribe inputChannel1) (subscribe inputChannel2) (subscribe inputChannel3)
@@ -153,10 +156,6 @@ liftToDict bool1 bool2 bool3 =
 -- lift mouse position and all input signals into UserInput
 userInput : Signal UserInput
 userInput = map2 UserInput Mouse.position userInputs
-
--- Put everything into initial GameState
-gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict
 
 
 -- run level
