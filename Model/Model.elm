@@ -77,8 +77,8 @@ failedGetGate = {
 getGateName : Int -> Array.Array String -> String
 getGateName index names = withDefault "failedGetGate" (Array.get index names)
 
-failedSignal : Channel Bool
-failedSignal = channel False
+failedChannel : Channel Bool
+failedChannel = channel False
 
 {------------------------------------------------------------------------------
     Logic functions

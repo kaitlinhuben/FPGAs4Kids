@@ -6,11 +6,16 @@ module View.View where
 import Array
 import Dict
 import List ((::))
-import Graphics.Element (Element, container, middle, image)
+import Graphics.Element (Element, container, middle, image, color, link)
 import Graphics.Collage (Form, collage, segment, traced, solid, toForm, move)
+import Graphics.Input (clickable)
 import Color (green, black, lightGrey)
 import Maybe (withDefault)
+import Signal (send)
 import Model.Model (..)
+
+-- don't technically need asText, but clickable doesn't work without it!
+import Text (asText)
 
 {------------------------------------------------------------------------------
     Display entire page
@@ -108,7 +113,7 @@ drawInputGate name gs =
     gate = getGate name gs.circuitState
 
     -- get the input channel associated with the gate
-    gateInput = withDefault failedSignal (Dict.get name gs.inputChannels)
+    gateChannel = withDefault failedChannel (Dict.get name gs.inputChannels)
     
     -- get the size and set up the image
     (w,h) = gate.imgSize
@@ -121,7 +126,7 @@ drawInputGate name gs =
                      | otherwise -> True
 
     -- make the image a clickable element
-    {--gateElement = I.clickable (Signal.send gateInput updateValue) gateImage
+    gateElement = clickable (send gateChannel updateValue) gateImage
 
     -- fill the background of the image with status color
     fillColor = if | gate.status == True -> green
@@ -129,6 +134,6 @@ drawInputGate name gs =
     coloredElement = color fillColor gateElement
 
     -- make the clickable image a link so cursor switches to pointer
-    linkedElement = link "#" coloredElement--}
+    linkedElement = link "#" coloredElement
   in 
-    move gate.location {--(toForm linkedElement)--} (toForm gateImage)
+    move gate.location (toForm linkedElement)
