@@ -17,6 +17,7 @@ type alias GameInput = {
   }
 type alias UserInput = {
     mousePos : (Int, Int)
+  , mouseClicks : Int
   , inputBools : Dict.Dict String Bool
   }
 

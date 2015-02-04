@@ -25,10 +25,12 @@ stepGame gameInput gameState =
         -- update game state by simulating everything
         updatedGameState = updateGameState gameStateWithInputs
 
-        -- grab the new mouse position
+        -- grab the new mouse position and clicks
         newMousePos = ui.mousePos
+        newMouseClicks = ui.mouseClicks
     in 
-        { updatedGameState | mousePos <- newMousePos }
+        { updatedGameState | mousePos <- newMousePos
+                            ,clicks <- newMouseClicks }
 
 -- For physics
 delta : Signal Float

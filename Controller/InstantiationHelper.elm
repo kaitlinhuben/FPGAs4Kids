@@ -5,7 +5,8 @@ module Controller.InstantiationHelper where
 
 import Dict
 import List ((::))
-import Signal (Channel)
+import Signal (Channel, map)
+import Mouse (clicks)
 import Model.Model (..)
 
 {------------------------------------------------------------------------------

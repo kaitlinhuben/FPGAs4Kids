@@ -3,7 +3,7 @@ module Level_1 where
 import Mouse
 import Array
 import Dict
-import Signal (Signal, Channel, channel, subscribe, map, map2)
+import Signal (Signal, Channel, channel, subscribe, map, map2, map3, foldp)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
@@ -75,9 +75,12 @@ userInputs = map liftToDict (subscribe inputChannel)
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
--- lift mouse position and all input signals into UserInput
+-- count clicks
+countClick: Signal Int 
+countClick = foldp (\clk count -> count + 1) 0 Mouse.clicks
+-- lift mouse position/clicks and all input signals into UserInput
 userInput : Signal UserInput
-userInput = map2 UserInput Mouse.position userInputs
+userInput = map3 UserInput Mouse.position countClick userInputs
 
 
 -- Run main
