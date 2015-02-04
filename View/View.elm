@@ -6,7 +6,7 @@ module View.View where
 import Array
 import Dict
 import List ((::))
-import Graphics.Element (Element, container, middle, image, color, link)
+import Graphics.Element (..)
 import Graphics.Collage (Form, collage, segment, traced, solid, toForm, move)
 import Graphics.Input (clickable)
 import Color (green, black, lightGrey)
@@ -15,7 +15,7 @@ import Signal (send)
 import Model.Model (..)
 
 -- don't technically need asText, but clickable doesn't work without it!
-import Text (asText)
+import Text (asText, plainText)
 
 {------------------------------------------------------------------------------
     Display entire page
@@ -23,9 +23,13 @@ import Text (asText)
 display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
     let
-        circuitElement = drawCircuit (w,h) gameState
+        circuitWidth = w
+        circuitHeight = h - 50
+        circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
+        circuitContainer = container w h middle circuitElement
+        blahText = asText gameState.clicks
     in
-        container w h middle circuitElement
+        flow down [blahText, circuitContainer]
     
 {------------------------------------------------------------------------------
     Draw the whole circuit

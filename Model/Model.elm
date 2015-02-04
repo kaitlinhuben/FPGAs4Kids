@@ -31,6 +31,7 @@ type alias GameState = {
   , mousePos : (Int, Int)
   , inputStatuses : InputsState
   , inputChannels : Dict.Dict String (Channel Bool)
+  , clicks : Int
   }
 
 type alias CircuitState = Dict.Dict String Gate
