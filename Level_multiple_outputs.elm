@@ -38,6 +38,20 @@ andGate2 = {
     , imgSize = (75,75)
   }
 
+notGate : Gate
+notGate = {
+      name = "notGate"
+    , gateType = NormalGate
+    , status = False
+    , inputs = Array.fromList ["input3"]
+    , logic = notLogic
+    , location = (0,-125)
+    , imgName = notImageName
+    , imgOnName = notImageName
+    , imgOffName = notImageName
+    , imgSize = (75,75)
+  }
+
 orGate : Gate
 orGate = {
       name = "orGate"
@@ -56,7 +70,7 @@ input1 : Gate
 input1 = {
       name = "input1"
     , gateType = InputGate
-    , status = True
+    , status = False
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,100)
@@ -94,14 +108,42 @@ input3 = {
     , imgSize = (75,75)
   }
 
-output : Gate
-output = {
-      name = "output"
+output1 : Gate
+output1 = {
+      name = "output1"
     , gateType = OutputGate
     , status = False
     , inputs = Array.fromList ["orGate"]
     , logic = inputLogic
     , location = (175,0)
+    , imgName = outputOffName
+    , imgOnName = outputOnName
+    , imgOffName = outputOffName
+    , imgSize = (75,75)
+  }
+
+output2 : Gate
+output2 = {
+      name = "output2"
+    , gateType = OutputGate
+    , status = False
+    , inputs = Array.fromList ["andGate2"]
+    , logic = inputLogic
+    , location = (175,-100)
+    , imgName = outputOffName
+    , imgOnName = outputOnName
+    , imgOffName = outputOffName
+    , imgSize = (75,75)
+  }
+
+output3 : Gate
+output3 = {
+      name = "output3"
+    , gateType = OutputGate
+    , status = False
+    , inputs = Array.fromList ["notGate"]
+    , logic = inputLogic
+    , location = (175,-175)
     , imgName = outputOffName
     , imgOnName = outputOnName
     , imgOffName = outputOffName
@@ -116,8 +158,11 @@ gates = [
   , input3
   , andGate
   , andGate2
+  , notGate
   , orGate
-  , output
+  , output1
+  , output2
+  , output3
   ] 
 
 -- set up all Inputs
@@ -138,7 +183,7 @@ inputChannelsPreDict =
 
 -- set up solution
 solution : Dict.Dict String Bool
-solution = Dict.fromList [ ("output", True)] 
+solution = Dict.fromList [ ("output1", True), ("output2",True), ("output3",False)] 
 
 -- Put everything into initial GameState
 gameState : GameState
