@@ -29,11 +29,14 @@ display (w,h) gameState =
         circuitContainer = container w h middle circuitElement
         clicksText = asText gameState.clicks
         completedText = asText gameState.completed
+        levelDoneText = if | gameState.completed == True -> plainText "      YOU'RE DONE CONGRATS!"
+                           | otherwise -> plainText "      Not done yet, keep trying!"
         upperBar = flow right [
                       plainText "Clicks: ",
                       clicksText, 
                       plainText "    Level completed: ", 
-                      completedText
+                      completedText,
+                      levelDoneText
                     ]
     in
         flow down [upperBar, circuitContainer]

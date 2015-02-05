@@ -25,8 +25,12 @@ updateGameState gameState =
         -- next, simulate the circuit with updated user inputs
         netNames = gameState.networkNames
         simulatedCircuitState = List.foldl (updateGate) circuitStateUpdatedInputs netNames
+
+        -- last, see if level was completed
+        levelSolved = checkIfSolved simulatedCircuitState gameState.solution
     in
-        { gameState | circuitState <- simulatedCircuitState }
+        { gameState | circuitState <- simulatedCircuitState
+                    , completed <- levelSolved }
 
 {------------------------------------------------------------------------------
     Recursively update CircuitState with new input statuses
@@ -144,3 +148,40 @@ simOutputGate gate state =
         inputStatus = inputGate.status
     in
         { gate | status <- inputStatus }
+
+{------------------------------------------------------------------------------
+    Check whether level was solved
+------------------------------------------------------------------------------}
+checkIfSolved : CircuitState -> Dict.Dict String Bool -> Bool
+checkIfSolved circuit solution = 
+    -- for each solution entry, check solution vs circuit
+    let
+        gatesToCheck = Dict.keys solution
+    in
+        checkSolved circuit solution gatesToCheck
+
+checkSolved : CircuitState -> Dict.Dict String Bool -> List String -> Bool
+checkSolved circuit solution gatesToCheck = 
+    case gatesToCheck of
+        -- if empty, return state as-is
+        [] -> True
+
+        -- if a single input, update that input
+        name :: [] -> 
+            let
+                circuitGate = getGate name circuit 
+                circuitStatus = circuitGate.status
+                solutionStatus = withDefault True (Dict.get name solution)
+            in
+                if | circuitStatus == solutionStatus -> True
+                   | otherwise -> False
+            
+        -- if more than single input, update that input and call on tail
+        name :: tl ->
+            let
+                circuitGate = getGate name circuit 
+                circuitStatus = circuitGate.status
+                solutionStatus = withDefault True (Dict.get name solution)
+            in
+                if | circuitStatus /= solutionStatus -> False
+                   | otherwise -> checkSolved circuit solution tl
