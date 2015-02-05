@@ -1,4 +1,4 @@
-module TestRunner where
+module Level_multiple_outputs where
 
 import Mouse
 import Array
