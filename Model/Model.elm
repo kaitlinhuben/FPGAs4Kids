@@ -27,6 +27,7 @@ type alias GameState = {
     networkNames : List String
   , inputNames : List String
   , nonInputNames : List String
+  , solution : Dict.Dict String Bool
   , circuitState : CircuitState
   , gameMode : GameMode
   , mousePos : (Int, Int)

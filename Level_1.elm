@@ -64,9 +64,13 @@ inputChannel = channel inputGate.status
 inputSignalsPreDict : List (String, Channel Bool)
 inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 
+-- set up solution
+solution : Dict.Dict String Bool
+solution = Dict.fromList [ ("outputGate", True)]
+
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict
+gameState = instantiateGameState gates inputSignalsPreDict solution
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)

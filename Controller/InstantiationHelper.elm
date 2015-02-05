@@ -13,8 +13,8 @@ import Model.Model (..)
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-instantiateGameState : List Gate -> List (String, Channel Bool) -> GameState
-instantiateGameState gates inputChannelsPreDict = { 
+instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> GameState
+instantiateGameState gates inputChannelsPreDict solutionDict = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -25,6 +25,7 @@ instantiateGameState gates inputChannelsPreDict = {
     , inputChannels = Dict.fromList inputChannelsPreDict
     , clicks = 0
     , completed = False
+    , solution = solutionDict 
     }
 
 {------------------------------------------------------------------------------

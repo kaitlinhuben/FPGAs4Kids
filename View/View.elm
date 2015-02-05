@@ -137,6 +137,7 @@ drawInputGate name gs =
                      | otherwise -> True
 
     -- make the image a clickable element
+    -- TODO also send this to count of clicks??
     gateElement = clickable (send gateChannel updateValue) gateImage
 
     -- fill the background of the image with status color
