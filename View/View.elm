@@ -14,8 +14,8 @@ import Maybe (withDefault)
 import Signal (send)
 import Model.Model (..)
 
--- don't technically need asText, but clickable doesn't work without it!
-import Text (asText, plainText)
+-- don't technically need Text.asText, but clickable doesn't work without it!
+import Text
 
 {------------------------------------------------------------------------------
     Display entire page
@@ -27,17 +27,23 @@ display (w,h) gameState =
         circuitHeight = h - 50
         circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
         circuitContainer = container w h middle circuitElement
-        clicksText = asText gameState.clicks
-        completedText = asText gameState.completed
-        levelDoneText = if | gameState.completed == True -> plainText "      YOU'RE DONE CONGRATS!"
-                           | otherwise -> plainText "      Not done yet, keep trying!"
-        upperBar = flow right [
-                      plainText "Clicks: ",
+        clicksText = Text.asText gameState.clicks
+        completedText = Text.asText gameState.completed
+        --levelDoneText = if | gameState.completed == True -> Text.plainText "      YOU'RE DONE CONGRATS!"
+          --                 | otherwise -> Text.plainText "      Not done yet, keep trying!"
+        levelNextButton = if | gameState.completed == True -> Text.link gameState.nextLink (Text.fromString "      Go to next level")
+                             | otherwise -> Text.fromString ""
+        upperBar = flow down [
+                    Text.plainText gameState.directions,
+                    Text.plainText "Stats",
+                    flow right [
+                      Text.plainText "Clicks: ",
                       clicksText, 
-                      plainText "    Level completed: ", 
+                      Text.plainText "    Level completed: ", 
                       completedText,
-                      levelDoneText
-                    ]
+                      Text.leftAligned levelNextButton
+                    ]                    
+                   ]
     in
         flow down [upperBar, circuitContainer]
     

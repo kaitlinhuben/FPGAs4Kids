@@ -68,9 +68,15 @@ inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 solution : Dict.Dict String Bool
 solution = Dict.fromList [ ("outputGate", True)]
 
+-- directions & link
+directions : String
+directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on."
+nextLink : String
+nextLink = "Level_2.elm"
+
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution
+gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
