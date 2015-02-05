@@ -24,6 +24,7 @@ instantiateGameState gates inputChannelsPreDict = {
     , inputStatuses = extractInputStatuses gates Dict.empty
     , inputChannels = Dict.fromList inputChannelsPreDict
     , clicks = 0
+    , completed = False
     }
 
 {------------------------------------------------------------------------------

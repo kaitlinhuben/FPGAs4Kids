@@ -27,9 +27,16 @@ display (w,h) gameState =
         circuitHeight = h - 50
         circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
         circuitContainer = container w h middle circuitElement
-        blahText = asText gameState.clicks
+        clicksText = asText gameState.clicks
+        completedText = asText gameState.completed
+        upperBar = flow right [
+                      plainText "Clicks: ",
+                      clicksText, 
+                      plainText "    Level completed: ", 
+                      completedText
+                    ]
     in
-        flow down [blahText, circuitContainer]
+        flow down [upperBar, circuitContainer]
     
 {------------------------------------------------------------------------------
     Draw the whole circuit
