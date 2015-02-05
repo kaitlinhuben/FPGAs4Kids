@@ -1,4 +1,4 @@
-module Level_2 where
+module Level_3 where
 
 import Mouse
 import Array
@@ -14,7 +14,7 @@ inputGate1 : Gate
 inputGate1 = {
       name = "inputGate1"
     , gateType = InputGate
-    , status = True
+    , status = False
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-100,0)
@@ -40,17 +40,17 @@ inputGate2 = {
   }
 
 -- Set up gates for level
-andGate : Gate
-andGate = {
-      name = "andGate"
+orGate : Gate
+orGate = {
+      name = "orGate"
     , gateType = NormalGate
     , status = False
     , inputs = Array.fromList ["inputGate1", "inputGate2"]
-    , logic = andLogic
+    , logic = orLogic
     , location = (0,0)
-    , imgName = andImageName
-    , imgOnName = andImageName
-    , imgOffName = andImageName
+    , imgName = orImageName
+    , imgOnName = orImageName
+    , imgOffName = orImageName
     , imgSize = (75,75)
   }
 
@@ -59,7 +59,7 @@ outputGate = {
       name = "outputGate"
     , gateType = OutputGate
     , status = False
-    , inputs = Array.fromList ["andGate"]
+    , inputs = Array.fromList ["orGate"]
     , logic = inputLogic
     , location = (100,0)
     , imgName = outputOffName
@@ -70,7 +70,7 @@ outputGate = {
 
 -- set up array of gates in correct order
 gates : List Gate
-gates = [inputGate1, inputGate2, andGate, outputGate]
+gates = [inputGate1, inputGate2, orGate, outputGate]
 
 -- set up all Inputs
 inputChannel1 : Channel Bool 
@@ -89,9 +89,9 @@ solution = Dict.fromList [ ("outputGate", True)]
 
 -- directions & link
 directions : String
-directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on."
+directions = "This is an OR gate. It needs at least one input on. Try to get the output to turn on."
 nextLink : String
-nextLink = "Level_3.elm"
+nextLink = "Level_4.elm"
 
 -- put everything into initial GameState
 gameState : GameState

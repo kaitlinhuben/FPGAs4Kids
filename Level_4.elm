@@ -1,4 +1,4 @@
-module TestRunner where
+module Level_4 where
 
 import Mouse
 import Array
@@ -56,7 +56,7 @@ input1 : Gate
 input1 = {
       name = "input1"
     , gateType = InputGate
-    , status = True
+    , status = False
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,100)
@@ -70,7 +70,7 @@ input2 : Gate
 input2 = {
       name = "input2"
     , gateType = InputGate
-    , status = True
+    , status = False
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,0)
@@ -84,7 +84,7 @@ input3 : Gate
 input3 = {
       name = "input3"
     , gateType = InputGate
-    , status = False
+    , status = True
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,-100)
@@ -140,9 +140,15 @@ inputChannelsPreDict =
 solution : Dict.Dict String Bool
 solution = Dict.fromList [ ("output", True)] 
 
+-- directions & link
+directions : String
+directions = "Now that you know how things work, try to get the output to turn on."
+nextLink : String
+nextLink = "Level_5.elm"
+
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict solution
+gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink
 
 -- lift all input signals into user input
 userInputs : Signal (InputsState)

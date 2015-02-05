@@ -1,4 +1,4 @@
-module Level_multiple_outputs where
+module Level_5 where
 
 import Mouse
 import Array
@@ -185,9 +185,15 @@ inputChannelsPreDict =
 solution : Dict.Dict String Bool
 solution = Dict.fromList [ ("output1", True), ("output2",True), ("output3",False)] 
 
+-- directions & link
+directions : String
+directions = "Now you have more than one output. Get (from top): on, on, off."
+nextLink : String
+nextLink = "congrats.html"
+
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict solution
+gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink
 
 -- lift all input signals into user input
 userInputs : Signal (InputsState)
