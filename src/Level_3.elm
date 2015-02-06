@@ -91,7 +91,7 @@ solution = Dict.fromList [ ("outputGate", True)]
 directions : String
 directions = "This is an OR gate. It needs at least one input on. Try to get the output to turn on."
 nextLink : String
-nextLink = "Level_4.elm"
+nextLink = "Level_4.html"
 
 -- put everything into initial GameState
 gameState : GameState

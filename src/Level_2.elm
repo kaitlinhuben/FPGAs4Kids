@@ -91,7 +91,7 @@ solution = Dict.fromList [ ("outputGate", True)]
 directions : String
 directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on."
 nextLink : String
-nextLink = "Level_3.elm"
+nextLink = "Level_3.html"
 
 -- put everything into initial GameState
 gameState : GameState

@@ -1,6 +1,6 @@
 build/
-cache/
-congrats.html
 elm-stuff/
 elm-package.json
 elm.js
+levels/
+congrats.html

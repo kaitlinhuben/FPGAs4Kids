@@ -144,7 +144,7 @@ solution = Dict.fromList [ ("output", True)]
 directions : String
 directions = "Now that you know how things work, try to get the output to turn on."
 nextLink : String
-nextLink = "Level_5.elm"
+nextLink = "Level_5.html"
 
 -- Put everything into initial GameState
 gameState : GameState

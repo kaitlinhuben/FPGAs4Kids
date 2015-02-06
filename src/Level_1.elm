@@ -72,7 +72,7 @@ solution = Dict.fromList [ ("outputGate", True)]
 directions : String
 directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on."
 nextLink : String
-nextLink = "Level_2.elm"
+nextLink = "Level_2.html"
 
 -- put everything into initial GameState
 gameState : GameState
