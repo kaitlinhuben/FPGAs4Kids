@@ -189,7 +189,7 @@ solution = Dict.fromList [ ("output1", True), ("output2",True), ("output3",False
 directions : String
 directions = "Now you have more than one output. Get (from top): on, on, off."
 nextLink : String
-nextLink = "congrats.html"
+nextLink = "../congrats.html"
 
 -- Put everything into initial GameState
 gameState : GameState
