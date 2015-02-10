@@ -149,12 +149,7 @@ drawInputGate name gs =
     -- TODO also send this to count of clicks?? --> send a tuple
     gateElement = clickable (send gateChannel updateValue) gateImage
 
-    -- fill the background of the image with status color
-    fillColor = if | gate.status == True -> green
-                   | gate.status == False -> lightGrey
-    coloredElement = color fillColor gateElement
-
     -- make the clickable image a link so cursor switches to pointer
-    linkedElement = link "#" coloredElement
+    linkedElement = link "#" gateElement
   in 
     move gate.location (toForm linkedElement)

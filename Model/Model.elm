@@ -120,10 +120,10 @@ imgPath : String
 imgPath = "../assets/img/"
 
 inputOnName : String
-inputOnName = imgPath ++ "input-on.png"
+inputOnName = imgPath ++ "switch-on.png"
 
 inputOffName : String
-inputOffName = imgPath ++ "input-off.png"
+inputOffName = imgPath ++ "switch-off.png"
 
 andImageName : String
 andImageName = imgPath ++ "and-schematic-filled.png"
