@@ -135,7 +135,7 @@ notImageName : String
 notImageName = imgPath ++ "not-schematic-filled.png"
 
 outputOnName : String
-outputOnName = imgPath ++ "output-on.png"
+outputOnName = imgPath ++ "light-on.png"
 
 outputOffName : String
-outputOffName = imgPath ++ "output-off.png"
+outputOffName = imgPath ++ "light-off.png"

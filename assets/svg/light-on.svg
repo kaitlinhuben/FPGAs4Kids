@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="switch-off.svg"
-   inkscape:export-filename="C:\Users\TransferAcct\Desktop\logic-game\assets\img\switch-off.png"
+   sodipodi:docname="light-on.svg"
+   inkscape:export-filename="C:\Users\TransferAcct\Desktop\logic-game\assets\img\light-on.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -36,8 +36,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="26.042471"
-     inkscape:cy="102.5183"
+     inkscape:cx="54.945233"
+     inkscape:cy="115.93744"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -64,32 +64,46 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-852.36218)">
+    <path
+       sodipodi:type="arc"
+       style="fill:#3e3e3e;fill-opacity:1;stroke:none"
+       id="path2987"
+       sodipodi:cx="105.35714"
+       sodipodi:cy="100.35714"
+       sodipodi:rx="66.785713"
+       sodipodi:ry="12.857142"
+       d="m 172.14285,100.35714 a 66.785713,12.857142 0 1 1 -133.571424,0 66.785713,12.857142 0 1 1 133.571424,0 z"
+       transform="matrix(1.3425462,0,0,1.0250992,-41.446822,848.69421)" />
+    <path
+       style="fill:#73d216;fill-opacity:0.89411765;stroke:none"
+       d="m 99.999999,902.96412 c -42.484334,0 -77.172786,19.29406 -79.536815,43.5839 -0.08701,0.22426 -0.151861,0.45592 -0.151861,0.68337 0,6.46998 35.673206,11.73121 79.688676,11.73121 44.015471,0 79.688681,-5.26123 79.688681,-11.73121 0,-0.22745 -0.0649,-0.45911 -0.15186,-0.68337 -2.36403,-24.28984 -37.05249,-43.5839 -79.536821,-43.5839 z"
+       id="path3757"
+       inkscape:connector-curvature="0" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:none"
-       id="rect3813"
-       width="190"
-       height="90"
-       x="5"
-       y="907.36218"
-       ry="7.323606" />
+       style="fill:#73d216;fill-opacity:0.89411765;stroke:none"
+       id="rect3765"
+       width="2.0203049"
+       height="33.587574"
+       x="98.989845"
+       y="862.63623"
+       ry="2.5253813" />
     <rect
-       ry="6.509872"
-       y="912.36218"
-       x="10"
-       height="80"
-       width="80"
-       id="rect3815"
-       style="fill:#dfdfdf;fill-opacity:1;stroke:none" />
-    <text
-       xml:space="preserve"
-       style="font-size:53.30459595px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Century Gothic;-inkscape-font-specification:Century Gothic Bold"
-       x="93.968376"
-       y="971.50562"
-       id="text3817"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3819"
-         x="93.968376"
-         y="971.50562">OFF</tspan></text>
+       ry="2.5253813"
+       y="774.59448"
+       x="-408.43124"
+       height="33.587574"
+       width="2.0203049"
+       id="rect3767"
+       style="fill:#73d216;fill-opacity:0.89411765;stroke:none"
+       transform="matrix(0.8660254,-0.5,0.5,0.8660254,0,0)" />
+    <rect
+       transform="matrix(-0.8660254,-0.5,-0.5,0.8660254,0,0)"
+       style="fill:#73d216;fill-opacity:0.89411765;stroke:none"
+       id="rect3769"
+       width="2.0203049"
+       height="33.587574"
+       x="-576.28259"
+       y="676.03583"
+       ry="2.5253813" />
   </g>
 </svg>
