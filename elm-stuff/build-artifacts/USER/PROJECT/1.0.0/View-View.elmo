@@ -1,0 +1,256 @@
+Elm.View = Elm.View || {};
+Elm.View.View = Elm.View.View || {};
+Elm.View.View.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   _elm.View.View = _elm.View.View || {};
+   if (_elm.View.View.values)
+   return _elm.View.View.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "View.View",
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Model = Elm.Model.Model.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var drawInputGate = F2(function (name,
+   gs) {
+      return function () {
+         var gateChannel = A2($Maybe.withDefault,
+         $Model$Model.failedChannel,
+         A2($Dict.get,
+         name,
+         gs.inputChannels));
+         var gate = A2($Model$Model.getGate,
+         name,
+         gs.circuitState);
+         var $ = gate.imgSize,
+         w = $._0,
+         h = $._1;
+         var gateImage = A3($Graphics$Element.image,
+         w,
+         h,
+         gate.imgName);
+         var updateValue = _U.eq(gate.status,
+         true) ? false : true;
+         var gateElement = A2($Graphics$Input.clickable,
+         A2($Signal.send,
+         gateChannel,
+         updateValue),
+         gateImage);
+         var linkedElement = A2($Graphics$Element.link,
+         "#",
+         gateElement);
+         return A2($Graphics$Collage.move,
+         gate.location,
+         $Graphics$Collage.toForm(linkedElement));
+      }();
+   });
+   var drawGate = F2(function (name,
+   gs) {
+      return function () {
+         var gate = A2($Model$Model.getGate,
+         name,
+         gs.circuitState);
+         var $ = gate.imgSize,
+         w = $._0,
+         h = $._1;
+         var imgForm = $Graphics$Collage.toForm(A3($Graphics$Element.image,
+         w,
+         h,
+         gate.imgName));
+         return A2($Graphics$Collage.move,
+         gate.location,
+         imgForm);
+      }();
+   });
+   var drawNets = F2(function (name,
+   gs) {
+      return function () {
+         var circuit = gs.circuitState;
+         var gate = A2($Model$Model.getGate,
+         name,
+         circuit);
+         var $ = gate.location,
+         x = $._0,
+         y = $._1;
+         var input1name = A2($Model$Model.getGateName,
+         0,
+         gate.inputs);
+         var input1 = A2($Model$Model.getGate,
+         input1name,
+         circuit);
+         var $ = input1.location,
+         x1 = $._0,
+         y1 = $._1;
+         var segment1 = A2($Graphics$Collage.segment,
+         {ctor: "_Tuple2",_0: x,_1: y},
+         {ctor: "_Tuple2"
+         ,_0: x1
+         ,_1: y1});
+         var lineColor1 = _U.eq(input1.status,
+         true) ? $Color.green : $Color.black;
+         var input1segment = A2($Graphics$Collage.traced,
+         $Graphics$Collage.solid(lineColor1),
+         segment1);
+         return _U.eq($Array.length(gate.inputs),
+         1) ? input1segment : function () {
+            var input2name = A2($Model$Model.getGateName,
+            1,
+            gate.inputs);
+            var input2 = A2($Model$Model.getGate,
+            input2name,
+            circuit);
+            var $ = input2.location,
+            x2 = $._0,
+            y2 = $._1;
+            var segment2 = A2($Graphics$Collage.segment,
+            {ctor: "_Tuple2",_0: x,_1: y},
+            {ctor: "_Tuple2"
+            ,_0: x2
+            ,_1: y2});
+            var lineColor2 = _U.eq(input2.status,
+            true) ? $Color.green : $Color.black;
+            var input2segment = A2($Graphics$Collage.traced,
+            $Graphics$Collage.solid(lineColor2),
+            segment2);
+            var both = A3($Graphics$Collage.collage,
+            300,
+            300,
+            _L.fromArray([input1segment
+                         ,input2segment]));
+            return $Graphics$Collage.toForm(both);
+         }();
+      }();
+   });
+   var drawAll = F3(function (drawSingle,
+   names,
+   gs) {
+      return function () {
+         switch (names.ctor)
+         {case "::":
+            switch (names._1.ctor)
+              {case "[]":
+                 return _L.fromArray([A2(drawSingle,
+                   names._0,
+                   gs)]);}
+              return function () {
+                 var tlForms = A3(drawAll,
+                 drawSingle,
+                 names._1,
+                 gs);
+                 var singleForm = A2(drawSingle,
+                 names._0,
+                 gs);
+                 return A2($List._op["::"],
+                 singleForm,
+                 tlForms);
+              }();
+            case "[]":
+            return _L.fromArray([]);}
+         _U.badCase($moduleName,
+         "between lines 72 and 80");
+      }();
+   });
+   var drawCircuit = F2(function (_v3,
+   gs) {
+      return function () {
+         switch (_v3.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var otherForms = A3(drawAll,
+                 drawGate,
+                 gs.nonInputNames,
+                 gs);
+                 var inputsForms = A3(drawAll,
+                 drawInputGate,
+                 gs.inputNames,
+                 gs);
+                 var netsForms = A3(drawAll,
+                 drawNets,
+                 gs.nonInputNames,
+                 gs);
+                 var allForms = A2($Basics._op["++"],
+                 netsForms,
+                 A2($Basics._op["++"],
+                 inputsForms,
+                 otherForms));
+                 return A3($Graphics$Collage.collage,
+                 _v3._0,
+                 _v3._1,
+                 allForms);
+              }();}
+         _U.badCase($moduleName,
+         "between lines 54 and 61");
+      }();
+   });
+   var display = F2(function (_v7,
+   gameState) {
+      return function () {
+         switch (_v7.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var nextBtn = A2($Html.a,
+                 _L.fromArray([$Html$Attributes.href(gameState.nextLink)]),
+                 _L.fromArray([A2($Html.button,
+                 _L.fromArray([$Html$Attributes.id("test-button")]),
+                 _L.fromArray([$Html.text("Go to next level")]))]));
+                 var levelNextButton = _U.eq(gameState.completed,
+                 true) ? A3($Html.toElement,
+                 150,
+                 20,
+                 nextBtn) : $Text.plainText("");
+                 var clicksText = $Text.asText(gameState.clicks);
+                 var upperBar = A2($Graphics$Element.flow,
+                 $Graphics$Element.down,
+                 _L.fromArray([$Text.plainText(gameState.directions)
+                              ,$Text.plainText("Stats")
+                              ,A2($Graphics$Element.flow,
+                              $Graphics$Element.right,
+                              _L.fromArray([$Text.plainText("Clicks: ")
+                                           ,clicksText
+                                           ,$Text.plainText("           ")
+                                           ,levelNextButton]))]));
+                 var circuitHeight = _v7._1 - 50;
+                 var circuitWidth = _v7._0;
+                 var circuitElement = A2(drawCircuit,
+                 {ctor: "_Tuple2"
+                 ,_0: circuitWidth
+                 ,_1: circuitHeight},
+                 gameState);
+                 var circuitContainer = A4($Graphics$Element.container,
+                 _v7._0,
+                 _v7._1,
+                 $Graphics$Element.middle,
+                 circuitElement);
+                 return A2($Graphics$Element.flow,
+                 $Graphics$Element.down,
+                 _L.fromArray([upperBar
+                              ,circuitContainer]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 27 and 47");
+      }();
+   });
+   _elm.View.View.values = {_op: _op
+                           ,display: display
+                           ,drawCircuit: drawCircuit
+                           ,drawAll: drawAll
+                           ,drawNets: drawNets
+                           ,drawGate: drawGate
+                           ,drawInputGate: drawInputGate};
+   return _elm.View.View.values;
+};

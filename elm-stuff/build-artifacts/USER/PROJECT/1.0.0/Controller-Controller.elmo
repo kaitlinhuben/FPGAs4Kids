@@ -1,0 +1,74 @@
+Elm.Controller = Elm.Controller || {};
+Elm.Controller.Controller = Elm.Controller.Controller || {};
+Elm.Controller.Controller.make = function (_elm) {
+   "use strict";
+   _elm.Controller = _elm.Controller || {};
+   _elm.Controller.Controller = _elm.Controller.Controller || {};
+   if (_elm.Controller.Controller.values)
+   return _elm.Controller.Controller.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Controller.Controller",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Model$CircuitFunctions = Elm.Model.CircuitFunctions.make(_elm),
+   $Model$Model = Elm.Model.Model.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm),
+   $View$View = Elm.View.View.make(_elm),
+   $Window = Elm.Window.make(_elm);
+   var delta = A2($Signal.map,
+   function (t) {
+      return t / 20;
+   },
+   $Time.fps(25));
+   var gatherInput = function (userInput) {
+      return A2($Signal.sampleOn,
+      delta,
+      A3($Signal.map2,
+      $Model$Model.GameInput,
+      delta,
+      userInput));
+   };
+   var stepGame = F2(function (gameInput,
+   gameState) {
+      return function () {
+         var ui = gameInput.userInput;
+         var inputs = ui.inputBools;
+         var gameStateWithInputs = _U.replace([["inputStatuses"
+                                               ,inputs]],
+         gameState);
+         var updatedGameState = $Model$CircuitFunctions.updateGameState(gameStateWithInputs);
+         var newMousePos = ui.mousePos;
+         var newMouseClicks = ui.mouseClicks;
+         return _U.replace([["mousePos"
+                            ,newMousePos]
+                           ,["clicks",newMouseClicks]],
+         updatedGameState);
+      }();
+   });
+   var foldGame = F2(function (game,
+   userInput) {
+      return A3($Signal.foldp,
+      stepGame,
+      game,
+      gatherInput(userInput));
+   });
+   var mainDriver = F2(function (game,
+   userInput) {
+      return A3($Signal.map2,
+      $View$View.display,
+      $Window.dimensions,
+      A2(foldGame,game,userInput));
+   });
+   _elm.Controller.Controller.values = {_op: _op
+                                       ,stepGame: stepGame
+                                       ,delta: delta
+                                       ,gatherInput: gatherInput
+                                       ,foldGame: foldGame
+                                       ,mainDriver: mainDriver};
+   return _elm.Controller.Controller.values;
+};
