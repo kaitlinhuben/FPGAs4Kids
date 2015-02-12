@@ -9,7 +9,7 @@ import List ((::))
 import Graphics.Element (..)
 import Graphics.Collage (Form, collage, segment, traced, solid, toForm, move)
 import Graphics.Input (clickable)
-import Color (green, black, lightGrey)
+import Color (Color, green, black, lightGrey, red, blue)
 import Maybe (withDefault)
 import Signal (send)
 import Html (a, button, text, toElement)
@@ -28,21 +28,26 @@ display (w,h) gameState =
         circuitWidth = w
         circuitHeight = h - 50
         circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
-        circuitContainer = container w h middle circuitElement
+        circuitContainer = container circuitWidth circuitHeight middle circuitElement
         clicksText = Text.asText gameState.clicks
-        nextBtn = a [href gameState.nextLink] [button [id "test-button"] [text "Go to next level"]]
+        nextBtn = a 
+                  [href gameState.nextLink] 
+                  [button 
+                    [id "test-button"] 
+                    [text "Go to next level"]
+                  ]
         levelNextButton = if | gameState.completed == True -> toElement 150 20 nextBtn
                              | otherwise -> Text.plainText ""
         upperBar = flow down 
-                  [ Text.plainText gameState.directions
-                  , Text.plainText "Stats"
-                  , flow right 
-                    [ Text.plainText "Clicks: "
-                    , clicksText
-                    , Text.plainText "           "
-                    , levelNextButton
-                    ]                    
-                  ]
+                    [ Text.plainText gameState.directions
+                    , Text.plainText "Stats"
+                    , flow right 
+                      [ Text.plainText "Clicks: "
+                      , clicksText
+                      , Text.plainText "           "
+                      , levelNextButton
+                      ]                    
+                    ]
     in
         flow down [upperBar, circuitContainer]
     
@@ -84,35 +89,69 @@ drawNets : String -> GameState -> Form
 drawNets name gs =
   let 
     circuit = gs.circuitState
+    gate = getGate name circuit 
+  in
+    if | Array.length gate.inputs == 1 -> drawNetToSingle name gs
+       | otherwise -> drawNetsToDouble name gs
+
+drawNetToSingle : String -> GameState -> Form
+drawNetToSingle name gs =
+  drawSingleNet name 0 gs
+
+drawNetsToDouble : String -> GameState -> Form
+drawNetsToDouble name gs =
+  let
+    input1segment = drawSingleNet name 0 gs
+    input2segment = drawSingleNet name 1 gs
+    both = collage 300 300 [input1segment,input2segment] -- TODO don't hardcode size
+  in 
+    toForm both
+
+drawSingleNet : String -> Int -> GameState -> Form
+drawSingleNet name index gs =
+  let 
+    circuit = gs.circuitState
     -- get the location of this gate
     gate = getGate name circuit
     (x,y) = gate.location
 
     -- get the location of the first input
-    input1name = getGateName 0 gate.inputs
-    input1 = getGate input1name circuit
+    inputName = getGateName index gate.inputs
+    input1 = getGate inputName circuit
     (x1,y1) = input1.location
 
+    lineColor = if | input1.status == True -> green
+                   | otherwise -> black
+  in
+    if | y == y1 -> drawStraightNet (x,y) (x1,y1) lineColor
+       | otherwise -> drawDogLegNet (x,y) (x1,y1) lineColor
+
+drawStraightNet : (Float, Float) -> (Float, Float) -> Color -> Form
+drawStraightNet (x,y) (x1,y1) lineColor = 
+  let
     -- draw segment from first input to this gate
     segment1 = segment (x,y) (x1,y1)
-    lineColor1 = if | input1.status == True -> green
-                    | otherwise -> black
-    input1segment = traced (solid lineColor1) segment1
   in
-    if | Array.length gate.inputs == 1 -> input1segment
-       | otherwise ->
-          -- if there's a second input, draw that too
-          let
-            input2name = getGateName 1 gate.inputs
-            input2 = getGate input2name circuit
-            (x2,y2) = input2.location
-            segment2 = segment (x,y) (x2,y2)
-            lineColor2 = if | input2.status == True -> green
-                            | otherwise -> black
-            input2segment = traced (solid lineColor2) segment2
-            both = collage 300 300 [input1segment,input2segment] -- TODO don't hardcode size
-          in 
-            toForm both
+    traced (solid lineColor) segment1
+
+drawDogLegNet : (Float, Float) -> (Float, Float) -> Color -> Form
+drawDogLegNet (x,y) (x1,y1) lineColor = 
+  let
+    middle = (x + x1)/2
+    leg1 = (middle, y)
+    leg2 = (middle, y1)
+    -- draw three segments (three parts of "leg")
+    segment1 = segment (x,y) (middle,y)
+    segment2 = segment (middle,y) (middle,y1)
+    segment3 = segment (middle,y1) (x1,y1)
+
+    traced1 = traced (solid lineColor) segment1
+    traced2 = traced (solid lineColor) segment2
+    traced3 = traced (solid lineColor) segment3
+
+    all = collage 300 300 [traced1,traced2,traced3] -- TODO don't hardcode
+  in
+    toForm all
 
 -- Draw a single gate
 drawGate : String -> GameState -> Form

@@ -3915,18 +3915,18 @@ Elm.Json.Encode.make = function (_elm) {
                              ,list: list};
    return _elm.Json.Encode.values;
 };
-Elm.Level_2 = Elm.Level_2 || {};
-Elm.Level_2.make = function (_elm) {
+Elm.Level_4 = Elm.Level_4 || {};
+Elm.Level_4.make = function (_elm) {
    "use strict";
-   _elm.Level_2 = _elm.Level_2 || {};
-   if (_elm.Level_2.values)
-   return _elm.Level_2.values;
+   _elm.Level_4 = _elm.Level_4 || {};
+   if (_elm.Level_4.values)
+   return _elm.Level_4.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "Level_2",
+   $moduleName = "Level_4",
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Controller$Controller = Elm.Controller.Controller.make(_elm),
@@ -3942,39 +3942,144 @@ Elm.Level_2.make = function (_elm) {
    }),
    0,
    $Mouse.clicks);
-   var liftToDict = F2(function (bool1,
-   bool2) {
+   var liftToDict = F3(function (bool1,
+   bool2,
+   bool3) {
       return function () {
-         var firstDict = A3($Dict.insert,
-         "inputGate1",
+         var emptyDict = $Dict.empty;
+         var dict1 = A3($Dict.insert,
+         "input1",
          bool1,
-         $Dict.empty);
-         return A3($Dict.insert,
-         "inputGate2",
+         emptyDict);
+         var dict2 = A3($Dict.insert,
+         "input2",
          bool2,
-         firstDict);
+         dict1);
+         return A3($Dict.insert,
+         "input3",
+         bool3,
+         dict2);
       }();
    });
-   var nextLink = "Level_3.html";
-   var directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on.";
+   var nextLink = "Level_5.html";
+   var directions = "Now that you know how things work, try to get the output to turn on.";
    var solution = $Dict.fromList(_L.fromArray([{ctor: "_Tuple2"
-                                               ,_0: "outputGate"
+                                               ,_0: "output"
                                                ,_1: true}]));
-   var outputGate = {_: {}
-                    ,gateType: $Model$Model.OutputGate
-                    ,imgName: $Model$Model.outputOffName
-                    ,imgOffName: $Model$Model.outputOffName
-                    ,imgOnName: $Model$Model.outputOnName
-                    ,imgSize: {ctor: "_Tuple2"
-                              ,_0: 75
-                              ,_1: 75}
-                    ,inputs: $Array.fromList(_L.fromArray(["andGate"]))
-                    ,location: {ctor: "_Tuple2"
-                               ,_0: 100
-                               ,_1: 0}
-                    ,logic: $Model$Model.inputLogic
-                    ,name: "outputGate"
-                    ,status: false};
+   var output = {_: {}
+                ,gateType: $Model$Model.OutputGate
+                ,imgName: $Model$Model.outputOffName
+                ,imgOffName: $Model$Model.outputOffName
+                ,imgOnName: $Model$Model.outputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.fromList(_L.fromArray(["orGate"]))
+                ,location: {ctor: "_Tuple2"
+                           ,_0: 175
+                           ,_1: 0}
+                ,logic: $Model$Model.inputLogic
+                ,name: "output"
+                ,status: false};
+   var input3 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOffName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: -100}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input3"
+                ,status: true};
+   var inputChannel3 = $Signal.channel(input3.status);
+   var input2 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOnName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: 0}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input2"
+                ,status: false};
+   var inputChannel2 = $Signal.channel(input2.status);
+   var input1 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOnName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: 100}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input1"
+                ,status: false};
+   var inputChannel1 = $Signal.channel(input1.status);
+   var inputChannelsPreDict = _L.fromArray([{ctor: "_Tuple2"
+                                            ,_0: "input1"
+                                            ,_1: inputChannel1}
+                                           ,{ctor: "_Tuple2"
+                                            ,_0: "input2"
+                                            ,_1: inputChannel2}
+                                           ,{ctor: "_Tuple2"
+                                            ,_0: "input3"
+                                            ,_1: inputChannel3}]);
+   var userInputs = A4($Signal.map3,
+   liftToDict,
+   $Signal.subscribe(inputChannel1),
+   $Signal.subscribe(inputChannel2),
+   $Signal.subscribe(inputChannel3));
+   var userInput = A4($Signal.map3,
+   $Model$Model.UserInput,
+   $Mouse.position,
+   countClick,
+   userInputs);
+   var orGate = {_: {}
+                ,gateType: $Model$Model.NormalGate
+                ,imgName: $Model$Model.orImageName
+                ,imgOffName: $Model$Model.orImageName
+                ,imgOnName: $Model$Model.orImageName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.fromList(_L.fromArray(["andGate"
+                                                      ,"andGate2"]))
+                ,location: {ctor: "_Tuple2"
+                           ,_0: 100
+                           ,_1: 0}
+                ,logic: $Model$Model.orLogic
+                ,name: "orGate"
+                ,status: false};
+   var andGate2 = {_: {}
+                  ,gateType: $Model$Model.NormalGate
+                  ,imgName: $Model$Model.andImageName
+                  ,imgOffName: $Model$Model.andImageName
+                  ,imgOnName: $Model$Model.andImageName
+                  ,imgSize: {ctor: "_Tuple2"
+                            ,_0: 75
+                            ,_1: 75}
+                  ,inputs: $Array.fromList(_L.fromArray(["input3"
+                                                        ,"andGate"]))
+                  ,location: {ctor: "_Tuple2"
+                             ,_0: 0
+                             ,_1: -50}
+                  ,logic: $Model$Model.andLogic
+                  ,name: "andGate2"
+                  ,status: true};
    var andGate = {_: {}
                  ,gateType: $Model$Model.NormalGate
                  ,imgName: $Model$Model.andImageName
@@ -3983,83 +4088,43 @@ Elm.Level_2.make = function (_elm) {
                  ,imgSize: {ctor: "_Tuple2"
                            ,_0: 75
                            ,_1: 75}
-                 ,inputs: $Array.fromList(_L.fromArray(["inputGate1"
-                                                       ,"inputGate2"]))
+                 ,inputs: $Array.fromList(_L.fromArray(["input1"
+                                                       ,"input2"]))
                  ,location: {ctor: "_Tuple2"
-                            ,_0: 0
-                            ,_1: 0}
+                            ,_0: -100
+                            ,_1: 50}
                  ,logic: $Model$Model.andLogic
                  ,name: "andGate"
                  ,status: false};
-   var inputGate2 = {_: {}
-                    ,gateType: $Model$Model.InputGate
-                    ,imgName: $Model$Model.inputOnName
-                    ,imgOffName: $Model$Model.inputOffName
-                    ,imgOnName: $Model$Model.inputOnName
-                    ,imgSize: {ctor: "_Tuple2"
-                              ,_0: 75
-                              ,_1: 75}
-                    ,inputs: $Array.empty
-                    ,location: {ctor: "_Tuple2"
-                               ,_0: -100
-                               ,_1: -100}
-                    ,logic: $Model$Model.inputLogic
-                    ,name: "inputGate2"
-                    ,status: false};
-   var inputChannel2 = $Signal.channel(inputGate2.status);
-   var inputGate1 = {_: {}
-                    ,gateType: $Model$Model.InputGate
-                    ,imgName: $Model$Model.inputOnName
-                    ,imgOffName: $Model$Model.inputOffName
-                    ,imgOnName: $Model$Model.inputOnName
-                    ,imgSize: {ctor: "_Tuple2"
-                              ,_0: 75
-                              ,_1: 75}
-                    ,inputs: $Array.empty
-                    ,location: {ctor: "_Tuple2"
-                               ,_0: -100
-                               ,_1: 0}
-                    ,logic: $Model$Model.inputLogic
-                    ,name: "inputGate1"
-                    ,status: true};
-   var gates = _L.fromArray([inputGate1
-                            ,inputGate2
+   var gates = _L.fromArray([input1
+                            ,input2
+                            ,input3
                             ,andGate
-                            ,outputGate]);
-   var inputChannel1 = $Signal.channel(inputGate1.status);
-   var inputSignalsPreDict = _L.fromArray([{ctor: "_Tuple2"
-                                           ,_0: "inputGate1"
-                                           ,_1: inputChannel1}
-                                          ,{ctor: "_Tuple2"
-                                           ,_0: "inputGate2"
-                                           ,_1: inputChannel2}]);
+                            ,andGate2
+                            ,orGate
+                            ,output]);
    var gameState = A5($Controller$InstantiationHelper.instantiateGameState,
    gates,
-   inputSignalsPreDict,
+   inputChannelsPreDict,
    solution,
    directions,
    nextLink);
-   var userInputs = A3($Signal.map2,
-   liftToDict,
-   $Signal.subscribe(inputChannel1),
-   $Signal.subscribe(inputChannel2));
-   var userInput = A4($Signal.map3,
-   $Model$Model.UserInput,
-   $Mouse.position,
-   countClick,
-   userInputs);
    var main = A2($Controller$Controller.mainDriver,
    gameState,
    userInput);
-   _elm.Level_2.values = {_op: _op
-                         ,inputGate1: inputGate1
-                         ,inputGate2: inputGate2
+   _elm.Level_4.values = {_op: _op
                          ,andGate: andGate
-                         ,outputGate: outputGate
+                         ,andGate2: andGate2
+                         ,orGate: orGate
+                         ,input1: input1
+                         ,input2: input2
+                         ,input3: input3
+                         ,output: output
                          ,gates: gates
                          ,inputChannel1: inputChannel1
                          ,inputChannel2: inputChannel2
-                         ,inputSignalsPreDict: inputSignalsPreDict
+                         ,inputChannel3: inputChannel3
+                         ,inputChannelsPreDict: inputChannelsPreDict
                          ,solution: solution
                          ,directions: directions
                          ,nextLink: nextLink
@@ -4069,7 +4134,7 @@ Elm.Level_2.make = function (_elm) {
                          ,countClick: countClick
                          ,userInput: userInput
                          ,main: main};
-   return _elm.Level_2.values;
+   return _elm.Level_4.values;
 };
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
@@ -12801,7 +12866,98 @@ Elm.View.View.make = function (_elm) {
          imgForm);
       }();
    });
-   var drawNets = F2(function (name,
+   var drawDogLegNet = F3(function (_v0,
+   _v1,
+   lineColor) {
+      return function () {
+         switch (_v1.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v0.ctor)
+                 {case "_Tuple2":
+                    return function () {
+                         var middle = (_v0._0 + _v1._0) / 2;
+                         var leg1 = {ctor: "_Tuple2"
+                                    ,_0: middle
+                                    ,_1: _v0._1};
+                         var leg2 = {ctor: "_Tuple2"
+                                    ,_0: middle
+                                    ,_1: _v1._1};
+                         var segment1 = A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: _v0._0
+                         ,_1: _v0._1},
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v0._1});
+                         var traced1 = A2($Graphics$Collage.traced,
+                         $Graphics$Collage.solid(lineColor),
+                         segment1);
+                         var segment2 = A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v0._1},
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v1._1});
+                         var traced2 = A2($Graphics$Collage.traced,
+                         $Graphics$Collage.solid(lineColor),
+                         segment2);
+                         var segment3 = A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v1._1},
+                         {ctor: "_Tuple2"
+                         ,_0: _v1._0
+                         ,_1: _v1._1});
+                         var traced3 = A2($Graphics$Collage.traced,
+                         $Graphics$Collage.solid(lineColor),
+                         segment3);
+                         var all = A3($Graphics$Collage.collage,
+                         300,
+                         300,
+                         _L.fromArray([traced1
+                                      ,traced2
+                                      ,traced3]));
+                         return $Graphics$Collage.toForm(all);
+                      }();}
+                 _U.badCase($moduleName,
+                 "between lines 139 and 154");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 139 and 154");
+      }();
+   });
+   var drawStraightNet = F3(function (_v8,
+   _v9,
+   lineColor) {
+      return function () {
+         switch (_v9.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v8.ctor)
+                 {case "_Tuple2":
+                    return function () {
+                         var segment1 = A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: _v8._0
+                         ,_1: _v8._1},
+                         {ctor: "_Tuple2"
+                         ,_0: _v9._0
+                         ,_1: _v9._1});
+                         return A2($Graphics$Collage.traced,
+                         $Graphics$Collage.solid(lineColor),
+                         segment1);
+                      }();}
+                 _U.badCase($moduleName,
+                 "between lines 131 and 135");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 131 and 135");
+      }();
+   });
+   var drawSingleNet = F3(function (name,
+   index,
    gs) {
       return function () {
          var circuit = gs.circuitState;
@@ -12811,53 +12967,66 @@ Elm.View.View.make = function (_elm) {
          var $ = gate.location,
          x = $._0,
          y = $._1;
-         var input1name = A2($Model$Model.getGateName,
-         0,
+         var inputName = A2($Model$Model.getGateName,
+         index,
          gate.inputs);
          var input1 = A2($Model$Model.getGate,
-         input1name,
+         inputName,
          circuit);
          var $ = input1.location,
          x1 = $._0,
          y1 = $._1;
-         var segment1 = A2($Graphics$Collage.segment,
-         {ctor: "_Tuple2",_0: x,_1: y},
-         {ctor: "_Tuple2"
-         ,_0: x1
-         ,_1: y1});
-         var lineColor1 = _U.eq(input1.status,
+         var lineColor = _U.eq(input1.status,
          true) ? $Color.green : $Color.black;
-         var input1segment = A2($Graphics$Collage.traced,
-         $Graphics$Collage.solid(lineColor1),
-         segment1);
+         return _U.eq(y,
+         y1) ? A3(drawStraightNet,
+         {ctor: "_Tuple2",_0: x,_1: y},
+         {ctor: "_Tuple2",_0: x1,_1: y1},
+         lineColor) : A3(drawDogLegNet,
+         {ctor: "_Tuple2",_0: x,_1: y},
+         {ctor: "_Tuple2",_0: x1,_1: y1},
+         lineColor);
+      }();
+   });
+   var drawNetsToDouble = F2(function (name,
+   gs) {
+      return function () {
+         var input2segment = A3(drawSingleNet,
+         name,
+         1,
+         gs);
+         var input1segment = A3(drawSingleNet,
+         name,
+         0,
+         gs);
+         var both = A3($Graphics$Collage.collage,
+         300,
+         300,
+         _L.fromArray([input1segment
+                      ,input2segment]));
+         return $Graphics$Collage.toForm(both);
+      }();
+   });
+   var drawNetToSingle = F2(function (name,
+   gs) {
+      return A3(drawSingleNet,
+      name,
+      0,
+      gs);
+   });
+   var drawNets = F2(function (name,
+   gs) {
+      return function () {
+         var circuit = gs.circuitState;
+         var gate = A2($Model$Model.getGate,
+         name,
+         circuit);
          return _U.eq($Array.length(gate.inputs),
-         1) ? input1segment : function () {
-            var input2name = A2($Model$Model.getGateName,
-            1,
-            gate.inputs);
-            var input2 = A2($Model$Model.getGate,
-            input2name,
-            circuit);
-            var $ = input2.location,
-            x2 = $._0,
-            y2 = $._1;
-            var segment2 = A2($Graphics$Collage.segment,
-            {ctor: "_Tuple2",_0: x,_1: y},
-            {ctor: "_Tuple2"
-            ,_0: x2
-            ,_1: y2});
-            var lineColor2 = _U.eq(input2.status,
-            true) ? $Color.green : $Color.black;
-            var input2segment = A2($Graphics$Collage.traced,
-            $Graphics$Collage.solid(lineColor2),
-            segment2);
-            var both = A3($Graphics$Collage.collage,
-            300,
-            300,
-            _L.fromArray([input1segment
-                         ,input2segment]));
-            return $Graphics$Collage.toForm(both);
-         }();
+         1) ? A2(drawNetToSingle,
+         name,
+         gs) : A2(drawNetsToDouble,
+         name,
+         gs);
       }();
    });
    var drawAll = F3(function (drawSingle,
@@ -12886,13 +13055,13 @@ Elm.View.View.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 72 and 80");
+         "between lines 77 and 85");
       }();
    });
-   var drawCircuit = F2(function (_v3,
+   var drawCircuit = F2(function (_v19,
    gs) {
       return function () {
-         switch (_v3.ctor)
+         switch (_v19.ctor)
          {case "_Tuple2":
             return function () {
                  var otherForms = A3(drawAll,
@@ -12913,18 +13082,18 @@ Elm.View.View.make = function (_elm) {
                  inputsForms,
                  otherForms));
                  return A3($Graphics$Collage.collage,
-                 _v3._0,
-                 _v3._1,
+                 _v19._0,
+                 _v19._1,
                  allForms);
               }();}
          _U.badCase($moduleName,
-         "between lines 54 and 61");
+         "between lines 59 and 66");
       }();
    });
-   var display = F2(function (_v7,
+   var display = F2(function (_v23,
    gameState) {
       return function () {
-         switch (_v7.ctor)
+         switch (_v23.ctor)
          {case "_Tuple2":
             return function () {
                  var nextBtn = A2($Html.a,
@@ -12948,16 +13117,16 @@ Elm.View.View.make = function (_elm) {
                                            ,clicksText
                                            ,$Text.plainText("           ")
                                            ,levelNextButton]))]));
-                 var circuitHeight = _v7._1 - 50;
-                 var circuitWidth = _v7._0;
+                 var circuitHeight = _v23._1 - 50;
+                 var circuitWidth = _v23._0;
                  var circuitElement = A2(drawCircuit,
                  {ctor: "_Tuple2"
                  ,_0: circuitWidth
                  ,_1: circuitHeight},
                  gameState);
                  var circuitContainer = A4($Graphics$Element.container,
-                 _v7._0,
-                 _v7._1,
+                 circuitWidth,
+                 circuitHeight,
                  $Graphics$Element.middle,
                  circuitElement);
                  return A2($Graphics$Element.flow,
@@ -12966,7 +13135,7 @@ Elm.View.View.make = function (_elm) {
                               ,circuitContainer]));
               }();}
          _U.badCase($moduleName,
-         "between lines 27 and 47");
+         "between lines 27 and 52");
       }();
    });
    _elm.View.View.values = {_op: _op
@@ -12974,6 +13143,11 @@ Elm.View.View.make = function (_elm) {
                            ,drawCircuit: drawCircuit
                            ,drawAll: drawAll
                            ,drawNets: drawNets
+                           ,drawNetToSingle: drawNetToSingle
+                           ,drawNetsToDouble: drawNetsToDouble
+                           ,drawSingleNet: drawSingleNet
+                           ,drawStraightNet: drawStraightNet
+                           ,drawDogLegNet: drawDogLegNet
                            ,drawGate: drawGate
                            ,drawInputGate: drawInputGate};
    return _elm.View.View.values;
