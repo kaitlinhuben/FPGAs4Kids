@@ -1,0 +1,162 @@
+Elm.View = Elm.View || {};
+Elm.View.Nets = Elm.View.Nets || {};
+Elm.View.Nets.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   _elm.View.Nets = _elm.View.Nets || {};
+   if (_elm.View.Nets.values)
+   return _elm.View.Nets.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "View.Nets",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Model$Model = Elm.Model.Model.make(_elm);
+   var drawStraightNet = F3(function (_v0,
+   _v1,
+   lineColor) {
+      return function () {
+         switch (_v1.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v0.ctor)
+                 {case "_Tuple2":
+                    return A2($Graphics$Collage.traced,
+                      $Graphics$Collage.solid(lineColor),
+                      A2($Graphics$Collage.segment,
+                      {ctor: "_Tuple2"
+                      ,_0: _v0._0
+                      ,_1: _v0._1},
+                      {ctor: "_Tuple2"
+                      ,_0: _v1._0
+                      ,_1: _v1._1}));}
+                 _U.badCase($moduleName,
+                 "on line 49, column 3 to 49");
+              }();}
+         _U.badCase($moduleName,
+         "on line 49, column 3 to 49");
+      }();
+   });
+   var drawDogLegNet = F3(function (_v8,
+   _v9,
+   lineColor) {
+      return function () {
+         switch (_v9.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v8.ctor)
+                 {case "_Tuple2":
+                    return function () {
+                         var start_point = {ctor: "_Tuple2"
+                                           ,_0: _v9._0
+                                           ,_1: _v9._1};
+                         var shift = 5;
+                         var y_end = _U.cmp(_v9._1,
+                         _v8._1) > 0 ? _v8._1 + shift : _v8._1 - shift;
+                         var end_point = {ctor: "_Tuple2"
+                                         ,_0: _v8._0
+                                         ,_1: y_end};
+                         var middle = (_v8._0 + _v9._0) / 2;
+                         var mid_point_1 = {ctor: "_Tuple2"
+                                           ,_0: middle
+                                           ,_1: _v9._1};
+                         var input_to_mid = A3(drawStraightNet,
+                         start_point,
+                         mid_point_1,
+                         lineColor);
+                         var mid_point_2 = {ctor: "_Tuple2"
+                                           ,_0: middle
+                                           ,_1: y_end};
+                         var mid_down_mid = A3(drawStraightNet,
+                         mid_point_1,
+                         mid_point_2,
+                         lineColor);
+                         var mid_to_gate = A3(drawStraightNet,
+                         mid_point_2,
+                         end_point,
+                         lineColor);
+                         var all = A3($Graphics$Collage.collage,
+                         300,
+                         300,
+                         _L.fromArray([input_to_mid
+                                      ,mid_down_mid
+                                      ,mid_to_gate]));
+                         return $Graphics$Collage.toForm(all);
+                      }();}
+                 _U.badCase($moduleName,
+                 "between lines 54 and 74");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 54 and 74");
+      }();
+   });
+   var drawSingleNet = F3(function (name,
+   index,
+   gs) {
+      return function () {
+         var circuit = gs.circuitState;
+         var gate = A2($Model$Model.getGate,
+         name,
+         circuit);
+         var $ = gate.location,
+         x = $._0,
+         y = $._1;
+         var inputName = A2($Model$Model.getGateName,
+         index,
+         gate.inputs);
+         var input1 = A2($Model$Model.getGate,
+         inputName,
+         circuit);
+         var $ = input1.location,
+         x1 = $._0,
+         y1 = $._1;
+         var lineColor = _U.eq(input1.status,
+         true) ? $Color.green : $Color.black;
+         return _U.eq(y,
+         y1) ? A3(drawStraightNet,
+         {ctor: "_Tuple2",_0: x,_1: y},
+         {ctor: "_Tuple2",_0: x1,_1: y1},
+         lineColor) : A3(drawDogLegNet,
+         {ctor: "_Tuple2",_0: x,_1: y},
+         {ctor: "_Tuple2",_0: x1,_1: y1},
+         lineColor);
+      }();
+   });
+   var drawNetsToDouble = F2(function (name,
+   gs) {
+      return function () {
+         var input2segment = A3(drawSingleNet,
+         name,
+         1,
+         gs);
+         var input1segment = A3(drawSingleNet,
+         name,
+         0,
+         gs);
+         var both = A3($Graphics$Collage.collage,
+         300,
+         300,
+         _L.fromArray([input1segment
+                      ,input2segment]));
+         return $Graphics$Collage.toForm(both);
+      }();
+   });
+   var drawNetToSingle = F2(function (name,
+   gs) {
+      return A3(drawSingleNet,
+      name,
+      0,
+      gs);
+   });
+   _elm.View.Nets.values = {_op: _op
+                           ,drawNetToSingle: drawNetToSingle
+                           ,drawNetsToDouble: drawNetsToDouble
+                           ,drawSingleNet: drawSingleNet
+                           ,drawStraightNet: drawStraightNet
+                           ,drawDogLegNet: drawDogLegNet};
+   return _elm.View.Nets.values;
+};

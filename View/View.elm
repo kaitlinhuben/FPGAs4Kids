@@ -1,5 +1,5 @@
 {--
-    Contains all functions to render information
+    Contains main functions to render view
 --}
 module View.View where 
 
@@ -7,14 +7,14 @@ import Array
 import Dict
 import List ((::))
 import Graphics.Element (..)
-import Graphics.Collage (Form, collage, segment, traced, solid, toForm, move)
+import Graphics.Collage (Form, collage, toForm, move)
 import Graphics.Input (clickable)
-import Color (Color, green, black, lightGrey, red, blue)
 import Maybe (withDefault)
 import Signal (send)
 import Html (a, button, text, toElement)
 import Html.Attributes (href, id)
 import Model.Model (..)
+import View.Nets (..)
 
 -- don't technically need Text.asText, but clickable doesn't work without it!
 import Text
@@ -93,60 +93,6 @@ drawNets name gs =
   in
     if | Array.length gate.inputs == 1 -> drawNetToSingle name gs
        | otherwise -> drawNetsToDouble name gs
-
-drawNetToSingle : String -> GameState -> Form
-drawNetToSingle name gs =
-  drawSingleNet name 0 gs
-
-drawNetsToDouble : String -> GameState -> Form
-drawNetsToDouble name gs =
-  let
-    input1segment = drawSingleNet name 0 gs
-    input2segment = drawSingleNet name 1 gs
-    both = collage 300 300 [input1segment,input2segment] -- TODO don't hardcode size
-  in 
-    toForm both
-
-drawSingleNet : String -> Int -> GameState -> Form
-drawSingleNet name index gs =
-  let 
-    circuit = gs.circuitState
-    -- get the location of this gate
-    gate = getGate name circuit
-    (x,y) = gate.location
-
-    -- get the location of the first input
-    inputName = getGateName index gate.inputs
-    input1 = getGate inputName circuit
-    (x1,y1) = input1.location
-
-    lineColor = if | input1.status == True -> green
-                   | otherwise -> black
-  in
-    if | y == y1 -> drawStraightNet (x,y) (x1,y1) lineColor
-       | otherwise -> drawDogLegNet (x,y) (x1,y1) lineColor
-
-drawStraightNet : (Float, Float) -> (Float, Float) -> Color -> Form
-drawStraightNet (x,y) (x1,y1) lineColor = 
-  traced (solid lineColor) (segment (x,y) (x1,y1))
-
-drawDogLegNet : (Float, Float) -> (Float, Float) -> Color -> Form
-drawDogLegNet (x,y) (x1,y1) lineColor = 
-  let
-    -- find where the dog leg should occur on x axis
-    middle = (x + x1)/2
-    -- don't have everything go directly down middle line
-    y_start = if | y1 > y -> y + 5
-               | otherwise -> y - 5
-
-    -- draw three segments (three parts of "leg")
-    traced1 = drawStraightNet (x,y_start) (middle,y_start) lineColor
-    traced2 = drawStraightNet (middle,y_start) (middle,y1) lineColor
-    traced3 = drawStraightNet (middle,y1) (x1,y1) lineColor
-
-    all = collage 300 300 [traced1,traced2,traced3] -- TODO don't hardcode size
-  in
-    toForm all
 
 -- Draw a single gate
 drawGate : String -> GameState -> Form

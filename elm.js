@@ -12788,84 +12788,23 @@ Elm.Transform2D.make = function (_elm) {
    return _elm.Transform2D.values;
 };
 Elm.View = Elm.View || {};
-Elm.View.View = Elm.View.View || {};
-Elm.View.View.make = function (_elm) {
+Elm.View.Nets = Elm.View.Nets || {};
+Elm.View.Nets.make = function (_elm) {
    "use strict";
    _elm.View = _elm.View || {};
-   _elm.View.View = _elm.View.View || {};
-   if (_elm.View.View.values)
-   return _elm.View.View.values;
+   _elm.View.Nets = _elm.View.Nets || {};
+   if (_elm.View.Nets.values)
+   return _elm.View.Nets.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "View.View",
-   $Array = Elm.Array.make(_elm),
+   $moduleName = "View.Nets",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $Graphics$Input = Elm.Graphics.Input.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Model$Model = Elm.Model.Model.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var drawInputGate = F2(function (name,
-   gs) {
-      return function () {
-         var gateChannel = A2($Maybe.withDefault,
-         $Model$Model.failedChannel,
-         A2($Dict.get,
-         name,
-         gs.inputChannels));
-         var gate = A2($Model$Model.getGate,
-         name,
-         gs.circuitState);
-         var $ = gate.imgSize,
-         w = $._0,
-         h = $._1;
-         var gateImage = A3($Graphics$Element.image,
-         w,
-         h,
-         gate.imgName);
-         var updateValue = _U.eq(gate.status,
-         true) ? false : true;
-         var gateElement = A2($Graphics$Input.clickable,
-         A2($Signal.send,
-         gateChannel,
-         updateValue),
-         gateImage);
-         var linkedElement = A2($Graphics$Element.link,
-         "#",
-         gateElement);
-         return A2($Graphics$Collage.move,
-         gate.location,
-         $Graphics$Collage.toForm(linkedElement));
-      }();
-   });
-   var drawGate = F2(function (name,
-   gs) {
-      return function () {
-         var gate = A2($Model$Model.getGate,
-         name,
-         gs.circuitState);
-         var $ = gate.imgSize,
-         w = $._0,
-         h = $._1;
-         var imgForm = $Graphics$Collage.toForm(A3($Graphics$Element.image,
-         w,
-         h,
-         gate.imgName));
-         return A2($Graphics$Collage.move,
-         gate.location,
-         imgForm);
-      }();
-   });
+   $Model$Model = Elm.Model.Model.make(_elm);
    var drawStraightNet = F3(function (_v0,
    _v1,
    lineColor) {
@@ -12885,10 +12824,10 @@ Elm.View.View.make = function (_elm) {
                       ,_0: _v1._0
                       ,_1: _v1._1}));}
                  _U.badCase($moduleName,
-                 "on line 131, column 3 to 49");
+                 "on line 49, column 3 to 49");
               }();}
          _U.badCase($moduleName,
-         "on line 131, column 3 to 49");
+         "on line 49, column 3 to 49");
       }();
    });
    var drawDogLegNet = F3(function (_v8,
@@ -12901,46 +12840,47 @@ Elm.View.View.make = function (_elm) {
                  switch (_v8.ctor)
                  {case "_Tuple2":
                     return function () {
-                         var y_start = _U.cmp(_v9._1,
-                         _v8._1) > 0 ? _v8._1 + 5 : _v8._1 - 5;
+                         var start_point = {ctor: "_Tuple2"
+                                           ,_0: _v9._0
+                                           ,_1: _v9._1};
+                         var shift = 5;
+                         var y_end = _U.cmp(_v9._1,
+                         _v8._1) > 0 ? _v8._1 + shift : _v8._1 - shift;
+                         var end_point = {ctor: "_Tuple2"
+                                         ,_0: _v8._0
+                                         ,_1: y_end};
                          var middle = (_v8._0 + _v9._0) / 2;
-                         var traced1 = A3(drawStraightNet,
-                         {ctor: "_Tuple2"
-                         ,_0: _v8._0
-                         ,_1: y_start},
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: y_start},
+                         var mid_point_1 = {ctor: "_Tuple2"
+                                           ,_0: middle
+                                           ,_1: _v9._1};
+                         var input_to_mid = A3(drawStraightNet,
+                         start_point,
+                         mid_point_1,
                          lineColor);
-                         var traced2 = A3(drawStraightNet,
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: y_start},
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v9._1},
+                         var mid_point_2 = {ctor: "_Tuple2"
+                                           ,_0: middle
+                                           ,_1: y_end};
+                         var mid_down_mid = A3(drawStraightNet,
+                         mid_point_1,
+                         mid_point_2,
                          lineColor);
-                         var traced3 = A3(drawStraightNet,
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v9._1},
-                         {ctor: "_Tuple2"
-                         ,_0: _v9._0
-                         ,_1: _v9._1},
+                         var mid_to_gate = A3(drawStraightNet,
+                         mid_point_2,
+                         end_point,
                          lineColor);
                          var all = A3($Graphics$Collage.collage,
                          300,
                          300,
-                         _L.fromArray([traced1
-                                      ,traced2
-                                      ,traced3]));
+                         _L.fromArray([input_to_mid
+                                      ,mid_down_mid
+                                      ,mid_to_gate]));
                          return $Graphics$Collage.toForm(all);
                       }();}
                  _U.badCase($moduleName,
-                 "between lines 135 and 149");
+                 "between lines 54 and 74");
               }();}
          _U.badCase($moduleName,
-         "between lines 135 and 149");
+         "between lines 54 and 74");
       }();
    });
    var drawSingleNet = F3(function (name,
@@ -13001,6 +12941,93 @@ Elm.View.View.make = function (_elm) {
       0,
       gs);
    });
+   _elm.View.Nets.values = {_op: _op
+                           ,drawNetToSingle: drawNetToSingle
+                           ,drawNetsToDouble: drawNetsToDouble
+                           ,drawSingleNet: drawSingleNet
+                           ,drawStraightNet: drawStraightNet
+                           ,drawDogLegNet: drawDogLegNet};
+   return _elm.View.Nets.values;
+};
+Elm.View = Elm.View || {};
+Elm.View.View = Elm.View.View || {};
+Elm.View.View.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   _elm.View.View = _elm.View.View || {};
+   if (_elm.View.View.values)
+   return _elm.View.View.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "View.View",
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Model = Elm.Model.Model.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $View$Nets = Elm.View.Nets.make(_elm);
+   var drawInputGate = F2(function (name,
+   gs) {
+      return function () {
+         var gateChannel = A2($Maybe.withDefault,
+         $Model$Model.failedChannel,
+         A2($Dict.get,
+         name,
+         gs.inputChannels));
+         var gate = A2($Model$Model.getGate,
+         name,
+         gs.circuitState);
+         var $ = gate.imgSize,
+         w = $._0,
+         h = $._1;
+         var gateImage = A3($Graphics$Element.image,
+         w,
+         h,
+         gate.imgName);
+         var updateValue = _U.eq(gate.status,
+         true) ? false : true;
+         var gateElement = A2($Graphics$Input.clickable,
+         A2($Signal.send,
+         gateChannel,
+         updateValue),
+         gateImage);
+         var linkedElement = A2($Graphics$Element.link,
+         "#",
+         gateElement);
+         return A2($Graphics$Collage.move,
+         gate.location,
+         $Graphics$Collage.toForm(linkedElement));
+      }();
+   });
+   var drawGate = F2(function (name,
+   gs) {
+      return function () {
+         var gate = A2($Model$Model.getGate,
+         name,
+         gs.circuitState);
+         var $ = gate.imgSize,
+         w = $._0,
+         h = $._1;
+         var imgForm = $Graphics$Collage.toForm(A3($Graphics$Element.image,
+         w,
+         h,
+         gate.imgName));
+         return A2($Graphics$Collage.move,
+         gate.location,
+         imgForm);
+      }();
+   });
    var drawNets = F2(function (name,
    gs) {
       return function () {
@@ -13009,9 +13036,9 @@ Elm.View.View.make = function (_elm) {
          name,
          circuit);
          return _U.eq($Array.length(gate.inputs),
-         1) ? A2(drawNetToSingle,
+         1) ? A2($View$Nets.drawNetToSingle,
          name,
-         gs) : A2(drawNetsToDouble,
+         gs) : A2($View$Nets.drawNetsToDouble,
          name,
          gs);
       }();
@@ -13045,10 +13072,10 @@ Elm.View.View.make = function (_elm) {
          "between lines 77 and 85");
       }();
    });
-   var drawCircuit = F2(function (_v19,
+   var drawCircuit = F2(function (_v3,
    gs) {
       return function () {
-         switch (_v19.ctor)
+         switch (_v3.ctor)
          {case "_Tuple2":
             return function () {
                  var otherForms = A3(drawAll,
@@ -13069,18 +13096,18 @@ Elm.View.View.make = function (_elm) {
                  inputsForms,
                  otherForms));
                  return A3($Graphics$Collage.collage,
-                 _v19._0,
-                 _v19._1,
+                 _v3._0,
+                 _v3._1,
                  allForms);
               }();}
          _U.badCase($moduleName,
          "between lines 59 and 66");
       }();
    });
-   var display = F2(function (_v23,
+   var display = F2(function (_v7,
    gameState) {
       return function () {
-         switch (_v23.ctor)
+         switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
                  var nextBtn = A2($Html.a,
@@ -13104,8 +13131,8 @@ Elm.View.View.make = function (_elm) {
                                            ,clicksText
                                            ,$Text.plainText("           ")
                                            ,levelNextButton]))]));
-                 var circuitHeight = _v23._1 - 50;
-                 var circuitWidth = _v23._0;
+                 var circuitHeight = _v7._1 - 50;
+                 var circuitWidth = _v7._0;
                  var circuitElement = A2(drawCircuit,
                  {ctor: "_Tuple2"
                  ,_0: circuitWidth
@@ -13130,11 +13157,6 @@ Elm.View.View.make = function (_elm) {
                            ,drawCircuit: drawCircuit
                            ,drawAll: drawAll
                            ,drawNets: drawNets
-                           ,drawNetToSingle: drawNetToSingle
-                           ,drawNetsToDouble: drawNetsToDouble
-                           ,drawSingleNet: drawSingleNet
-                           ,drawStraightNet: drawStraightNet
-                           ,drawDogLegNet: drawDogLegNet
                            ,drawGate: drawGate
                            ,drawInputGate: drawInputGate};
    return _elm.View.View.values;
