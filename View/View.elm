@@ -128,28 +128,23 @@ drawSingleNet name index gs =
 
 drawStraightNet : (Float, Float) -> (Float, Float) -> Color -> Form
 drawStraightNet (x,y) (x1,y1) lineColor = 
-  let
-    -- draw segment from first input to this gate
-    segment1 = segment (x,y) (x1,y1)
-  in
-    traced (solid lineColor) segment1
+  traced (solid lineColor) (segment (x,y) (x1,y1))
 
 drawDogLegNet : (Float, Float) -> (Float, Float) -> Color -> Form
 drawDogLegNet (x,y) (x1,y1) lineColor = 
   let
+    -- find where the dog leg should occur on x axis
     middle = (x + x1)/2
-    leg1 = (middle, y)
-    leg2 = (middle, y1)
+    -- don't have everything go directly down middle line
+    y_start = if | y1 > y -> y + 5
+               | otherwise -> y - 5
+
     -- draw three segments (three parts of "leg")
-    segment1 = segment (x,y) (middle,y)
-    segment2 = segment (middle,y) (middle,y1)
-    segment3 = segment (middle,y1) (x1,y1)
+    traced1 = drawStraightNet (x,y_start) (middle,y_start) lineColor
+    traced2 = drawStraightNet (middle,y_start) (middle,y1) lineColor
+    traced3 = drawStraightNet (middle,y1) (x1,y1) lineColor
 
-    traced1 = traced (solid lineColor) segment1
-    traced2 = traced (solid lineColor) segment2
-    traced3 = traced (solid lineColor) segment3
-
-    all = collage 300 300 [traced1,traced2,traced3] -- TODO don't hardcode
+    all = collage 300 300 [traced1,traced2,traced3] -- TODO don't hardcode size
   in
     toForm all
 

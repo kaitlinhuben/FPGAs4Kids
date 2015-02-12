@@ -77,7 +77,7 @@ Elm.View.View.make = function (_elm) {
          imgForm);
       }();
    });
-   var drawDogLegNet = F3(function (_v0,
+   var drawStraightNet = F3(function (_v0,
    _v1,
    lineColor) {
       return function () {
@@ -86,60 +86,23 @@ Elm.View.View.make = function (_elm) {
             return function () {
                  switch (_v0.ctor)
                  {case "_Tuple2":
-                    return function () {
-                         var middle = (_v0._0 + _v1._0) / 2;
-                         var leg1 = {ctor: "_Tuple2"
-                                    ,_0: middle
-                                    ,_1: _v0._1};
-                         var leg2 = {ctor: "_Tuple2"
-                                    ,_0: middle
-                                    ,_1: _v1._1};
-                         var segment1 = A2($Graphics$Collage.segment,
-                         {ctor: "_Tuple2"
-                         ,_0: _v0._0
-                         ,_1: _v0._1},
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v0._1});
-                         var traced1 = A2($Graphics$Collage.traced,
-                         $Graphics$Collage.solid(lineColor),
-                         segment1);
-                         var segment2 = A2($Graphics$Collage.segment,
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v0._1},
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v1._1});
-                         var traced2 = A2($Graphics$Collage.traced,
-                         $Graphics$Collage.solid(lineColor),
-                         segment2);
-                         var segment3 = A2($Graphics$Collage.segment,
-                         {ctor: "_Tuple2"
-                         ,_0: middle
-                         ,_1: _v1._1},
-                         {ctor: "_Tuple2"
-                         ,_0: _v1._0
-                         ,_1: _v1._1});
-                         var traced3 = A2($Graphics$Collage.traced,
-                         $Graphics$Collage.solid(lineColor),
-                         segment3);
-                         var all = A3($Graphics$Collage.collage,
-                         300,
-                         300,
-                         _L.fromArray([traced1
-                                      ,traced2
-                                      ,traced3]));
-                         return $Graphics$Collage.toForm(all);
-                      }();}
+                    return A2($Graphics$Collage.traced,
+                      $Graphics$Collage.solid(lineColor),
+                      A2($Graphics$Collage.segment,
+                      {ctor: "_Tuple2"
+                      ,_0: _v0._0
+                      ,_1: _v0._1},
+                      {ctor: "_Tuple2"
+                      ,_0: _v1._0
+                      ,_1: _v1._1}));}
                  _U.badCase($moduleName,
-                 "between lines 139 and 154");
+                 "on line 131, column 3 to 49");
               }();}
          _U.badCase($moduleName,
-         "between lines 139 and 154");
+         "on line 131, column 3 to 49");
       }();
    });
-   var drawStraightNet = F3(function (_v8,
+   var drawDogLegNet = F3(function (_v8,
    _v9,
    lineColor) {
       return function () {
@@ -149,22 +112,46 @@ Elm.View.View.make = function (_elm) {
                  switch (_v8.ctor)
                  {case "_Tuple2":
                     return function () {
-                         var segment1 = A2($Graphics$Collage.segment,
+                         var y_start = _U.cmp(_v9._1,
+                         _v8._1) > 0 ? _v8._1 + 5 : _v8._1 - 5;
+                         var middle = (_v8._0 + _v9._0) / 2;
+                         var traced1 = A3(drawStraightNet,
                          {ctor: "_Tuple2"
                          ,_0: _v8._0
-                         ,_1: _v8._1},
+                         ,_1: y_start},
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: y_start},
+                         lineColor);
+                         var traced2 = A3(drawStraightNet,
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: y_start},
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v9._1},
+                         lineColor);
+                         var traced3 = A3(drawStraightNet,
+                         {ctor: "_Tuple2"
+                         ,_0: middle
+                         ,_1: _v9._1},
                          {ctor: "_Tuple2"
                          ,_0: _v9._0
-                         ,_1: _v9._1});
-                         return A2($Graphics$Collage.traced,
-                         $Graphics$Collage.solid(lineColor),
-                         segment1);
+                         ,_1: _v9._1},
+                         lineColor);
+                         var all = A3($Graphics$Collage.collage,
+                         300,
+                         300,
+                         _L.fromArray([traced1
+                                      ,traced2
+                                      ,traced3]));
+                         return $Graphics$Collage.toForm(all);
                       }();}
                  _U.badCase($moduleName,
-                 "between lines 131 and 135");
+                 "between lines 135 and 149");
               }();}
          _U.badCase($moduleName,
-         "between lines 131 and 135");
+         "between lines 135 and 149");
       }();
    });
    var drawSingleNet = F3(function (name,
