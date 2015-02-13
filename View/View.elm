@@ -59,9 +59,10 @@ drawCircuit (w,h) gs =
   let 
     netsForms = drawAll drawNets gs.nonInputNames gs 
     inputsForms = drawAll drawInputGate gs.inputNames gs
+    solutionsForms = drawAll drawSolution (Dict.keys gs.solution) gs
     otherForms = drawAll drawGate gs.nonInputNames gs
 
-    allForms = netsForms ++ inputsForms ++ otherForms
+    allForms = netsForms ++ inputsForms ++ solutionsForms ++ otherForms
   in
     collage w h allForms
 
@@ -103,6 +104,20 @@ drawGate name gs =
     imgForm = toForm(image w h gate.imgName)
   in 
     move gate.location imgForm
+
+-- Draw the solution (e.g. whether output is correct or not)
+drawSolution : String -> GameState -> Form
+drawSolution name gs = 
+  let
+    gate = getGate name gs.circuitState
+    gateSolution = withDefault False (Dict.get name gs.solution)
+    (w,h) = solutionSize
+    solutionImg = if | gate.status == gateSolution -> outputGoodName
+                     | otherwise -> outputBadName
+    imgForm = toForm(image w h solutionImg)
+    (x,y) = gate.location
+  in 
+    move (x,y-25) imgForm
 
 -- Draw a single input gate
 drawInputGate : String -> GameState -> Form

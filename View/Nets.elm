@@ -55,7 +55,7 @@ drawDogLegNet (x,y) (x1,y1) lineColor =
     -- find where the dog leg should occur on x axis
     middle = (x + x1)/2
     -- when hit gate, shift up or down a little bit to prevent overlap
-    shift = 5
+    shift = 10
     y_end = if | y1 > y -> y + shift
                | otherwise -> y - shift
 

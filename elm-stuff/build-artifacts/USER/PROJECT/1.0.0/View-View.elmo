@@ -59,6 +59,34 @@ Elm.View.View.make = function (_elm) {
          $Graphics$Collage.toForm(linkedElement));
       }();
    });
+   var drawSolution = F2(function (name,
+   gs) {
+      return function () {
+         var $ = $Model$Model.solutionSize,
+         w = $._0,
+         h = $._1;
+         var gateSolution = A2($Maybe.withDefault,
+         false,
+         A2($Dict.get,name,gs.solution));
+         var gate = A2($Model$Model.getGate,
+         name,
+         gs.circuitState);
+         var solutionImg = _U.eq(gate.status,
+         gateSolution) ? $Model$Model.outputGoodName : $Model$Model.outputBadName;
+         var imgForm = $Graphics$Collage.toForm(A3($Graphics$Element.image,
+         w,
+         h,
+         solutionImg));
+         var $ = gate.location,
+         x = $._0,
+         y = $._1;
+         return A2($Graphics$Collage.move,
+         {ctor: "_Tuple2"
+         ,_0: x
+         ,_1: y - 25},
+         imgForm);
+      }();
+   });
    var drawGate = F2(function (name,
    gs) {
       return function () {
@@ -118,7 +146,7 @@ Elm.View.View.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 77 and 85");
+         "between lines 78 and 86");
       }();
    });
    var drawCircuit = F2(function (_v3,
@@ -130,6 +158,10 @@ Elm.View.View.make = function (_elm) {
                  var otherForms = A3(drawAll,
                  drawGate,
                  gs.nonInputNames,
+                 gs);
+                 var solutionsForms = A3(drawAll,
+                 drawSolution,
+                 $Dict.keys(gs.solution),
                  gs);
                  var inputsForms = A3(drawAll,
                  drawInputGate,
@@ -143,14 +175,16 @@ Elm.View.View.make = function (_elm) {
                  netsForms,
                  A2($Basics._op["++"],
                  inputsForms,
-                 otherForms));
+                 A2($Basics._op["++"],
+                 solutionsForms,
+                 otherForms)));
                  return A3($Graphics$Collage.collage,
                  _v3._0,
                  _v3._1,
                  allForms);
               }();}
          _U.badCase($moduleName,
-         "between lines 59 and 66");
+         "between lines 59 and 67");
       }();
    });
    var display = F2(function (_v7,
@@ -207,6 +241,7 @@ Elm.View.View.make = function (_elm) {
                            ,drawAll: drawAll
                            ,drawNets: drawNets
                            ,drawGate: drawGate
+                           ,drawSolution: drawSolution
                            ,drawInputGate: drawInputGate};
    return _elm.View.View.values;
 };

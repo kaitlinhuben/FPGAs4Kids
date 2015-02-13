@@ -139,3 +139,12 @@ outputOnName = imgPath ++ "light-on.png"
 
 outputOffName : String
 outputOffName = imgPath ++ "light-off.png"
+
+outputGoodName: String
+outputGoodName = imgPath ++ "output-good.png"
+
+outputBadName : String
+outputBadName = imgPath ++ "output-bad.png"
+
+solutionSize : (Int, Int)
+solutionSize = (25,25)

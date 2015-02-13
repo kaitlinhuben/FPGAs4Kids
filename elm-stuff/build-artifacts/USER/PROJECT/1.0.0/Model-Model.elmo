@@ -17,6 +17,9 @@ Elm.Model.Model.make = function (_elm) {
    $Dict = Elm.Dict.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var solutionSize = {ctor: "_Tuple2"
+                      ,_0: 25
+                      ,_1: 25};
    var imgPath = "../assets/img/";
    var inputOnName = A2($Basics._op["++"],
    imgPath,
@@ -39,6 +42,12 @@ Elm.Model.Model.make = function (_elm) {
    var outputOffName = A2($Basics._op["++"],
    imgPath,
    "light-off.png");
+   var outputGoodName = A2($Basics._op["++"],
+   imgPath,
+   "output-good.png");
+   var outputBadName = A2($Basics._op["++"],
+   imgPath,
+   "output-bad.png");
    var norLogic = F2(function (input1,
    input2) {
       return $Basics.not(input1 || input2);
@@ -220,6 +229,9 @@ Elm.Model.Model.make = function (_elm) {
                              ,orImageName: orImageName
                              ,notImageName: notImageName
                              ,outputOnName: outputOnName
-                             ,outputOffName: outputOffName};
+                             ,outputOffName: outputOffName
+                             ,outputGoodName: outputGoodName
+                             ,outputBadName: outputBadName
+                             ,solutionSize: solutionSize};
    return _elm.Model.Model.values;
 };

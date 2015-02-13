@@ -36,7 +36,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="51.57845"
+     inkscape:cx="-8.7781642"
      inkscape:cy="100.06726"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -44,8 +44,8 @@
      borderlayer="false"
      inkscape:window-width="1366"
      inkscape:window-height="706"
-     inkscape:window-x="1592"
-     inkscape:window-y="334"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -55,7 +55,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -69,13 +69,14 @@
        id="rect3813"
        width="190"
        height="90"
-       x="5"
-       y="907.36218"
-       ry="7.323606" />
+       x="-1047.3622"
+       y="55"
+       ry="7.323606"
+       transform="matrix(0,-1,1,0,0,0)" />
     <rect
        ry="6.509872"
-       y="912.36218"
-       x="110"
+       y="862.36218"
+       x="60"
        height="80"
        width="80"
        id="rect3815"
@@ -83,13 +84,14 @@
     <text
        xml:space="preserve"
        style="font-size:53.30459595px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Century Gothic;-inkscape-font-specification:Century Gothic Bold"
-       x="11.968376"
-       y="971.50562"
+       x="62.921875"
+       y="1041.5056"
        id="text3817"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3819"
-         x="11.968376"
-         y="971.50562">ON</tspan></text>
+         x="62.921875"
+         y="1041.5056"
+         style="font-size:48px">ON</tspan></text>
   </g>
 </svg>

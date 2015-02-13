@@ -35,15 +35,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8"
-     inkscape:cx="26.042471"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-34.314144"
      inkscape:cy="102.5183"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      borderlayer="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="878"
+     inkscape:window-width="1366"
+     inkscape:window-height="706"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
@@ -69,27 +69,28 @@
        id="rect3813"
        width="190"
        height="90"
-       x="5"
-       y="907.36218"
-       ry="7.323606" />
+       x="857.36218"
+       y="-145"
+       ry="7.323606"
+       transform="matrix(0,1,-1,0,0,0)" />
     <rect
        ry="6.509872"
-       y="912.36218"
-       x="10"
+       y="962.36218"
+       x="60"
        height="80"
        width="80"
        id="rect3815"
        style="fill:#dfdfdf;fill-opacity:1;stroke:none" />
     <text
        xml:space="preserve"
-       style="font-size:53.30459595px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Century Gothic;-inkscape-font-specification:Century Gothic Bold"
-       x="93.968376"
-       y="971.50562"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Century Gothic;-inkscape-font-specification:Century Gothic Bold"
+       x="56.617188"
+       y="897.50562"
        id="text3817"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3819"
-         x="93.968376"
-         y="971.50562">OFF</tspan></text>
+         x="56.617188"
+         y="897.50562">OFF</tspan></text>
   </g>
 </svg>
