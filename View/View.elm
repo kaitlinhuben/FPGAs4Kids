@@ -11,8 +11,8 @@ import Graphics.Collage (Form, collage, toForm, move)
 import Graphics.Input (clickable)
 import Maybe (withDefault)
 import Signal (send)
-import Html (a, button, text, toElement, fromElement)
-import Html.Attributes (href, id)
+import Html (a, button, text, toElement, fromElement, img)
+import Html.Attributes (href, id, src)
 import Model.Model (..)
 import View.Nets (..)
 
@@ -32,13 +32,13 @@ display (w,h) gameState =
         clicksText = Text.asText gameState.clicks
         navButtonSize = 50
         nextBtnHTML = a 
-                  [href gameState.nextLink] 
-                  [ fromElement (image navButtonSize navButtonSize nextLevelBtn) ] --TODO link doesn't work
+                  [ href gameState.nextLink ] 
+                  [ img [src nextLevelBtn] [] ]
         levelNextButton = if | gameState.completed == False -> image navButtonSize navButtonSize nextLevelNotYetBtn
                              | otherwise -> toElement navButtonSize navButtonSize nextBtnHTML
         restartButton = toElement navButtonSize navButtonSize ( a 
-                        [href "#"]
-                        [ fromElement (image navButtonSize navButtonSize restartName) ] )
+                        [ href "#" ]
+                        [ img [src restartName] [] ] )
 
         upperBar = flow down 
                     [ Text.plainText gameState.directions

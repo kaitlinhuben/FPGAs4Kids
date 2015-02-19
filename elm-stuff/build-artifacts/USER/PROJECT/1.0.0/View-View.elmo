@@ -193,13 +193,12 @@ Elm.View.View.make = function (_elm) {
          switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
-                 var navButtonSize = 50;
                  var nextBtnHTML = A2($Html.a,
                  _L.fromArray([$Html$Attributes.href(gameState.nextLink)]),
-                 _L.fromArray([$Html.fromElement(A3($Graphics$Element.image,
-                 navButtonSize,
-                 navButtonSize,
-                 $Model$Model.nextLevelBtn))]));
+                 _L.fromArray([A2($Html.img,
+                 _L.fromArray([$Html$Attributes.src($Model$Model.nextLevelBtn)]),
+                 _L.fromArray([]))]));
+                 var navButtonSize = 50;
                  var levelNextButton = _U.eq(gameState.completed,
                  false) ? A3($Graphics$Element.image,
                  navButtonSize,
@@ -213,10 +212,9 @@ Elm.View.View.make = function (_elm) {
                  navButtonSize,
                  A2($Html.a,
                  _L.fromArray([$Html$Attributes.href("#")]),
-                 _L.fromArray([$Html.fromElement(A3($Graphics$Element.image,
-                 navButtonSize,
-                 navButtonSize,
-                 $Model$Model.restartName))])));
+                 _L.fromArray([A2($Html.img,
+                 _L.fromArray([$Html$Attributes.src($Model$Model.restartName)]),
+                 _L.fromArray([]))])));
                  var clicksText = $Text.asText(gameState.clicks);
                  var upperBar = A2($Graphics$Element.flow,
                  $Graphics$Element.down,
