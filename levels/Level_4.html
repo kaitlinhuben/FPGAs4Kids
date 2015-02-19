@@ -4735,6 +4735,15 @@ Elm.Model.Model.make = function (_elm) {
    var outputBadName = A2($Basics._op["++"],
    imgPath,
    "output-bad.png");
+   var restartName = A2($Basics._op["++"],
+   imgPath,
+   "restart.png");
+   var nextLevelBtn = A2($Basics._op["++"],
+   imgPath,
+   "next-level.png");
+   var nextLevelNotYetBtn = A2($Basics._op["++"],
+   imgPath,
+   "next-level-not-yet.png");
    var norLogic = F2(function (input1,
    input2) {
       return $Basics.not(input1 || input2);
@@ -4919,6 +4928,9 @@ Elm.Model.Model.make = function (_elm) {
                              ,outputOffName: outputOffName
                              ,outputGoodName: outputGoodName
                              ,outputBadName: outputBadName
+                             ,restartName: restartName
+                             ,nextLevelBtn: nextLevelBtn
+                             ,nextLevelNotYetBtn: nextLevelNotYetBtn
                              ,solutionSize: solutionSize};
    return _elm.Model.Model.values;
 };Elm.Mouse = Elm.Mouse || {};
@@ -13061,7 +13073,7 @@ Elm.View.View.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 78 and 86");
+         "between lines 81 and 89");
       }();
    });
    var drawCircuit = F2(function (_v3,
@@ -13099,7 +13111,7 @@ Elm.View.View.make = function (_elm) {
                  allForms);
               }();}
          _U.badCase($moduleName,
-         "between lines 59 and 67");
+         "between lines 62 and 70");
       }();
    });
    var display = F2(function (_v7,
@@ -13108,16 +13120,28 @@ Elm.View.View.make = function (_elm) {
          switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
-                 var nextBtn = A2($Html.a,
+                 var nextBtnHTML = A2($Html.a,
                  _L.fromArray([$Html$Attributes.href(gameState.nextLink)]),
-                 _L.fromArray([A2($Html.button,
-                 _L.fromArray([$Html$Attributes.id("test-button")]),
-                 _L.fromArray([$Html.text("Go to next level")]))]));
+                 _L.fromArray([A2($Html.img,
+                 _L.fromArray([$Html$Attributes.src($Model$Model.nextLevelBtn)]),
+                 _L.fromArray([]))]));
+                 var navButtonSize = 50;
                  var levelNextButton = _U.eq(gameState.completed,
-                 true) ? A3($Html.toElement,
-                 150,
-                 20,
-                 nextBtn) : $Text.plainText("");
+                 false) ? A3($Graphics$Element.image,
+                 navButtonSize,
+                 navButtonSize,
+                 $Model$Model.nextLevelNotYetBtn) : A3($Html.toElement,
+                 navButtonSize,
+                 navButtonSize,
+                 nextBtnHTML);
+                 var restartButton = A3($Html.toElement,
+                 navButtonSize,
+                 navButtonSize,
+                 A2($Html.a,
+                 _L.fromArray([$Html$Attributes.href("#")]),
+                 _L.fromArray([A2($Html.img,
+                 _L.fromArray([$Html$Attributes.src($Model$Model.restartName)]),
+                 _L.fromArray([]))])));
                  var clicksText = $Text.asText(gameState.clicks);
                  var upperBar = A2($Graphics$Element.flow,
                  $Graphics$Element.down,
@@ -13128,6 +13152,7 @@ Elm.View.View.make = function (_elm) {
                               _L.fromArray([$Text.plainText("Clicks: ")
                                            ,clicksText
                                            ,$Text.plainText("           ")
+                                           ,restartButton
                                            ,levelNextButton]))]));
                  var circuitHeight = _v7._1 - 50;
                  var circuitWidth = _v7._0;
@@ -13147,7 +13172,7 @@ Elm.View.View.make = function (_elm) {
                               ,circuitContainer]));
               }();}
          _U.badCase($moduleName,
-         "between lines 27 and 52");
+         "between lines 27 and 55");
       }();
    });
    _elm.View.View.values = {_op: _op
