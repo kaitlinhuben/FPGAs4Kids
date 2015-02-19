@@ -35,18 +35,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="37.26719"
+     inkscape:zoom="1.4"
+     inkscape:cx="79.945761"
      inkscape:cy="101.65173"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      borderlayer="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="878"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="667"
+     inkscape:window-height="690"
+     inkscape:window-x="683"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -72,7 +72,7 @@
        sodipodi:cy="100.35714"
        sodipodi:rx="66.785713"
        sodipodi:ry="12.857142"
-       d="m 172.14285,100.35714 a 66.785713,12.857142 0 1 1 -133.571424,0 66.785713,12.857142 0 1 1 133.571424,0 z"
+       d="m 172.14285,100.35714 c 0,7.1008 -29.90098,12.85714 -66.78571,12.85714 -36.884731,0 -66.785714,-5.75634 -66.785714,-12.85714 0,-7.100804 29.900983,-12.857143 66.785714,-12.857143 36.88473,0 66.78571,5.756339 66.78571,12.857143 z"
        transform="matrix(1.3425462,0,0,1.0250992,-41.446822,848.69421)" />
     <path
        style="fill:#dfdfdf;fill-opacity:0.89411765;stroke:none"
