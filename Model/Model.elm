@@ -146,5 +146,14 @@ outputGoodName = imgPath ++ "output-good.png"
 outputBadName : String
 outputBadName = imgPath ++ "output-bad.png"
 
+restartName : String
+restartName = imgPath ++ "restart.png"
+
+nextLevelBtn : String
+nextLevelBtn = imgPath ++ "next-level.png"
+
+nextLevelNotYetBtn : String
+nextLevelNotYetBtn = imgPath ++ "next-level-not-yet.png"
+
 solutionSize : (Int, Int)
 solutionSize = (25,25)

@@ -48,6 +48,15 @@ Elm.Model.Model.make = function (_elm) {
    var outputBadName = A2($Basics._op["++"],
    imgPath,
    "output-bad.png");
+   var restartName = A2($Basics._op["++"],
+   imgPath,
+   "restart.png");
+   var nextLevelBtn = A2($Basics._op["++"],
+   imgPath,
+   "next-level.png");
+   var nextLevelNotYetBtn = A2($Basics._op["++"],
+   imgPath,
+   "next-level-not-yet.png");
    var norLogic = F2(function (input1,
    input2) {
       return $Basics.not(input1 || input2);
@@ -232,6 +241,9 @@ Elm.Model.Model.make = function (_elm) {
                              ,outputOffName: outputOffName
                              ,outputGoodName: outputGoodName
                              ,outputBadName: outputBadName
+                             ,restartName: restartName
+                             ,nextLevelBtn: nextLevelBtn
+                             ,nextLevelNotYetBtn: nextLevelNotYetBtn
                              ,solutionSize: solutionSize};
    return _elm.Model.Model.values;
 };

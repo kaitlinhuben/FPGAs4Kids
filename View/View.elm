@@ -11,7 +11,7 @@ import Graphics.Collage (Form, collage, toForm, move)
 import Graphics.Input (clickable)
 import Maybe (withDefault)
 import Signal (send)
-import Html (a, button, text, toElement)
+import Html (a, button, text, toElement, fromElement)
 import Html.Attributes (href, id)
 import Model.Model (..)
 import View.Nets (..)
@@ -30,14 +30,16 @@ display (w,h) gameState =
         circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
         circuitContainer = container circuitWidth circuitHeight middle circuitElement
         clicksText = Text.asText gameState.clicks
-        nextBtn = a 
+        navButtonSize = 50
+        nextBtnHTML = a 
                   [href gameState.nextLink] 
-                  [button 
-                    [id "test-button"] 
-                    [text "Go to next level"]
-                  ]
-        levelNextButton = if | gameState.completed == True -> toElement 150 20 nextBtn
-                             | otherwise -> Text.plainText ""
+                  [ fromElement (image navButtonSize navButtonSize nextLevelBtn) ] --TODO link doesn't work
+        levelNextButton = if | gameState.completed == False -> image navButtonSize navButtonSize nextLevelNotYetBtn
+                             | otherwise -> toElement navButtonSize navButtonSize nextBtnHTML
+        restartButton = toElement navButtonSize navButtonSize ( a 
+                        [href "#"]
+                        [ fromElement (image navButtonSize navButtonSize restartName) ] )
+
         upperBar = flow down 
                     [ Text.plainText gameState.directions
                     , Text.plainText "Stats"
@@ -45,6 +47,7 @@ display (w,h) gameState =
                       [ Text.plainText "Clicks: "
                       , clicksText
                       , Text.plainText "           "
+                      , restartButton
                       , levelNextButton
                       ]                    
                     ]
