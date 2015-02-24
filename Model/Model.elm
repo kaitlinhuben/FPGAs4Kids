@@ -12,9 +12,7 @@ import Signal (Channel, channel)
     Game and circuit type and type aliases
 ------------------------------------------------------------------------------}
 type alias UserInput = {
-    mousePos : (Int, Int)
-  , mouseClicks : Int
-  , inputBools : Dict.Dict String Bool
+    inputBools : Dict.Dict String Bool
   }
 
 type GameMode = Game | Schematic

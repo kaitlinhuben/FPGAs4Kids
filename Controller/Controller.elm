@@ -6,6 +6,7 @@ module Controller.Controller where
 import Window
 import Signal
 import Time (fps)
+import Dict
 import Graphics.Element (Element)
 import Model.Model (..)
 import Model.CircuitFunctions (..)
@@ -24,12 +25,10 @@ stepGame userInput gameState =
         -- update game state by simulating everything
         updatedGameState = updateGameState gameStateWithInputs
 
-        -- grab the new mouse position and clicks
-        newMousePos = userInput.mousePos
-        newMouseClicks = userInput.mouseClicks
+        -- increment clicks
+        newMouseClicks = updatedGameState.clicks + 1
     in 
-        { updatedGameState | mousePos <- newMousePos
-                            ,clicks <- newMouseClicks }
+        { updatedGameState | clicks <- newMouseClicks }
 
 {-----If ever wanted animation ("physics", use this) 
  -----Would also need to change stepGame to take GameInput instead of UserInput
@@ -49,15 +48,10 @@ You would also need to add this to Model.Model:
   }
 --}
 
--- Only update when inputs change
-gatherInput : Signal UserInput -> Signal UserInput
-gatherInput userInput = 
-  Signal.sampleOn userInput userInput
-
 -- Updates the game state given the user input
 foldGame : GameState -> Signal UserInput -> Signal GameState
 foldGame game userInput = 
-  Signal.foldp stepGame game (gatherInput userInput)
+  Signal.foldp stepGame game userInput
 
 -- Driver
 mainDriver : GameState -> Signal UserInput -> Signal Element

@@ -85,12 +85,10 @@ userInputs = map liftToDict (subscribe inputChannel)
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
--- count clicks
-countClick: Signal Int 
-countClick = foldp (\clk count -> count + 1) 0 Mouse.clicks
+
 -- lift mouse position/clicks and all input signals into UserInput
 userInput : Signal UserInput
-userInput = map3 UserInput Mouse.position countClick userInputs
+userInput = map UserInput userInputs
 
 
 -- Run main
