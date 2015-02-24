@@ -108,14 +108,6 @@ liftToDict bool1 bool2 =
     in 
         Dict.insert "inputGate2" bool2 firstDict
 
--- count clicks
-countClick: Signal Int 
-countClick = foldp (\clk count -> count + 1) 0 Mouse.clicks
--- lift mouse position/clicks and all input signals into UserInput
-userInput : Signal UserInput
-userInput = map3 UserInput Mouse.position countClick userInputs
-
-
 -- Run main
 main : Signal Element
-main = mainDriver gameState userInput
+main = mainDriver gameState (map UserInput userInputs)

@@ -3,7 +3,7 @@ module Level_4 where
 import Mouse
 import Array
 import Dict
-import Signal (Signal, Channel, channel, subscribe, map2, map3, foldp)
+import Signal (Signal, Channel, channel, subscribe, map, map2, map3, foldp)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
@@ -163,14 +163,6 @@ liftToDict bool1 bool2 bool3 =
   in 
     Dict.insert "input3" bool3 dict2
     
--- count clicks
-countClick: Signal Int 
-countClick = foldp (\clk count -> count + 1) 0 Mouse.clicks
--- lift mouse position/clicks and all input signals into UserInput
-userInput : Signal UserInput
-userInput = map3 UserInput Mouse.position countClick userInputs
-
-
--- run level
+-- Run main
 main : Signal Element
-main = mainDriver gameState userInput
+main = mainDriver gameState (map UserInput userInputs)

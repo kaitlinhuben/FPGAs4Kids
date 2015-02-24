@@ -85,12 +85,6 @@ userInputs = map liftToDict (subscribe inputChannel)
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
-
--- lift mouse position/clicks and all input signals into UserInput
-userInput : Signal UserInput
-userInput = map UserInput userInputs
-
-
 -- Run main
 main : Signal Element
-main = mainDriver gameState userInput
+main = mainDriver gameState (map UserInput userInputs)
