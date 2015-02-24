@@ -779,38 +779,27 @@ Elm.Controller.Controller.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Controller.Controller",
-   $Basics = Elm.Basics.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Model$CircuitFunctions = Elm.Model.CircuitFunctions.make(_elm),
    $Model$Model = Elm.Model.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm),
    $View$View = Elm.View.View.make(_elm),
    $Window = Elm.Window.make(_elm);
-   var delta = A2($Signal.map,
-   function (t) {
-      return t / 20;
-   },
-   $Time.fps(25));
    var gatherInput = function (userInput) {
       return A2($Signal.sampleOn,
-      delta,
-      A3($Signal.map2,
-      $Model$Model.GameInput,
-      delta,
-      userInput));
+      userInput,
+      userInput);
    };
-   var stepGame = F2(function (gameInput,
+   var stepGame = F2(function (userInput,
    gameState) {
       return function () {
-         var ui = gameInput.userInput;
-         var inputs = ui.inputBools;
+         var newMouseClicks = userInput.mouseClicks;
+         var newMousePos = userInput.mousePos;
+         var inputs = userInput.inputBools;
          var gameStateWithInputs = _U.replace([["inputStatuses"
                                                ,inputs]],
          gameState);
          var updatedGameState = $Model$CircuitFunctions.updateGameState(gameStateWithInputs);
-         var newMousePos = ui.mousePos;
-         var newMouseClicks = ui.mouseClicks;
          return _U.replace([["mousePos"
                             ,newMousePos]
                            ,["clicks",newMouseClicks]],
@@ -833,7 +822,6 @@ Elm.Controller.Controller.make = function (_elm) {
    });
    _elm.Controller.Controller.values = {_op: _op
                                        ,stepGame: stepGame
-                                       ,delta: delta
                                        ,gatherInput: gatherInput
                                        ,foldGame: foldGame
                                        ,mainDriver: mainDriver};
@@ -3915,18 +3903,18 @@ Elm.Json.Encode.make = function (_elm) {
                              ,list: list};
    return _elm.Json.Encode.values;
 };
-Elm.Level_1 = Elm.Level_1 || {};
-Elm.Level_1.make = function (_elm) {
+Elm.Level_5 = Elm.Level_5 || {};
+Elm.Level_5.make = function (_elm) {
    "use strict";
-   _elm.Level_1 = _elm.Level_1 || {};
-   if (_elm.Level_1.values)
-   return _elm.Level_1.values;
+   _elm.Level_5 = _elm.Level_5 || {};
+   if (_elm.Level_5.values)
+   return _elm.Level_5.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "Level_1",
+   $moduleName = "Level_5",
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Controller$Controller = Elm.Controller.Controller.make(_elm),
@@ -3942,32 +3930,164 @@ Elm.Level_1.make = function (_elm) {
    }),
    0,
    $Mouse.clicks);
-   var liftToDict = function (bool) {
-      return A3($Dict.insert,
-      "inputGate",
-      bool,
-      $Dict.empty);
-   };
-   var nextLink = "Level_2.html";
-   var directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on.";
+   var liftToDict = F3(function (bool1,
+   bool2,
+   bool3) {
+      return function () {
+         var emptyDict = $Dict.empty;
+         var dict1 = A3($Dict.insert,
+         "input1",
+         bool1,
+         emptyDict);
+         var dict2 = A3($Dict.insert,
+         "input2",
+         bool2,
+         dict1);
+         return A3($Dict.insert,
+         "input3",
+         bool3,
+         dict2);
+      }();
+   });
+   var nextLink = "../congrats.html";
+   var directions = "Now you have more than one output. Get (from top): on, on, off.";
    var solution = $Dict.fromList(_L.fromArray([{ctor: "_Tuple2"
-                                               ,_0: "outputGate"
-                                               ,_1: true}]));
-   var outputGate = {_: {}
-                    ,gateType: $Model$Model.OutputGate
-                    ,imgName: $Model$Model.outputOffName
-                    ,imgOffName: $Model$Model.outputOffName
-                    ,imgOnName: $Model$Model.outputOnName
-                    ,imgSize: {ctor: "_Tuple2"
-                              ,_0: 75
-                              ,_1: 75}
-                    ,inputs: $Array.fromList(_L.fromArray(["notGate"]))
-                    ,location: {ctor: "_Tuple2"
-                               ,_0: 100
-                               ,_1: 0}
-                    ,logic: $Model$Model.inputLogic
-                    ,name: "outputGate"
-                    ,status: false};
+                                               ,_0: "output1"
+                                               ,_1: true}
+                                              ,{ctor: "_Tuple2"
+                                               ,_0: "output2"
+                                               ,_1: true}
+                                              ,{ctor: "_Tuple2"
+                                               ,_0: "output3"
+                                               ,_1: false}]));
+   var output3 = {_: {}
+                 ,gateType: $Model$Model.OutputGate
+                 ,imgName: $Model$Model.outputOffName
+                 ,imgOffName: $Model$Model.outputOffName
+                 ,imgOnName: $Model$Model.outputOnName
+                 ,imgSize: {ctor: "_Tuple2"
+                           ,_0: 75
+                           ,_1: 75}
+                 ,inputs: $Array.fromList(_L.fromArray(["notGate"]))
+                 ,location: {ctor: "_Tuple2"
+                            ,_0: 175
+                            ,_1: -175}
+                 ,logic: $Model$Model.inputLogic
+                 ,name: "output3"
+                 ,status: false};
+   var output2 = {_: {}
+                 ,gateType: $Model$Model.OutputGate
+                 ,imgName: $Model$Model.outputOffName
+                 ,imgOffName: $Model$Model.outputOffName
+                 ,imgOnName: $Model$Model.outputOnName
+                 ,imgSize: {ctor: "_Tuple2"
+                           ,_0: 75
+                           ,_1: 75}
+                 ,inputs: $Array.fromList(_L.fromArray(["andGate2"]))
+                 ,location: {ctor: "_Tuple2"
+                            ,_0: 175
+                            ,_1: -100}
+                 ,logic: $Model$Model.inputLogic
+                 ,name: "output2"
+                 ,status: false};
+   var output1 = {_: {}
+                 ,gateType: $Model$Model.OutputGate
+                 ,imgName: $Model$Model.outputOffName
+                 ,imgOffName: $Model$Model.outputOffName
+                 ,imgOnName: $Model$Model.outputOnName
+                 ,imgSize: {ctor: "_Tuple2"
+                           ,_0: 75
+                           ,_1: 75}
+                 ,inputs: $Array.fromList(_L.fromArray(["orGate"]))
+                 ,location: {ctor: "_Tuple2"
+                            ,_0: 175
+                            ,_1: 0}
+                 ,logic: $Model$Model.inputLogic
+                 ,name: "output1"
+                 ,status: false};
+   var input3 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOffName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: -100}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input3"
+                ,status: false};
+   var inputChannel3 = $Signal.channel(input3.status);
+   var input2 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOnName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: 0}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input2"
+                ,status: true};
+   var inputChannel2 = $Signal.channel(input2.status);
+   var input1 = {_: {}
+                ,gateType: $Model$Model.InputGate
+                ,imgName: $Model$Model.inputOnName
+                ,imgOffName: $Model$Model.inputOffName
+                ,imgOnName: $Model$Model.inputOnName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.empty
+                ,location: {ctor: "_Tuple2"
+                           ,_0: -200
+                           ,_1: 100}
+                ,logic: $Model$Model.inputLogic
+                ,name: "input1"
+                ,status: false};
+   var inputChannel1 = $Signal.channel(input1.status);
+   var inputChannelsPreDict = _L.fromArray([{ctor: "_Tuple2"
+                                            ,_0: "input1"
+                                            ,_1: inputChannel1}
+                                           ,{ctor: "_Tuple2"
+                                            ,_0: "input2"
+                                            ,_1: inputChannel2}
+                                           ,{ctor: "_Tuple2"
+                                            ,_0: "input3"
+                                            ,_1: inputChannel3}]);
+   var userInputs = A4($Signal.map3,
+   liftToDict,
+   $Signal.subscribe(inputChannel1),
+   $Signal.subscribe(inputChannel2),
+   $Signal.subscribe(inputChannel3));
+   var userInput = A4($Signal.map3,
+   $Model$Model.UserInput,
+   $Mouse.position,
+   countClick,
+   userInputs);
+   var orGate = {_: {}
+                ,gateType: $Model$Model.NormalGate
+                ,imgName: $Model$Model.orImageName
+                ,imgOffName: $Model$Model.orImageName
+                ,imgOnName: $Model$Model.orImageName
+                ,imgSize: {ctor: "_Tuple2"
+                          ,_0: 75
+                          ,_1: 75}
+                ,inputs: $Array.fromList(_L.fromArray(["andGate"
+                                                      ,"andGate2"]))
+                ,location: {ctor: "_Tuple2"
+                           ,_0: 100
+                           ,_1: 0}
+                ,logic: $Model$Model.orLogic
+                ,name: "orGate"
+                ,status: false};
    var notGate = {_: {}
                  ,gateType: $Model$Model.NormalGate
                  ,imgName: $Model$Model.notImageName
@@ -3976,59 +4096,80 @@ Elm.Level_1.make = function (_elm) {
                  ,imgSize: {ctor: "_Tuple2"
                            ,_0: 75
                            ,_1: 75}
-                 ,inputs: $Array.fromList(_L.fromArray(["inputGate"]))
+                 ,inputs: $Array.fromList(_L.fromArray(["input3"]))
                  ,location: {ctor: "_Tuple2"
                             ,_0: 0
-                            ,_1: 0}
+                            ,_1: -125}
                  ,logic: $Model$Model.notLogic
                  ,name: "notGate"
                  ,status: false};
-   var inputGate = {_: {}
-                   ,gateType: $Model$Model.InputGate
-                   ,imgName: $Model$Model.inputOnName
-                   ,imgOffName: $Model$Model.inputOffName
-                   ,imgOnName: $Model$Model.inputOnName
-                   ,imgSize: {ctor: "_Tuple2"
-                             ,_0: 75
-                             ,_1: 75}
-                   ,inputs: $Array.empty
-                   ,location: {ctor: "_Tuple2"
-                              ,_0: -100
-                              ,_1: 0}
-                   ,logic: $Model$Model.inputLogic
-                   ,name: "inputGate"
-                   ,status: true};
-   var gates = _L.fromArray([inputGate
+   var andGate2 = {_: {}
+                  ,gateType: $Model$Model.NormalGate
+                  ,imgName: $Model$Model.andImageName
+                  ,imgOffName: $Model$Model.andImageName
+                  ,imgOnName: $Model$Model.andImageName
+                  ,imgSize: {ctor: "_Tuple2"
+                            ,_0: 75
+                            ,_1: 75}
+                  ,inputs: $Array.fromList(_L.fromArray(["input3"
+                                                        ,"andGate"]))
+                  ,location: {ctor: "_Tuple2"
+                             ,_0: 0
+                             ,_1: -50}
+                  ,logic: $Model$Model.andLogic
+                  ,name: "andGate2"
+                  ,status: true};
+   var andGate = {_: {}
+                 ,gateType: $Model$Model.NormalGate
+                 ,imgName: $Model$Model.andImageName
+                 ,imgOffName: $Model$Model.andImageName
+                 ,imgOnName: $Model$Model.andImageName
+                 ,imgSize: {ctor: "_Tuple2"
+                           ,_0: 75
+                           ,_1: 75}
+                 ,inputs: $Array.fromList(_L.fromArray(["input1"
+                                                       ,"input2"]))
+                 ,location: {ctor: "_Tuple2"
+                            ,_0: -100
+                            ,_1: 50}
+                 ,logic: $Model$Model.andLogic
+                 ,name: "andGate"
+                 ,status: false};
+   var gates = _L.fromArray([input1
+                            ,input2
+                            ,input3
+                            ,andGate
+                            ,andGate2
                             ,notGate
-                            ,outputGate]);
-   var inputChannel = $Signal.channel(inputGate.status);
-   var inputSignalsPreDict = _L.fromArray([{ctor: "_Tuple2"
-                                           ,_0: "inputGate"
-                                           ,_1: inputChannel}]);
+                            ,orGate
+                            ,output1
+                            ,output2
+                            ,output3]);
    var gameState = A5($Controller$InstantiationHelper.instantiateGameState,
    gates,
-   inputSignalsPreDict,
+   inputChannelsPreDict,
    solution,
    directions,
    nextLink);
-   var userInputs = A2($Signal.map,
-   liftToDict,
-   $Signal.subscribe(inputChannel));
-   var userInput = A4($Signal.map3,
-   $Model$Model.UserInput,
-   $Mouse.position,
-   countClick,
-   userInputs);
    var main = A2($Controller$Controller.mainDriver,
    gameState,
    userInput);
-   _elm.Level_1.values = {_op: _op
-                         ,inputGate: inputGate
+   _elm.Level_5.values = {_op: _op
+                         ,andGate: andGate
+                         ,andGate2: andGate2
                          ,notGate: notGate
-                         ,outputGate: outputGate
+                         ,orGate: orGate
+                         ,input1: input1
+                         ,input2: input2
+                         ,input3: input3
+                         ,output1: output1
+                         ,output2: output2
+                         ,output3: output3
                          ,gates: gates
-                         ,inputChannel: inputChannel
-                         ,inputSignalsPreDict: inputSignalsPreDict
+                         ,inputChannel1: inputChannel1
+                         ,inputChannel2: inputChannel2
+                         ,inputChannel3: inputChannel3
+                         ,inputChannelsPreDict: inputChannelsPreDict
                          ,solution: solution
                          ,directions: directions
                          ,nextLink: nextLink
@@ -4038,7 +4179,7 @@ Elm.Level_1.make = function (_elm) {
                          ,countClick: countClick
                          ,userInput: userInput
                          ,main: main};
-   return _elm.Level_1.values;
+   return _elm.Level_5.values;
 };
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
@@ -4811,14 +4952,7 @@ Elm.Model.Model.make = function (_elm) {
              ,mouseClicks: b
              ,mousePos: a};
    });
-   var GameInput = F2(function (a,
-   b) {
-      return {_: {}
-             ,timeDelta: a
-             ,userInput: b};
-   });
    _elm.Model.Model.values = {_op: _op
-                             ,GameInput: GameInput
                              ,UserInput: UserInput
                              ,Game: Game
                              ,Schematic: Schematic

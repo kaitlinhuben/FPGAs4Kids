@@ -11,10 +11,6 @@ import Signal (Channel, channel)
 {------------------------------------------------------------------------------
     Game and circuit type and type aliases
 ------------------------------------------------------------------------------}
-type alias GameInput = {
-    timeDelta : Float
-  , userInput : UserInput
-  }
 type alias UserInput = {
     mousePos : (Int, Int)
   , mouseClicks : Int

@@ -203,14 +203,7 @@ Elm.Model.Model.make = function (_elm) {
              ,mouseClicks: b
              ,mousePos: a};
    });
-   var GameInput = F2(function (a,
-   b) {
-      return {_: {}
-             ,timeDelta: a
-             ,userInput: b};
-   });
    _elm.Model.Model.values = {_op: _op
-                             ,GameInput: GameInput
                              ,UserInput: UserInput
                              ,Game: Game
                              ,Schematic: Schematic

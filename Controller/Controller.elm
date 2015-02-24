@@ -12,12 +12,11 @@ import Model.CircuitFunctions (..)
 import View.View (..)
 
 -- Every time the page refreshes, gather needed inputs and update game state
-stepGame : GameInput -> GameState -> GameState
-stepGame gameInput gameState = 
+stepGame : UserInput -> GameState -> GameState
+stepGame userInput gameState = 
     let
         -- get the user's choices for inputs
-        ui = gameInput.userInput
-        inputs = ui.inputBools
+        inputs = userInput.inputBools
 
         -- update game state with user's inputs
         gameStateWithInputs = { gameState | inputStatuses <- inputs}
@@ -26,12 +25,14 @@ stepGame gameInput gameState =
         updatedGameState = updateGameState gameStateWithInputs
 
         -- grab the new mouse position and clicks
-        newMousePos = ui.mousePos
-        newMouseClicks = ui.mouseClicks
+        newMousePos = userInput.mousePos
+        newMouseClicks = userInput.mouseClicks
     in 
         { updatedGameState | mousePos <- newMousePos
                             ,clicks <- newMouseClicks }
 
+{-----If ever wanted animation ("physics", use this) 
+ -----Would also need to change stepGame to take GameInput instead of UserInput
 -- For physics
 delta : Signal Float
 delta = Signal.map (\t -> t / 20) (fps 25)
@@ -40,6 +41,18 @@ delta = Signal.map (\t -> t / 20) (fps 25)
 gatherInput : Signal UserInput -> Signal GameInput
 gatherInput userInput = 
   Signal.sampleOn delta (Signal.map2 GameInput delta userInput)
+
+You would also need to add this to Model.Model:
+  type alias GameInput = {
+    timeDelta : Float
+  , userInput : UserInput
+  }
+--}
+
+-- Only update when inputs change
+gatherInput : Signal UserInput -> Signal UserInput
+gatherInput userInput = 
+  Signal.sampleOn userInput userInput
 
 -- Updates the game state given the user input
 foldGame : GameState -> Signal UserInput -> Signal GameState
