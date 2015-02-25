@@ -11,7 +11,7 @@ import Graphics.Collage (Form, collage, toForm, move)
 import Graphics.Input (clickable)
 import Maybe (withDefault)
 import Signal (send)
-import Html (a, button, text, toElement, fromElement, img)
+import Html (a, button, text, toElement, fromElement, img, h2)
 import Html.Attributes (href, id, src)
 import Model.Model (..)
 import View.Nets (..)
@@ -24,38 +24,45 @@ import Text
 ------------------------------------------------------------------------------}
 display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
-    let
-        circuitWidth = w
-        circuitHeight = h - 50
-        circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
-        circuitContainer = container circuitWidth circuitHeight middle circuitElement
-        clicksText = Text.asText gameState.clicks
-        navButtonSize = 50
-        nextBtnHTML = a 
-                  [ href gameState.nextLink ] 
-                  [ img [src nextLevelBtn] [] ]
-        levelNextButton = if | gameState.completed == False -> image navButtonSize navButtonSize nextLevelNotYetBtn
-                             | otherwise -> toElement navButtonSize navButtonSize nextBtnHTML
-        restartButton = toElement navButtonSize navButtonSize ( a 
-                        [ href "#" ]
-                        [ img [src restartName] [] ] )
+  let
+      upperBarHeight = 50
+      circuitWidth = w
+      circuitHeight = h - upperBarHeight
+      circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
+      circuitContainer = container circuitWidth circuitHeight middle circuitElement
+      upperBar = drawNavBar (circuitWidth, upperBarHeight) gameState
+  in
+      flow down [upperBar, circuitContainer]
 
-        upperBar = flow down 
-                    [ Text.plainText gameState.directions
-                    , Text.plainText "Stats"
-                    , flow right 
-                      [ Text.plainText "Clicks: "
-                      , clicksText
-                      , Text.plainText "           "
-                      , Text.plainText "Par: "
-                      , Text.asText gameState.clicksPar
-                      , Text.plainText "           "
-                      , restartButton
-                      , levelNextButton
-                      ]                    
-                    ]
-    in
-        flow down [upperBar, circuitContainer]
+drawNavBar : (Int, Int) -> GameState -> Element
+drawNavBar (w,h) gameState = 
+  let
+    -- directions
+    directionsElement = Text.plainText gameState.directions
+
+    -- stats: clicks, score, par, etc.
+    clicksText = Text.plainText ("Clicks: " ++ (toString gameState.clicks))
+    parText = Text.plainText ("Par: " ++ (toString gameState.clicksPar))
+    statsElement = flow down [parText, clicksText]
+
+    -- navigation: restart, next, etc.
+    navButtonSize = 50
+    nextBtnHTML = a 
+              [ href gameState.nextLink ] 
+              [ img [src nextLevelBtn] [] ]
+    levelNextButton = if | gameState.completed == False -> image navButtonSize navButtonSize nextLevelNotYetBtn
+                         | otherwise -> toElement navButtonSize navButtonSize nextBtnHTML
+    restartButton = toElement navButtonSize navButtonSize ( a 
+                    [ href "#" ]
+                    [ img [src restartName] [] ] )
+
+    
+  in
+    flow down 
+      [ flow right [restartButton, levelNextButton]
+      , directionsElement      
+      , statsElement
+      ]
     
 {------------------------------------------------------------------------------
     Draw the whole circuit
