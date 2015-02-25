@@ -781,36 +781,19 @@ Elm.Controller.Controller.make = function (_elm) {
    $Model$CircuitFunctions = Elm.Model.CircuitFunctions.make(_elm),
    $Model$Model = Elm.Model.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm),
    $View$View = Elm.View.View.make(_elm),
    $Window = Elm.Window.make(_elm);
-   var delta = A2($Signal.map,
-   function (t) {
-      return t / 20;
-   },
-   $Time.fps(25));
-   var gatherInput = function (userInput) {
-      return A2($Signal.sampleOn,
-      delta,
-      A3($Signal.map2,
-      $Model$Model.GameInput,
-      delta,
-      userInput));
-   };
-   var stepGame = F2(function (gameInput,
+   var stepGame = F2(function (userInput,
    gameState) {
       return function () {
-         var ui = gameInput.userInput;
-         var inputs = ui.inputBools;
+         var inputs = userInput.inputBools;
          var gameStateWithInputs = _U.replace([["inputStatuses"
                                                ,inputs]],
          gameState);
          var updatedGameState = $Model$CircuitFunctions.updateGameState(gameStateWithInputs);
-         var newMousePos = ui.mousePos;
-         var newMouseClicks = ui.mouseClicks;
-         return _U.replace([["mousePos"
-                            ,newMousePos]
-                           ,["clicks",newMouseClicks]],
+         var newMouseClicks = updatedGameState.clicks + 1;
+         return _U.replace([["clicks"
+                            ,newMouseClicks]],
          updatedGameState);
       }();
    });
@@ -819,7 +802,7 @@ Elm.Controller.Controller.make = function (_elm) {
       return A3($Signal.foldp,
       stepGame,
       game,
-      gatherInput(userInput));
+      userInput);
    });
    var mainDriver = F2(function (game,
    userInput) {
@@ -830,8 +813,6 @@ Elm.Controller.Controller.make = function (_elm) {
    });
    _elm.Controller.Controller.values = {_op: _op
                                        ,stepGame: stepGame
-                                       ,delta: delta
-                                       ,gatherInput: gatherInput
                                        ,foldGame: foldGame
                                        ,mainDriver: mainDriver};
    return _elm.Controller.Controller.values;
@@ -878,7 +859,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return dict;}
          _U.badCase($moduleName,
-         "between lines 83 and 94");
+         "between lines 85 and 96");
       }();
    });
    var extractCircuitState = F2(function (gates,
@@ -903,7 +884,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return cs;}
          _U.badCase($moduleName,
-         "between lines 71 and 78");
+         "between lines 73 and 80");
       }();
    });
    var extractNonInputGateNames = function (gates) {
@@ -921,7 +902,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 59 and 66");
+         "between lines 61 and 68");
       }();
    };
    var extractInputGateNames = function (gates) {
@@ -939,7 +920,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 47 and 54");
+         "between lines 49 and 56");
       }();
    };
    var extractGateNames = function (gates) {
@@ -955,20 +936,24 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 39 and 42");
+         "between lines 41 and 44");
       }();
    };
-   var instantiateGameState = F5(function (gates,
+   var instantiateGameState = F7(function (gates,
    inputChannelsPreDict,
    solutionDict,
    dir,
-   nlink) {
+   clink,
+   nlink,
+   par) {
       return {_: {}
              ,circuitState: A2(extractCircuitState,
              gates,
              $Dict.empty)
              ,clicks: 0
+             ,clicksPar: par
              ,completed: false
+             ,currentLink: clink
              ,directions: dir
              ,gameMode: $Model$Model.Schematic
              ,inputChannels: $Dict.fromList(inputChannelsPreDict)
@@ -3915,20 +3900,12 @@ Elm.Level_2.make = function (_elm) {
    _P = _N.Ports.make(_elm),
    $moduleName = "Level_2",
    $Array = Elm.Array.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
    $Controller$Controller = Elm.Controller.Controller.make(_elm),
    $Controller$InstantiationHelper = Elm.Controller.InstantiationHelper.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Model$Model = Elm.Model.Model.make(_elm),
-   $Mouse = Elm.Mouse.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var countClick = A3($Signal.foldp,
-   F2(function (clk,count) {
-      return count + 1;
-   }),
-   0,
-   $Mouse.clicks);
    var liftToDict = F2(function (bool1,
    bool2) {
       return function () {
@@ -3942,7 +3919,9 @@ Elm.Level_2.make = function (_elm) {
          firstDict);
       }();
    });
+   var par = 1;
    var nextLink = "Level_3.html";
+   var currentLink = "Level_2.html";
    var directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on.";
    var solution = $Dict.fromList(_L.fromArray([{ctor: "_Tuple2"
                                                ,_0: "outputGate"
@@ -3980,7 +3959,7 @@ Elm.Level_2.make = function (_elm) {
                  ,status: false};
    var inputGate2 = {_: {}
                     ,gateType: $Model$Model.InputGate
-                    ,imgName: $Model$Model.inputOnName
+                    ,imgName: $Model$Model.inputOffName
                     ,imgOffName: $Model$Model.inputOffName
                     ,imgOnName: $Model$Model.inputOnName
                     ,imgSize: {ctor: "_Tuple2"
@@ -4020,24 +3999,23 @@ Elm.Level_2.make = function (_elm) {
                                           ,{ctor: "_Tuple2"
                                            ,_0: "inputGate2"
                                            ,_1: inputChannel2}]);
-   var gameState = A5($Controller$InstantiationHelper.instantiateGameState,
+   var gameState = A7($Controller$InstantiationHelper.instantiateGameState,
    gates,
    inputSignalsPreDict,
    solution,
    directions,
-   nextLink);
+   currentLink,
+   nextLink,
+   par);
    var userInputs = A3($Signal.map2,
    liftToDict,
    $Signal.subscribe(inputChannel1),
    $Signal.subscribe(inputChannel2));
-   var userInput = A4($Signal.map3,
-   $Model$Model.UserInput,
-   $Mouse.position,
-   countClick,
-   userInputs);
    var main = A2($Controller$Controller.mainDriver,
    gameState,
-   userInput);
+   A2($Signal.map,
+   $Model$Model.UserInput,
+   userInputs));
    _elm.Level_2.values = {_op: _op
                          ,inputGate1: inputGate1
                          ,inputGate2: inputGate2
@@ -4049,12 +4027,12 @@ Elm.Level_2.make = function (_elm) {
                          ,inputSignalsPreDict: inputSignalsPreDict
                          ,solution: solution
                          ,directions: directions
+                         ,currentLink: currentLink
                          ,nextLink: nextLink
+                         ,par: par
                          ,gameState: gameState
                          ,userInputs: userInputs
                          ,liftToDict: liftToDict
-                         ,countClick: countClick
-                         ,userInput: userInput
                          ,main: main};
    return _elm.Level_2.values;
 };Elm.List = Elm.List || {};
@@ -4788,20 +4766,26 @@ Elm.Model.Model.make = function (_elm) {
                                  return function (k) {
                                     return function (l) {
                                        return function (m) {
-                                          return {_: {}
-                                                 ,circuitState: e
-                                                 ,clicks: j
-                                                 ,completed: k
-                                                 ,directions: l
-                                                 ,gameMode: f
-                                                 ,inputChannels: i
-                                                 ,inputNames: b
-                                                 ,inputStatuses: h
-                                                 ,mousePos: g
-                                                 ,networkNames: a
-                                                 ,nextLink: m
-                                                 ,nonInputNames: c
-                                                 ,solution: d};
+                                          return function (n) {
+                                             return function (o) {
+                                                return {_: {}
+                                                       ,circuitState: e
+                                                       ,clicks: j
+                                                       ,clicksPar: o
+                                                       ,completed: k
+                                                       ,currentLink: m
+                                                       ,directions: l
+                                                       ,gameMode: f
+                                                       ,inputChannels: i
+                                                       ,inputNames: b
+                                                       ,inputStatuses: h
+                                                       ,mousePos: g
+                                                       ,networkNames: a
+                                                       ,nextLink: n
+                                                       ,nonInputNames: c
+                                                       ,solution: d};
+                                             };
+                                          };
                                        };
                                     };
                                  };
@@ -4817,22 +4801,10 @@ Elm.Model.Model.make = function (_elm) {
    };
    var Schematic = {ctor: "Schematic"};
    var Game = {ctor: "Game"};
-   var UserInput = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,inputBools: c
-             ,mouseClicks: b
-             ,mousePos: a};
-   });
-   var GameInput = F2(function (a,
-   b) {
-      return {_: {}
-             ,timeDelta: a
-             ,userInput: b};
-   });
+   var UserInput = function (a) {
+      return {_: {},inputBools: a};
+   };
    _elm.Model.Model.values = {_op: _op
-                             ,GameInput: GameInput
                              ,UserInput: UserInput
                              ,Game: Game
                              ,Schematic: Schematic
@@ -13008,7 +12980,7 @@ Elm.View.View.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 81 and 89");
+         "between lines 106 and 114");
       }();
    });
    var drawCircuit = F2(function (_v3,
@@ -13046,72 +13018,131 @@ Elm.View.View.make = function (_elm) {
                  allForms);
               }();}
          _U.badCase($moduleName,
-         "between lines 62 and 70");
+         "between lines 87 and 95");
       }();
    });
-   var display = F2(function (_v7,
+   var drawMainContent = F2(function (_v7,
    gameState) {
       return function () {
          switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
-                 var nextBtnHTML = A2($Html.a,
-                 _L.fromArray([$Html$Attributes.href(gameState.nextLink)]),
-                 _L.fromArray([A2($Html.img,
-                 _L.fromArray([$Html$Attributes.src($Model$Model.nextLevelBtn)]),
-                 _L.fromArray([]))]));
+                 var circuitElement = A2(drawCircuit,
+                 {ctor: "_Tuple2"
+                 ,_0: _v7._0
+                 ,_1: _v7._1},
+                 gameState);
+                 var circuitContainer = A4($Graphics$Element.container,
+                 _v7._0,
+                 _v7._1,
+                 $Graphics$Element.middle,
+                 circuitElement);
+                 return _U.eq(gameState.completed,
+                 false) ? circuitContainer : function () {
+                    var nextBtnHTML = A2($Html.a,
+                    _L.fromArray([$Html$Attributes.href(gameState.nextLink)]),
+                    _L.fromArray([A2($Html.img,
+                    _L.fromArray([$Html$Attributes.src($Model$Model.nextLevelBtn)]),
+                    _L.fromArray([]))]));
+                    var levelNextButton = A3($Html.toElement,
+                    50,
+                    50,
+                    nextBtnHTML);
+                    var parText = $Text.centered(A2($Text.height,
+                    20,
+                    $Text.fromString(_U.cmp(gameState.clicks,
+                    gameState.clicksPar) < 1 ? "You were at or under par. Good job!" : "You were above par; give it another try.")));
+                    var completedText = $Text.centered(A2($Text.height,
+                    40,
+                    $Text.fromString("You completed the level!")));
+                    return A2($Graphics$Element.flow,
+                    $Graphics$Element.down,
+                    _L.fromArray([A2($Graphics$Element.flow,
+                                 $Graphics$Element.right,
+                                 _L.fromArray([completedText
+                                              ,levelNextButton]))
+                                 ,parText
+                                 ,circuitContainer]));
+                 }();
+              }();}
+         _U.badCase($moduleName,
+         "between lines 61 and 80");
+      }();
+   });
+   var drawNavBar = F2(function (_v11,
+   gameState) {
+      return function () {
+         switch (_v11.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var parText = $Text.plainText(A2($Basics._op["++"],
+                 "Par: ",
+                 $Basics.toString(gameState.clicksPar)));
+                 var clicksText = $Text.plainText(A2($Basics._op["++"],
+                 "Clicks: ",
+                 $Basics.toString(gameState.clicks)));
+                 var statsElement = A2($Graphics$Element.flow,
+                 $Graphics$Element.down,
+                 _L.fromArray([parText
+                              ,clicksText]));
+                 var directionsElement = $Text.plainText(gameState.directions);
                  var navButtonSize = 50;
-                 var levelNextButton = _U.eq(gameState.completed,
-                 false) ? A3($Graphics$Element.image,
-                 navButtonSize,
-                 navButtonSize,
-                 $Model$Model.nextLevelNotYetBtn) : A3($Html.toElement,
-                 navButtonSize,
-                 navButtonSize,
-                 nextBtnHTML);
                  var restartButton = A3($Html.toElement,
                  navButtonSize,
                  navButtonSize,
                  A2($Html.a,
-                 _L.fromArray([$Html$Attributes.href("#")]),
+                 _L.fromArray([$Html$Attributes.href(gameState.currentLink)]),
                  _L.fromArray([A2($Html.img,
                  _L.fromArray([$Html$Attributes.src($Model$Model.restartName)]),
                  _L.fromArray([]))])));
-                 var clicksText = $Text.asText(gameState.clicks);
-                 var upperBar = A2($Graphics$Element.flow,
-                 $Graphics$Element.down,
-                 _L.fromArray([$Text.plainText(gameState.directions)
-                              ,$Text.plainText("Stats")
-                              ,A2($Graphics$Element.flow,
-                              $Graphics$Element.right,
-                              _L.fromArray([$Text.plainText("Clicks: ")
-                                           ,clicksText
-                                           ,$Text.plainText("           ")
-                                           ,restartButton
-                                           ,levelNextButton]))]));
-                 var circuitHeight = _v7._1 - 50;
-                 var circuitWidth = _v7._0;
-                 var circuitElement = A2(drawCircuit,
+                 var extraWidth = _v11._0 - $Graphics$Element.widthOf(restartButton) - $Graphics$Element.widthOf(directionsElement) - $Graphics$Element.widthOf(statsElement);
+                 var spacerWidth = _U.cmp(extraWidth,
+                 50) < 0 ? 0 : extraWidth - 50;
+                 var emptySpacer = A2($Graphics$Element.spacer,
+                 spacerWidth,
+                 _v11._1);
+                 return A2($Graphics$Element.flow,
+                 $Graphics$Element.right,
+                 _L.fromArray([restartButton
+                              ,directionsElement
+                              ,emptySpacer
+                              ,statsElement]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 37 and 57");
+      }();
+   });
+   var display = F2(function (_v15,
+   gameState) {
+      return function () {
+         switch (_v15.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var upperBarHeight = 50;
+                 var mainHeight = _v15._1 - upperBarHeight;
+                 var mainContent = A2(drawMainContent,
                  {ctor: "_Tuple2"
-                 ,_0: circuitWidth
-                 ,_1: circuitHeight},
+                 ,_0: _v15._0
+                 ,_1: mainHeight},
                  gameState);
-                 var circuitContainer = A4($Graphics$Element.container,
-                 circuitWidth,
-                 circuitHeight,
-                 $Graphics$Element.middle,
-                 circuitElement);
+                 var upperBar = A2(drawNavBar,
+                 {ctor: "_Tuple2"
+                 ,_0: _v15._0
+                 ,_1: upperBarHeight},
+                 gameState);
                  return A2($Graphics$Element.flow,
                  $Graphics$Element.down,
                  _L.fromArray([upperBar
-                              ,circuitContainer]));
+                              ,mainContent]));
               }();}
          _U.badCase($moduleName,
-         "between lines 27 and 55");
+         "between lines 27 and 33");
       }();
    });
    _elm.View.View.values = {_op: _op
                            ,display: display
+                           ,drawNavBar: drawNavBar
+                           ,drawMainContent: drawMainContent
                            ,drawCircuit: drawCircuit
                            ,drawAll: drawAll
                            ,drawNets: drawNets
