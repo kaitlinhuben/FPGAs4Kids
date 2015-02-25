@@ -18,7 +18,7 @@ drawNetsToDouble name gs =
   let
     input1segment = drawSingleNet name 0 gs
     input2segment = drawSingleNet name 1 gs
-    both = collage 300 300 [input1segment,input2segment] -- TODO don't hardcode size
+    both = collage 500 500 [input1segment,input2segment] -- TODO don't hardcode size
   in 
     toForm both
 
@@ -69,6 +69,6 @@ drawDogLegNet (x,y) (x1,y1) lineColor =
     mid_down_mid = drawStraightNet mid_point_1 mid_point_2 lineColor
     mid_to_gate  = drawStraightNet mid_point_2 end_point   lineColor
 
-    all = collage 300 300 [input_to_mid,mid_down_mid,mid_to_gate] -- TODO don't hardcode size
+    all = collage 500 500 [input_to_mid,mid_down_mid,mid_to_gate] -- TODO don't hardcode size
   in
     toForm all

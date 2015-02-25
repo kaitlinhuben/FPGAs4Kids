@@ -85,7 +85,7 @@ drawMainContent (w,h) gameState =
 drawCircuit : (Int,Int) -> GameState -> Element
 drawCircuit (w,h) gs = 
   let 
-    netsForms = drawAll drawNets gs.nonInputNames gs 
+    netsForms = drawAll drawNets gs.nonInputNames gs
     inputsForms = drawAll drawInputGate gs.inputNames gs
     solutionsForms = drawAll drawSolution (Dict.keys gs.solution) gs
     otherForms = drawAll drawGate gs.nonInputNames gs
