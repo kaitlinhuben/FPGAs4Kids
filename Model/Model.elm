@@ -30,6 +30,7 @@ type alias GameState = {
   , clicks : Int
   , completed : Bool
   , directions : String
+  , currentLink : String
   , nextLink : String
   , clicksPar : Int
   }

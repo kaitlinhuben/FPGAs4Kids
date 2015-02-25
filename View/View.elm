@@ -26,28 +26,20 @@ display : (Int, Int) -> GameState -> Element
 display (w,h) gameState = 
   let
       upperBarHeight = 50
-      circuitWidth = w
-      circuitHeight = h - upperBarHeight
-      circuitElement = drawCircuit (circuitWidth,circuitHeight) gameState
-      circuitContainer = container circuitWidth circuitHeight middle circuitElement
-      upperBar = drawNavBar (circuitWidth, upperBarHeight) gameState
+      mainHeight = h - upperBarHeight
+      upperBar = drawNavBar (w, upperBarHeight) gameState
+      mainContent = drawMainContent (w, mainHeight) gameState
   in
-      flow down [upperBar, circuitContainer]
+      flow down [upperBar, mainContent]
 
 drawNavBar : (Int, Int) -> GameState -> Element
 drawNavBar (w,h) gameState = 
   let
     -- navigation: restart, next, etc.
     navButtonSize = 50
-    nextBtnHTML = a 
-              [ href gameState.nextLink ] 
-              [ img [src nextLevelBtn] [] ]
-    levelNextButton = if | gameState.completed == False -> image navButtonSize navButtonSize nextLevelNotYetBtn
-                         | otherwise -> toElement navButtonSize navButtonSize nextBtnHTML
     restartButton = toElement navButtonSize navButtonSize ( a 
-                    [ href "#" ]
+                    [ href gameState.currentLink ]
                     [ img [src restartName] [] ] )
-    navButtons = flow right [restartButton, levelNextButton]
 
     -- directions
     directionsElement = Text.plainText gameState.directions
@@ -58,12 +50,35 @@ drawNavBar (w,h) gameState =
     statsElement = flow down [parText, clicksText]
 
     -- get size of spacer (if needed)
-    extraWidth = w - (widthOf navButtons) - (widthOf directionsElement) - (widthOf statsElement)
+    extraWidth = w - (widthOf restartButton) - (widthOf directionsElement) - (widthOf statsElement)
     spacerWidth = if extraWidth < 50 then 0 else extraWidth - 50
     emptySpacer = spacer spacerWidth h 
   in
-    flow right [navButtons, directionsElement, emptySpacer, statsElement]
-    
+    flow right [restartButton, directionsElement, emptySpacer, statsElement]
+
+drawMainContent : (Int, Int) -> GameState -> Element
+drawMainContent (w,h) gameState = 
+  let 
+    circuitElement = drawCircuit (w,h) gameState
+    circuitContainer = container w h middle circuitElement
+  in
+    if | gameState.completed == False -> circuitContainer
+       | otherwise -> 
+          let
+            completedText = Text.centered (Text.height 40 (Text.fromString "You completed the level!"))
+            parText = Text.centered (Text.height 20 (Text.fromString (if gameState.clicks <= gameState.clicksPar then "You were at or under par. Good job!" else "You were above par; give it another try.")))
+            nextBtnHTML = a 
+              [ href gameState.nextLink ] 
+              [ img [src nextLevelBtn] [] ]
+            levelNextButton = toElement 50 50 nextBtnHTML
+          in
+            flow down 
+            [ 
+              flow right [ completedText, levelNextButton]
+            , parText
+            , circuitContainer 
+            ]
+
 {------------------------------------------------------------------------------
     Draw the whole circuit
 ------------------------------------------------------------------------------}

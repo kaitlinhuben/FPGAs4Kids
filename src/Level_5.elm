@@ -188,6 +188,8 @@ solution = Dict.fromList [ ("output1", True), ("output2",True), ("output3",False
 -- directions & link
 directions : String
 directions = "Now you have more than one output. Get (from top): on, on, off."
+currentLink : String
+currentLink = "Level_5.html"
 nextLink : String
 nextLink = "../congrats.html"
 par : Int 
@@ -195,7 +197,7 @@ par = 2
 
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink par
+gameState = instantiateGameState gates inputChannelsPreDict solution directions currentLink nextLink par
 
 -- lift all input signals into user input
 userInputs : Signal (InputsState)

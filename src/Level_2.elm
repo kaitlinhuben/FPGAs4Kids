@@ -90,6 +90,8 @@ solution = Dict.fromList [ ("outputGate", True)]
 -- directions & link
 directions : String
 directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on."
+currentLink : String
+currentLink = "Level_2.html"
 nextLink : String
 nextLink = "Level_3.html"
 par : Int 
@@ -97,7 +99,7 @@ par = 1
 
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink par
+gameState = instantiateGameState gates inputSignalsPreDict solution directions currentLink nextLink par
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
