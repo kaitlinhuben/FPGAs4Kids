@@ -37,14 +37,6 @@ display (w,h) gameState =
 drawNavBar : (Int, Int) -> GameState -> Element
 drawNavBar (w,h) gameState = 
   let
-    -- directions
-    directionsElement = Text.plainText gameState.directions
-
-    -- stats: clicks, score, par, etc.
-    clicksText = Text.plainText ("Clicks: " ++ (toString gameState.clicks))
-    parText = Text.plainText ("Par: " ++ (toString gameState.clicksPar))
-    statsElement = flow down [parText, clicksText]
-
     -- navigation: restart, next, etc.
     navButtonSize = 50
     nextBtnHTML = a 
@@ -55,14 +47,22 @@ drawNavBar (w,h) gameState =
     restartButton = toElement navButtonSize navButtonSize ( a 
                     [ href "#" ]
                     [ img [src restartName] [] ] )
+    navButtons = flow right [restartButton, levelNextButton]
 
-    
+    -- directions
+    directionsElement = Text.plainText gameState.directions
+
+    -- stats: clicks, score, par, etc.
+    clicksText = Text.plainText ("Clicks: " ++ (toString gameState.clicks))
+    parText = Text.plainText ("Par: " ++ (toString gameState.clicksPar))
+    statsElement = flow down [parText, clicksText]
+
+    -- get size of spacer (if needed)
+    extraWidth = w - (widthOf navButtons) - (widthOf directionsElement) - (widthOf statsElement)
+    spacerWidth = if extraWidth < 50 then 0 else extraWidth - 50
+    emptySpacer = spacer spacerWidth h 
   in
-    flow down 
-      [ flow right [restartButton, levelNextButton]
-      , directionsElement      
-      , statsElement
-      ]
+    flow right [navButtons, directionsElement, emptySpacer, statsElement]
     
 {------------------------------------------------------------------------------
     Draw the whole circuit
