@@ -60,7 +60,7 @@ input1 = {
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,100)
-    , imgName = inputOnName
+    , imgName = inputOffName
     , imgOnName = inputOnName
     , imgOffName = inputOffName
     , imgSize = (75,75)
@@ -74,7 +74,7 @@ input2 = {
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,0)
-    , imgName = inputOnName
+    , imgName = inputOffName
     , imgOnName = inputOnName
     , imgOffName = inputOffName
     , imgSize = (75,75)
@@ -88,7 +88,7 @@ input3 = {
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,-100)
-    , imgName = inputOffName
+    , imgName = inputOnName
     , imgOnName = inputOnName
     , imgOffName = inputOffName
     , imgSize = (75,75)
@@ -145,10 +145,12 @@ directions : String
 directions = "Now that you know how things work, try to get the output to turn on."
 nextLink : String
 nextLink = "Level_5.html"
+par : Int 
+par = 2
 
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink
+gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink par
 
 -- lift all input signals into user input
 userInputs : Signal (InputsState)

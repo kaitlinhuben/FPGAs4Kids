@@ -47,6 +47,9 @@ display (w,h) gameState =
                       [ Text.plainText "Clicks: "
                       , clicksText
                       , Text.plainText "           "
+                      , Text.plainText "Par: "
+                      , Text.asText gameState.clicksPar
+                      , Text.plainText "           "
                       , restartButton
                       , levelNextButton
                       ]                    
@@ -143,7 +146,6 @@ drawInputGate name gs =
                      | otherwise -> True
 
     -- make the image a clickable element
-    -- TODO also send this to count of clicks?? --> send a tuple
     gateElement = clickable (send gateChannel updateValue) gateImage
 
     -- make the clickable image a link so cursor switches to pointer

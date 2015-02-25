@@ -74,7 +74,7 @@ input1 = {
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-200,100)
-    , imgName = inputOnName
+    , imgName = inputOffName
     , imgOnName = inputOnName
     , imgOffName = inputOffName
     , imgSize = (75,75)
@@ -190,10 +190,12 @@ directions : String
 directions = "Now you have more than one output. Get (from top): on, on, off."
 nextLink : String
 nextLink = "../congrats.html"
+par : Int 
+par = 2
 
 -- Put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink
+gameState = instantiateGameState gates inputChannelsPreDict solution directions nextLink par
 
 -- lift all input signals into user input
 userInputs : Signal (InputsState)

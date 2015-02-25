@@ -73,10 +73,12 @@ directions : String
 directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on."
 nextLink : String
 nextLink = "Level_2.html"
+par : Int 
+par = 1
 
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink
+gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink par
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)

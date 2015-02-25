@@ -33,7 +33,7 @@ inputGate2 = {
     , inputs = Array.empty
     , logic = inputLogic
     , location = (-100,-100)
-    , imgName = inputOnName
+    , imgName = inputOffName
     , imgOnName = inputOnName
     , imgOffName = inputOffName
     , imgSize = (75,75)
@@ -92,10 +92,12 @@ directions : String
 directions = "This is an AND gate. It needs both inputs to be on. Try to get the output to turn on."
 nextLink : String
 nextLink = "Level_3.html"
+par : Int 
+par = 1
 
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink
+gameState = instantiateGameState gates inputSignalsPreDict solution directions nextLink par
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
