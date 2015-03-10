@@ -11,35 +11,39 @@ import Mouse (clicks)
 import Model.Model (..)
 
 initGate : InputJSON -> Gate
-initGate p = 
-    { name = p.name
+initGate jsonPort = 
+    { name = jsonPort.name
     , gateType = 
-        if | p.gateType == "InputGate" -> InputGate
-           | p.gateType == "NormalGate" -> NormalGate
-           | p.gateType == "OutputGate" -> OutputGate
-    , status = p.status
-    , inputs = p.inputs
+        if | jsonPort.gateType == "InputGate" -> InputGate
+           | jsonPort.gateType == "NormalGate" -> NormalGate
+           | jsonPort.gateType == "OutputGate" -> OutputGate
+    , status = jsonPort.status
+    , inputs = jsonPort.inputs
     , logic = 
-        if | p.logic == "inputLogic" -> inputLogic
-           | p.logic == "notLogic" -> notLogic
-    , location = p.location
-    , imgName = findImageName p.status p.logic
-    , imgOnName = findImageName True p.logic
-    , imgOffName = findImageName False p.logic
-    , imgSize = p.imgSize
+        if | jsonPort.logic == "inputLogic" -> inputLogic
+           | jsonPort.logic == "notLogic" -> notLogic
+           | jsonPort.logic == "outputLogic" -> outputLogic
+    , location = jsonPort.location
+    , imgName = findImageName jsonPort.status jsonPort.logic
+    , imgOnName = findImageName True jsonPort.logic
+    , imgOffName = findImageName False jsonPort.logic
+    , imgSize = jsonPort.imgSize
     }
 
 findImageName : Bool -> String -> String
 findImageName status logicString =
-    if | status == True &&  logicString == "inputLogic" -> inputOnName
+    if | status == True  && logicString == "inputLogic" -> inputOnName
        | status == False && logicString == "inputLogic" -> inputOffName
+       | status == True  && logicString == "outputLogic" -> outputOnName
+       | status == False && logicString == "outputLogic" -> outputOffName
        | logicString == "notLogic" -> notImageName
+       | otherwise -> outputBadName
 {------------------------------------------------------------------------------
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> String -> String -> String -> Int -> GameState
-instantiateGameState gates inputChannelsPreDict solutionDict dir clink nlink par = { 
+instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> MiscInputJSON-> GameState
+instantiateGameState gates inputChannelsPreDict solutionDict jsonPort = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -51,10 +55,10 @@ instantiateGameState gates inputChannelsPreDict solutionDict dir clink nlink par
     , clicks = 0
     , completed = False
     , solution = solutionDict 
-    , directions = dir
-    , currentLink = clink
-    , nextLink = nlink
-    , clicksPar = par
+    , directions = jsonPort.directions
+    , currentLink = jsonPort.currentLink
+    , nextLink = jsonPort.nextLink
+    , clicksPar = jsonPort.par
     }
 
 {------------------------------------------------------------------------------

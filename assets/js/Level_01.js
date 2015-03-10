@@ -863,7 +863,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return dict;}
          _U.badCase($moduleName,
-         "between lines 110 and 121");
+         "between lines 114 and 125");
       }();
    });
    var extractCircuitState = F2(function (gates,
@@ -888,7 +888,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return cs;}
          _U.badCase($moduleName,
-         "between lines 98 and 105");
+         "between lines 102 and 109");
       }();
    });
    var extractNonInputGateNames = function (gates) {
@@ -906,7 +906,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 86 and 93");
+         "between lines 90 and 97");
       }();
    };
    var extractInputGateNames = function (gates) {
@@ -924,7 +924,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 74 and 81");
+         "between lines 78 and 85");
       }();
    };
    var extractGateNames = function (gates) {
@@ -940,25 +940,22 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 66 and 69");
+         "between lines 70 and 73");
       }();
    };
-   var instantiateGameState = F7(function (gates,
+   var instantiateGameState = F4(function (gates,
    inputChannelsPreDict,
    solutionDict,
-   dir,
-   clink,
-   nlink,
-   par) {
+   jsonPort) {
       return {_: {}
              ,circuitState: A2(extractCircuitState,
              gates,
              $Dict.empty)
              ,clicks: 0
-             ,clicksPar: par
+             ,clicksPar: jsonPort.par
              ,completed: false
-             ,currentLink: clink
-             ,directions: dir
+             ,currentLink: jsonPort.currentLink
+             ,directions: jsonPort.directions
              ,gameMode: $Model$Model.Schematic
              ,inputChannels: $Dict.fromList(inputChannelsPreDict)
              ,inputNames: extractInputGateNames(gates)
@@ -969,7 +966,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
                         ,_0: 0
                         ,_1: 0}
              ,networkNames: extractGateNames(gates)
-             ,nextLink: nlink
+             ,nextLink: jsonPort.nextLink
              ,nonInputNames: extractNonInputGateNames(gates)
              ,solution: solutionDict};
    });
@@ -979,35 +976,39 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
       true) && _U.eq(logicString,
       "inputLogic") ? $Model$Model.inputOnName : _U.eq(status,
       false) && _U.eq(logicString,
-      "inputLogic") ? $Model$Model.inputOffName : _U.eq(logicString,
-      "notLogic") ? $Model$Model.notImageName : _U.badIf($moduleName,
-      "between lines 34 and 36");
+      "inputLogic") ? $Model$Model.inputOffName : _U.eq(status,
+      true) && _U.eq(logicString,
+      "outputLogic") ? $Model$Model.outputOnName : _U.eq(status,
+      false) && _U.eq(logicString,
+      "outputLogic") ? $Model$Model.outputOffName : _U.eq(logicString,
+      "notLogic") ? $Model$Model.notImageName : $Model$Model.outputBadName;
    });
-   var initGate = function (p) {
+   var initGate = function (jsonPort) {
       return {_: {}
-             ,gateType: _U.eq(p.gateType,
-             "InputGate") ? $Model$Model.InputGate : _U.eq(p.gateType,
-             "NormalGate") ? $Model$Model.NormalGate : _U.eq(p.gateType,
+             ,gateType: _U.eq(jsonPort.gateType,
+             "InputGate") ? $Model$Model.InputGate : _U.eq(jsonPort.gateType,
+             "NormalGate") ? $Model$Model.NormalGate : _U.eq(jsonPort.gateType,
              "OutputGate") ? $Model$Model.OutputGate : _U.badIf($moduleName,
              "between lines 17 and 19")
              ,imgName: A2(findImageName,
-             p.status,
-             p.logic)
+             jsonPort.status,
+             jsonPort.logic)
              ,imgOffName: A2(findImageName,
              false,
-             p.logic)
+             jsonPort.logic)
              ,imgOnName: A2(findImageName,
              true,
-             p.logic)
-             ,imgSize: p.imgSize
-             ,inputs: p.inputs
-             ,location: p.location
-             ,logic: _U.eq(p.logic,
-             "inputLogic") ? $Model$Model.inputLogic : _U.eq(p.logic,
-             "notLogic") ? $Model$Model.notLogic : _U.badIf($moduleName,
-             "between lines 23 and 24")
-             ,name: p.name
-             ,status: p.status};
+             jsonPort.logic)
+             ,imgSize: jsonPort.imgSize
+             ,inputs: jsonPort.inputs
+             ,location: jsonPort.location
+             ,logic: _U.eq(jsonPort.logic,
+             "inputLogic") ? $Model$Model.inputLogic : _U.eq(jsonPort.logic,
+             "notLogic") ? $Model$Model.notLogic : _U.eq(jsonPort.logic,
+             "outputLogic") ? $Model$Model.outputLogic : _U.badIf($moduleName,
+             "between lines 23 and 25")
+             ,name: jsonPort.name
+             ,status: jsonPort.status};
    };
    _elm.Controller.InstantiationHelper.values = {_op: _op
                                                 ,initGate: initGate
@@ -3950,7 +3951,6 @@ Elm.Level_01.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Level_01",
-   $Array = Elm.Array.make(_elm),
    $Controller$Controller = Elm.Controller.Controller.make(_elm),
    $Controller$InstantiationHelper = Elm.Controller.InstantiationHelper.make(_elm),
    $Dict = Elm.Dict.make(_elm),
@@ -3963,28 +3963,53 @@ Elm.Level_01.make = function (_elm) {
       bool,
       $Dict.empty);
    };
-   var par = 1;
-   var nextLink = "Level_2.html";
-   var currentLink = "Level_1.html";
-   var directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on.";
    var solution = $Dict.fromList(_L.fromArray([{ctor: "_Tuple2"
                                                ,_0: "outputGate"
                                                ,_1: true}]));
-   var outputGate = {_: {}
-                    ,gateType: $Model$Model.OutputGate
-                    ,imgName: $Model$Model.outputOffName
-                    ,imgOffName: $Model$Model.outputOffName
-                    ,imgOnName: $Model$Model.outputOnName
-                    ,imgSize: {ctor: "_Tuple2"
-                              ,_0: 75
-                              ,_1: 75}
-                    ,inputs: $Array.fromList(_L.fromArray(["notGate"]))
-                    ,location: {ctor: "_Tuple2"
-                               ,_0: 100
-                               ,_1: 0}
-                    ,logic: $Model$Model.inputLogic
-                    ,name: "outputGate"
-                    ,status: false};
+   var miscPort = _P.portIn("miscPort",
+   function (v) {
+      return typeof v === "object" && "directions" in v && "currentLink" in v && "nextLink" in v && "par" in v ? {_: {}
+                                                                                                                 ,directions: typeof v.directions === "string" || typeof v.directions === "object" && v.directions instanceof String ? v.directions : _U.badPort("a string",
+                                                                                                                 v.directions)
+                                                                                                                 ,currentLink: typeof v.currentLink === "string" || typeof v.currentLink === "object" && v.currentLink instanceof String ? v.currentLink : _U.badPort("a string",
+                                                                                                                 v.currentLink)
+                                                                                                                 ,nextLink: typeof v.nextLink === "string" || typeof v.nextLink === "object" && v.nextLink instanceof String ? v.nextLink : _U.badPort("a string",
+                                                                                                                 v.nextLink)
+                                                                                                                 ,par: typeof v.par === "number" ? v.par : _U.badPort("a number",
+                                                                                                                 v.par)} : _U.badPort("an object with fields \'directions\', \'currentLink\', \'nextLink\', \'par\'",
+      v);
+   });
+   var outPort = _P.portIn("outPort",
+   function (v) {
+      return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v && "logic" in v && "location" in v && "imgSize" in v ? {_: {}
+                                                                                                                                                              ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                                                                                              v.name)
+                                                                                                                                                              ,gateType: typeof v.gateType === "string" || typeof v.gateType === "object" && v.gateType instanceof String ? v.gateType : _U.badPort("a string",
+                                                                                                                                                              v.gateType)
+                                                                                                                                                              ,status: typeof v.status === "boolean" ? v.status : _U.badPort("a boolean (true or false)",
+                                                                                                                                                              v.status)
+                                                                                                                                                              ,inputs: typeof v.inputs === "object" && v.inputs instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.inputs.map(function (v) {
+                                                                                                                                                                 return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+                                                                                                                                                                 v);
+                                                                                                                                                              })) : _U.badPort("an array",
+                                                                                                                                                              v.inputs)
+                                                                                                                                                              ,logic: typeof v.logic === "string" || typeof v.logic === "object" && v.logic instanceof String ? v.logic : _U.badPort("a string",
+                                                                                                                                                              v.logic)
+                                                                                                                                                              ,location: typeof v.location === "object" && v.location instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: typeof v.location[0] === "number" ? v.location[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[0])
+                                                                                                                                                                                                                                         ,_1: typeof v.location[1] === "number" ? v.location[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[1])} : _U.badPort("an array",
+                                                                                                                                                              v.location)
+                                                                                                                                                              ,imgSize: typeof v.imgSize === "object" && v.imgSize instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                      ,_0: typeof v.imgSize[0] === "number" ? v.imgSize[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[0])
+                                                                                                                                                                                                                                      ,_1: typeof v.imgSize[1] === "number" ? v.imgSize[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[1])} : _U.badPort("an array",
+                                                                                                                                                              v.imgSize)} : _U.badPort("an object with fields \'name\', \'gateType\', \'status\', \'inputs\', \'logic\', \'location\', \'imgSize\'",
+      v);
+   });
+   var outputGate = $Controller$InstantiationHelper.initGate(outPort);
    var notPort = _P.portIn("notPort",
    function (v) {
       return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v && "logic" in v && "location" in v && "imgSize" in v ? {_: {}
@@ -4054,14 +4079,11 @@ Elm.Level_01.make = function (_elm) {
    var inputSignalsPreDict = _L.fromArray([{ctor: "_Tuple2"
                                            ,_0: "inputGate"
                                            ,_1: inputChannel}]);
-   var gameState = A7($Controller$InstantiationHelper.instantiateGameState,
+   var gameState = A4($Controller$InstantiationHelper.instantiateGameState,
    gates,
    inputSignalsPreDict,
    solution,
-   directions,
-   currentLink,
-   nextLink,
-   par);
+   miscPort);
    var userInputs = A2($Signal.map,
    liftToDict,
    $Signal.subscribe(inputChannel));
@@ -4078,10 +4100,6 @@ Elm.Level_01.make = function (_elm) {
                           ,inputChannel: inputChannel
                           ,inputSignalsPreDict: inputSignalsPreDict
                           ,solution: solution
-                          ,directions: directions
-                          ,currentLink: currentLink
-                          ,nextLink: nextLink
-                          ,par: par
                           ,gameState: gameState
                           ,userInputs: userInputs
                           ,liftToDict: liftToDict
@@ -4860,6 +4878,16 @@ Elm.Model.Model.make = function (_elm) {
    var UserInput = function (a) {
       return {_: {},inputBools: a};
    };
+   var MiscInputJSON = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,currentLink: b
+             ,directions: a
+             ,nextLink: c
+             ,par: d};
+   });
    var InputJSON = F7(function (a,
    b,
    c,
@@ -4878,6 +4906,7 @@ Elm.Model.Model.make = function (_elm) {
    });
    _elm.Model.Model.values = {_op: _op
                              ,InputJSON: InputJSON
+                             ,MiscInputJSON: MiscInputJSON
                              ,UserInput: UserInput
                              ,Game: Game
                              ,Schematic: Schematic

@@ -13,7 +13,8 @@ import Controller.InstantiationHelper (..)
 -- input ports
 port inPort : InputJSON
 port notPort: InputJSON
-
+port outPort: InputJSON
+port miscPort: MiscInputJSON
 
 -- Set up gates
 inputGate : Gate
@@ -23,18 +24,7 @@ notGate : Gate
 notGate = initGate notPort
 
 outputGate : Gate
-outputGate = {
-      name = "outputGate"
-    , gateType = OutputGate
-    , status = False
-    , inputs = Array.fromList ["notGate"]
-    , logic = inputLogic
-    , location = (100,0)
-    , imgName = outputOffName
-    , imgOnName = outputOnName
-    , imgOffName = outputOffName
-    , imgSize = (75,75)
-  }
+outputGate = initGate outPort
 
 -- set up array of gates in correct order
 gates : List Gate
@@ -52,19 +42,9 @@ inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 solution : Dict.Dict String Bool
 solution = Dict.fromList [ ("outputGate", True)]
 
--- directions & link
-directions : String
-directions = "This is a NOT gate. It flips inputs. Try to get the output to turn on."
-currentLink: String
-currentLink = "Level_1.html"
-nextLink : String
-nextLink = "Level_2.html"
-par : Int 
-par = 1
-
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution directions currentLink nextLink par
+gameState = instantiateGameState gates inputSignalsPreDict solution miscPort
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)

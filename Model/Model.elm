@@ -11,14 +11,21 @@ import Signal (Channel, channel)
 {------------------------------------------------------------------------------
     Game and circuit type and type aliases
 ------------------------------------------------------------------------------}
-type alias InputJSON = { name: String
-                       , gateType: String
-                       , status: Bool
-                       , inputs: Array.Array String
-                       , logic: String
-                       , location: (Float, Float)
-                       , imgSize: (Int, Int)
-                       }
+type alias InputJSON = { 
+    name: String
+  , gateType: String
+  , status: Bool
+  , inputs: Array.Array String
+  , logic: String
+  , location: (Float, Float)
+  , imgSize: (Int, Int)
+  }
+type alias MiscInputJSON = {
+    directions: String
+  , currentLink: String
+  , nextLink: String
+  , par: Int
+  }
 
 type alias UserInput = {
     inputBools : Dict.Dict String Bool
