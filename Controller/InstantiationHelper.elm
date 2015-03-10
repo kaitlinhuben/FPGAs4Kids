@@ -42,8 +42,8 @@ findImageName status logicString =
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> MiscInputJSON-> GameState
-instantiateGameState gates inputChannelsPreDict solutionDict jsonPort = { 
+instantiateGameState : List Gate -> List (String, Channel Bool) -> MiscInputJSON -> GameState
+instantiateGameState gates inputChannelsPreDict jsonPort = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -54,7 +54,7 @@ instantiateGameState gates inputChannelsPreDict solutionDict jsonPort = {
     , inputChannels = Dict.fromList inputChannelsPreDict
     , clicks = 0
     , completed = False
-    , solution = solutionDict 
+    , solution = Dict.fromList jsonPort.solution 
     , directions = jsonPort.directions
     , currentLink = jsonPort.currentLink
     , nextLink = jsonPort.nextLink

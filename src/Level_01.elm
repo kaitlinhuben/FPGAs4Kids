@@ -17,13 +17,8 @@ port outPort: InputJSON
 port miscPort: MiscInputJSON
 
 -- Set up gates
-inputGate : Gate
 inputGate = initGate inPort
-
-notGate : Gate
 notGate = initGate notPort
-
-outputGate : Gate
 outputGate = initGate outPort
 
 -- set up array of gates in correct order
@@ -38,13 +33,9 @@ inputChannel = channel inputGate.status
 inputSignalsPreDict : List (String, Channel Bool)
 inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 
--- set up solution
-solution : Dict.Dict String Bool
-solution = Dict.fromList [ ("outputGate", True)]
-
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict solution miscPort
+gameState = instantiateGameState gates inputSignalsPreDict miscPort
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)

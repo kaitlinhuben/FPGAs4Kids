@@ -943,9 +943,8 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
          "between lines 70 and 73");
       }();
    };
-   var instantiateGameState = F4(function (gates,
+   var instantiateGameState = F3(function (gates,
    inputChannelsPreDict,
-   solutionDict,
    jsonPort) {
       return {_: {}
              ,circuitState: A2(extractCircuitState,
@@ -968,7 +967,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
              ,networkNames: extractGateNames(gates)
              ,nextLink: jsonPort.nextLink
              ,nonInputNames: extractNonInputGateNames(gates)
-             ,solution: solutionDict};
+             ,solution: $Dict.fromList(jsonPort.solution)};
    });
    var findImageName = F2(function (status,
    logicString) {
@@ -3963,20 +3962,26 @@ Elm.Level_01.make = function (_elm) {
       bool,
       $Dict.empty);
    };
-   var solution = $Dict.fromList(_L.fromArray([{ctor: "_Tuple2"
-                                               ,_0: "outputGate"
-                                               ,_1: true}]));
    var miscPort = _P.portIn("miscPort",
    function (v) {
-      return typeof v === "object" && "directions" in v && "currentLink" in v && "nextLink" in v && "par" in v ? {_: {}
-                                                                                                                 ,directions: typeof v.directions === "string" || typeof v.directions === "object" && v.directions instanceof String ? v.directions : _U.badPort("a string",
-                                                                                                                 v.directions)
-                                                                                                                 ,currentLink: typeof v.currentLink === "string" || typeof v.currentLink === "object" && v.currentLink instanceof String ? v.currentLink : _U.badPort("a string",
-                                                                                                                 v.currentLink)
-                                                                                                                 ,nextLink: typeof v.nextLink === "string" || typeof v.nextLink === "object" && v.nextLink instanceof String ? v.nextLink : _U.badPort("a string",
-                                                                                                                 v.nextLink)
-                                                                                                                 ,par: typeof v.par === "number" ? v.par : _U.badPort("a number",
-                                                                                                                 v.par)} : _U.badPort("an object with fields \'directions\', \'currentLink\', \'nextLink\', \'par\'",
+      return typeof v === "object" && "solution" in v && "directions" in v && "currentLink" in v && "nextLink" in v && "par" in v ? {_: {}
+                                                                                                                                    ,solution: typeof v.solution === "object" && v.solution instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.solution.map(function (v) {
+                                                                                                                                       return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                            ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
+                                                                                                                                                                                            v[0])
+                                                                                                                                                                                            ,_1: typeof v[1] === "boolean" ? v[1] : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                            v[1])} : _U.badPort("an array",
+                                                                                                                                       v);
+                                                                                                                                    })) : _U.badPort("an array",
+                                                                                                                                    v.solution)
+                                                                                                                                    ,directions: typeof v.directions === "string" || typeof v.directions === "object" && v.directions instanceof String ? v.directions : _U.badPort("a string",
+                                                                                                                                    v.directions)
+                                                                                                                                    ,currentLink: typeof v.currentLink === "string" || typeof v.currentLink === "object" && v.currentLink instanceof String ? v.currentLink : _U.badPort("a string",
+                                                                                                                                    v.currentLink)
+                                                                                                                                    ,nextLink: typeof v.nextLink === "string" || typeof v.nextLink === "object" && v.nextLink instanceof String ? v.nextLink : _U.badPort("a string",
+                                                                                                                                    v.nextLink)
+                                                                                                                                    ,par: typeof v.par === "number" ? v.par : _U.badPort("a number",
+                                                                                                                                    v.par)} : _U.badPort("an object with fields \'solution\', \'directions\', \'currentLink\', \'nextLink\', \'par\'",
       v);
    });
    var outPort = _P.portIn("outPort",
@@ -4079,10 +4084,9 @@ Elm.Level_01.make = function (_elm) {
    var inputSignalsPreDict = _L.fromArray([{ctor: "_Tuple2"
                                            ,_0: "inputGate"
                                            ,_1: inputChannel}]);
-   var gameState = A4($Controller$InstantiationHelper.instantiateGameState,
+   var gameState = A3($Controller$InstantiationHelper.instantiateGameState,
    gates,
    inputSignalsPreDict,
-   solution,
    miscPort);
    var userInputs = A2($Signal.map,
    liftToDict,
@@ -4099,7 +4103,6 @@ Elm.Level_01.make = function (_elm) {
                           ,gates: gates
                           ,inputChannel: inputChannel
                           ,inputSignalsPreDict: inputSignalsPreDict
-                          ,solution: solution
                           ,gameState: gameState
                           ,userInputs: userInputs
                           ,liftToDict: liftToDict
@@ -4878,15 +4881,17 @@ Elm.Model.Model.make = function (_elm) {
    var UserInput = function (a) {
       return {_: {},inputBools: a};
    };
-   var MiscInputJSON = F4(function (a,
+   var MiscInputJSON = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
-             ,currentLink: b
-             ,directions: a
-             ,nextLink: c
-             ,par: d};
+             ,currentLink: c
+             ,directions: b
+             ,nextLink: d
+             ,par: e
+             ,solution: a};
    });
    var InputJSON = F7(function (a,
    b,

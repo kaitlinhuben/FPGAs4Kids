@@ -21,7 +21,8 @@ type alias InputJSON = {
   , imgSize: (Int, Int)
   }
 type alias MiscInputJSON = {
-    directions: String
+    solution: List (String, Bool)
+  , directions: String
   , currentLink: String
   , nextLink: String
   , par: Int
