@@ -10,24 +10,34 @@ import Signal (Channel, map)
 import Mouse (clicks)
 import Model.Model (..)
 
+initGate : InputJSON -> Gate
+initGate p = 
+    { name = p.name
+    , gateType = 
+        if | p.gateType == "InputGate" -> InputGate
+           | p.gateType == "NormalGate" -> NormalGate
+           | p.gateType == "OutputGate" -> OutputGate
+    , status = p.status
+    , inputs = p.inputs
+    , logic = 
+        if | p.logic == "inputLogic" -> inputLogic
+           | p.logic == "notLogic" -> notLogic
+    , location = p.location
+    , imgName = findImageName p.status p.logic
+    , imgOnName = findImageName True p.logic
+    , imgOffName = findImageName False p.logic
+    , imgSize = p.imgSize
+    }
+
+findImageName : Bool -> String -> String
+findImageName status logicString =
+    if | status == True &&  logicString == "inputLogic" -> inputOnName
+       | status == False && logicString == "inputLogic" -> inputOffName
+       | logicString == "notLogic" -> notImageName
 {------------------------------------------------------------------------------
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-initGate : {name:String,gateType:String,status:Bool,inputs:Array.Array String}->Gate
-initGate p = 
-    { name = p.name
-    , gateType = InputGate -- TODO
-    , status = p.status
-    , inputs = p.inputs
-    , logic = inputLogic --TODO
-    , location = (0.0,0.0)
-    , imgName = inputOnName -- TODO
-    , imgOnName = inputOnName -- TODO
-    , imgOffName = inputOffName -- TODO
-    , imgSize = (0,0)
-    }
-
 instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> String -> String -> String -> Int -> GameState
 instantiateGameState gates inputChannelsPreDict solutionDict dir clink nlink par = { 
       networkNames = extractGateNames gates

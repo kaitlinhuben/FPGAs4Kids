@@ -834,7 +834,6 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Controller.InstantiationHelper",
-   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $List = Elm.List.make(_elm),
@@ -864,7 +863,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return dict;}
          _U.badCase($moduleName,
-         "between lines 100 and 111");
+         "between lines 110 and 121");
       }();
    });
    var extractCircuitState = F2(function (gates,
@@ -889,7 +888,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return cs;}
          _U.badCase($moduleName,
-         "between lines 88 and 95");
+         "between lines 98 and 105");
       }();
    });
    var extractNonInputGateNames = function (gates) {
@@ -907,7 +906,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 76 and 83");
+         "between lines 86 and 93");
       }();
    };
    var extractInputGateNames = function (gates) {
@@ -925,7 +924,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 64 and 71");
+         "between lines 74 and 81");
       }();
    };
    var extractGateNames = function (gates) {
@@ -941,7 +940,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 56 and 59");
+         "between lines 66 and 69");
       }();
    };
    var instantiateGameState = F7(function (gates,
@@ -974,25 +973,45 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
              ,nonInputNames: extractNonInputGateNames(gates)
              ,solution: solutionDict};
    });
-   var initGate = F5(function (n,
-   stat,
-   ins,
-   loc,
-   sz) {
-      return {_: {}
-             ,gateType: $Model$Model.InputGate
-             ,imgName: $Model$Model.inputOnName
-             ,imgOffName: $Model$Model.inputOffName
-             ,imgOnName: $Model$Model.inputOnName
-             ,imgSize: sz
-             ,inputs: ins
-             ,location: loc
-             ,logic: $Model$Model.inputLogic
-             ,name: n
-             ,status: stat};
+   var findImageName = F2(function (status,
+   logicString) {
+      return _U.eq(status,
+      true) && _U.eq(logicString,
+      "inputLogic") ? $Model$Model.inputOnName : _U.eq(status,
+      false) && _U.eq(logicString,
+      "inputLogic") ? $Model$Model.inputOffName : _U.eq(logicString,
+      "notLogic") ? $Model$Model.notImageName : _U.badIf($moduleName,
+      "between lines 34 and 36");
    });
+   var initGate = function (p) {
+      return {_: {}
+             ,gateType: _U.eq(p.gateType,
+             "InputGate") ? $Model$Model.InputGate : _U.eq(p.gateType,
+             "NormalGate") ? $Model$Model.NormalGate : _U.eq(p.gateType,
+             "OutputGate") ? $Model$Model.OutputGate : _U.badIf($moduleName,
+             "between lines 17 and 19")
+             ,imgName: A2(findImageName,
+             p.status,
+             p.logic)
+             ,imgOffName: A2(findImageName,
+             false,
+             p.logic)
+             ,imgOnName: A2(findImageName,
+             true,
+             p.logic)
+             ,imgSize: p.imgSize
+             ,inputs: p.inputs
+             ,location: p.location
+             ,logic: _U.eq(p.logic,
+             "inputLogic") ? $Model$Model.inputLogic : _U.eq(p.logic,
+             "notLogic") ? $Model$Model.notLogic : _U.badIf($moduleName,
+             "between lines 23 and 24")
+             ,name: p.name
+             ,status: p.status};
+   };
    _elm.Controller.InstantiationHelper.values = {_op: _op
                                                 ,initGate: initGate
+                                                ,findImageName: findImageName
                                                 ,instantiateGameState: instantiateGameState
                                                 ,extractGateNames: extractGateNames
                                                 ,extractInputGateNames: extractInputGateNames
@@ -3966,47 +3985,68 @@ Elm.Level_01.make = function (_elm) {
                     ,logic: $Model$Model.inputLogic
                     ,name: "outputGate"
                     ,status: false};
-   var notGate = {_: {}
-                 ,gateType: $Model$Model.NormalGate
-                 ,imgName: $Model$Model.notImageName
-                 ,imgOffName: $Model$Model.notImageName
-                 ,imgOnName: $Model$Model.notImageName
-                 ,imgSize: {ctor: "_Tuple2"
-                           ,_0: 75
-                           ,_1: 75}
-                 ,inputs: $Array.fromList(_L.fromArray(["inputGate"]))
-                 ,location: {ctor: "_Tuple2"
-                            ,_0: 0
-                            ,_1: 0}
-                 ,logic: $Model$Model.notLogic
-                 ,name: "notGate"
-                 ,status: false};
-   var inPort = _P.portIn("inPort",
+   var notPort = _P.portIn("notPort",
    function (v) {
-      return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v ? {_: {}
-                                                                                                         ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
-                                                                                                         v.name)
-                                                                                                         ,gateType: typeof v.gateType === "string" || typeof v.gateType === "object" && v.gateType instanceof String ? v.gateType : _U.badPort("a string",
-                                                                                                         v.gateType)
-                                                                                                         ,status: typeof v.status === "boolean" ? v.status : _U.badPort("a boolean (true or false)",
-                                                                                                         v.status)
-                                                                                                         ,inputs: typeof v.inputs === "object" && v.inputs instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.inputs.map(function (v) {
-                                                                                                            return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
-                                                                                                            v);
-                                                                                                         })) : _U.badPort("an array",
-                                                                                                         v.inputs)} : _U.badPort("an object with fields \'name\', \'gateType\', \'status\', \'inputs\'",
+      return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v && "logic" in v && "location" in v && "imgSize" in v ? {_: {}
+                                                                                                                                                              ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                                                                                              v.name)
+                                                                                                                                                              ,gateType: typeof v.gateType === "string" || typeof v.gateType === "object" && v.gateType instanceof String ? v.gateType : _U.badPort("a string",
+                                                                                                                                                              v.gateType)
+                                                                                                                                                              ,status: typeof v.status === "boolean" ? v.status : _U.badPort("a boolean (true or false)",
+                                                                                                                                                              v.status)
+                                                                                                                                                              ,inputs: typeof v.inputs === "object" && v.inputs instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.inputs.map(function (v) {
+                                                                                                                                                                 return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+                                                                                                                                                                 v);
+                                                                                                                                                              })) : _U.badPort("an array",
+                                                                                                                                                              v.inputs)
+                                                                                                                                                              ,logic: typeof v.logic === "string" || typeof v.logic === "object" && v.logic instanceof String ? v.logic : _U.badPort("a string",
+                                                                                                                                                              v.logic)
+                                                                                                                                                              ,location: typeof v.location === "object" && v.location instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: typeof v.location[0] === "number" ? v.location[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[0])
+                                                                                                                                                                                                                                         ,_1: typeof v.location[1] === "number" ? v.location[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[1])} : _U.badPort("an array",
+                                                                                                                                                              v.location)
+                                                                                                                                                              ,imgSize: typeof v.imgSize === "object" && v.imgSize instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                      ,_0: typeof v.imgSize[0] === "number" ? v.imgSize[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[0])
+                                                                                                                                                                                                                                      ,_1: typeof v.imgSize[1] === "number" ? v.imgSize[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[1])} : _U.badPort("an array",
+                                                                                                                                                              v.imgSize)} : _U.badPort("an object with fields \'name\', \'gateType\', \'status\', \'inputs\', \'logic\', \'location\', \'imgSize\'",
       v);
    });
-   var inputGate = A5($Controller$InstantiationHelper.initGate,
-   inPort.name,
-   inPort.status,
-   inPort.inputs,
-   {ctor: "_Tuple2"
-   ,_0: -100
-   ,_1: 0},
-   {ctor: "_Tuple2"
-   ,_0: 75
-   ,_1: 75});
+   var notGate = $Controller$InstantiationHelper.initGate(notPort);
+   var inPort = _P.portIn("inPort",
+   function (v) {
+      return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v && "logic" in v && "location" in v && "imgSize" in v ? {_: {}
+                                                                                                                                                              ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                                                                                              v.name)
+                                                                                                                                                              ,gateType: typeof v.gateType === "string" || typeof v.gateType === "object" && v.gateType instanceof String ? v.gateType : _U.badPort("a string",
+                                                                                                                                                              v.gateType)
+                                                                                                                                                              ,status: typeof v.status === "boolean" ? v.status : _U.badPort("a boolean (true or false)",
+                                                                                                                                                              v.status)
+                                                                                                                                                              ,inputs: typeof v.inputs === "object" && v.inputs instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.inputs.map(function (v) {
+                                                                                                                                                                 return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+                                                                                                                                                                 v);
+                                                                                                                                                              })) : _U.badPort("an array",
+                                                                                                                                                              v.inputs)
+                                                                                                                                                              ,logic: typeof v.logic === "string" || typeof v.logic === "object" && v.logic instanceof String ? v.logic : _U.badPort("a string",
+                                                                                                                                                              v.logic)
+                                                                                                                                                              ,location: typeof v.location === "object" && v.location instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: typeof v.location[0] === "number" ? v.location[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[0])
+                                                                                                                                                                                                                                         ,_1: typeof v.location[1] === "number" ? v.location[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                         v.location[1])} : _U.badPort("an array",
+                                                                                                                                                              v.location)
+                                                                                                                                                              ,imgSize: typeof v.imgSize === "object" && v.imgSize instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                      ,_0: typeof v.imgSize[0] === "number" ? v.imgSize[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[0])
+                                                                                                                                                                                                                                      ,_1: typeof v.imgSize[1] === "number" ? v.imgSize[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                      v.imgSize[1])} : _U.badPort("an array",
+                                                                                                                                                              v.imgSize)} : _U.badPort("an object with fields \'name\', \'gateType\', \'status\', \'inputs\', \'logic\', \'location\', \'imgSize\'",
+      v);
+   });
+   var inputGate = $Controller$InstantiationHelper.initGate(inPort);
    var gates = _L.fromArray([inputGate
                             ,notGate
                             ,outputGate]);
@@ -4820,7 +4860,24 @@ Elm.Model.Model.make = function (_elm) {
    var UserInput = function (a) {
       return {_: {},inputBools: a};
    };
+   var InputJSON = F7(function (a,
+   b,
+   c,
+   d,
+   e,
+   f,
+   g) {
+      return {_: {}
+             ,gateType: b
+             ,imgSize: g
+             ,inputs: d
+             ,location: f
+             ,logic: e
+             ,name: a
+             ,status: c};
+   });
    _elm.Model.Model.values = {_op: _op
+                             ,InputJSON: InputJSON
                              ,UserInput: UserInput
                              ,Game: Game
                              ,Schematic: Schematic
@@ -13179,7 +13236,8 @@ Elm.View.View.make = function (_elm) {
                  gameState);
                  return A2($Graphics$Element.flow,
                  $Graphics$Element.down,
-                 _L.fromArray([mainContent]));
+                 _L.fromArray([upperBar
+                              ,mainContent]));
               }();}
          _U.badCase($moduleName,
          "between lines 27 and 33");

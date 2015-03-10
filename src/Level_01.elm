@@ -9,8 +9,10 @@ import Model.Model (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 
+
 -- input ports
-port inPort : { name:String, gateType: String, status:Bool, inputs:Array.Array String }
+port inPort : InputJSON
+port notPort: InputJSON
 
 
 -- Set up gates
@@ -18,18 +20,7 @@ inputGate : Gate
 inputGate = initGate inPort
 
 notGate : Gate
-notGate = {
-      name = "notGate"
-    , gateType = NormalGate
-    , status = False
-    , inputs = Array.fromList ["inputGate"]
-    , logic = notLogic
-    , location = (0,0)
-    , imgName = notImageName
-    , imgOnName = notImageName
-    , imgOffName = notImageName
-    , imgSize = (75,75)
-  }
+notGate = initGate notPort
 
 outputGate : Gate
 outputGate = {
