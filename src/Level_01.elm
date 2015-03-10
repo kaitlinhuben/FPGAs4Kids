@@ -1,4 +1,4 @@
-module Level_1 where
+module Level_01 where
 
 import Mouse
 import Array
@@ -8,6 +8,9 @@ import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
+
+-- input ports
+--port inputGatePort : Signal { name:String, status:Bool, inputs:Array.Array String}
 
 -- Set up gates
 inputGate : Gate

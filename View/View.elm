@@ -30,7 +30,7 @@ display (w,h) gameState =
       upperBar = drawNavBar (w, upperBarHeight) gameState
       mainContent = drawMainContent (w, mainHeight) gameState
   in
-      flow down [upperBar, mainContent]
+      flow down [{-upperBar,-} mainContent]
 
 drawNavBar : (Int, Int) -> GameState -> Element
 drawNavBar (w,h) gameState = 
