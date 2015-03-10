@@ -834,6 +834,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Controller.InstantiationHelper",
+   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $List = Elm.List.make(_elm),
@@ -863,7 +864,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return dict;}
          _U.badCase($moduleName,
-         "between lines 85 and 96");
+         "between lines 100 and 111");
       }();
    });
    var extractCircuitState = F2(function (gates,
@@ -888,7 +889,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
               }();
             case "[]": return cs;}
          _U.badCase($moduleName,
-         "between lines 73 and 80");
+         "between lines 88 and 95");
       }();
    });
    var extractNonInputGateNames = function (gates) {
@@ -906,7 +907,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 61 and 68");
+         "between lines 76 and 83");
       }();
    };
    var extractInputGateNames = function (gates) {
@@ -924,7 +925,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 49 and 56");
+         "between lines 64 and 71");
       }();
    };
    var extractGateNames = function (gates) {
@@ -940,7 +941,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 41 and 44");
+         "between lines 56 and 59");
       }();
    };
    var instantiateGameState = F7(function (gates,
@@ -973,7 +974,25 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
              ,nonInputNames: extractNonInputGateNames(gates)
              ,solution: solutionDict};
    });
+   var initGate = F5(function (n,
+   stat,
+   ins,
+   loc,
+   sz) {
+      return {_: {}
+             ,gateType: $Model$Model.InputGate
+             ,imgName: $Model$Model.inputOnName
+             ,imgOffName: $Model$Model.inputOffName
+             ,imgOnName: $Model$Model.inputOnName
+             ,imgSize: sz
+             ,inputs: ins
+             ,location: loc
+             ,logic: $Model$Model.inputLogic
+             ,name: n
+             ,status: stat};
+   });
    _elm.Controller.InstantiationHelper.values = {_op: _op
+                                                ,initGate: initGate
                                                 ,instantiateGameState: instantiateGameState
                                                 ,extractGateNames: extractGateNames
                                                 ,extractInputGateNames: extractInputGateNames
@@ -3962,21 +3981,32 @@ Elm.Level_01.make = function (_elm) {
                  ,logic: $Model$Model.notLogic
                  ,name: "notGate"
                  ,status: false};
-   var inputGate = {_: {}
-                   ,gateType: $Model$Model.InputGate
-                   ,imgName: $Model$Model.inputOnName
-                   ,imgOffName: $Model$Model.inputOffName
-                   ,imgOnName: $Model$Model.inputOnName
-                   ,imgSize: {ctor: "_Tuple2"
-                             ,_0: 75
-                             ,_1: 75}
-                   ,inputs: $Array.empty
-                   ,location: {ctor: "_Tuple2"
-                              ,_0: -100
-                              ,_1: 0}
-                   ,logic: $Model$Model.inputLogic
-                   ,name: "inputGate"
-                   ,status: true};
+   var inPort = _P.portIn("inPort",
+   function (v) {
+      return typeof v === "object" && "name" in v && "gateType" in v && "status" in v && "inputs" in v ? {_: {}
+                                                                                                         ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                                         v.name)
+                                                                                                         ,gateType: typeof v.gateType === "string" || typeof v.gateType === "object" && v.gateType instanceof String ? v.gateType : _U.badPort("a string",
+                                                                                                         v.gateType)
+                                                                                                         ,status: typeof v.status === "boolean" ? v.status : _U.badPort("a boolean (true or false)",
+                                                                                                         v.status)
+                                                                                                         ,inputs: typeof v.inputs === "object" && v.inputs instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.inputs.map(function (v) {
+                                                                                                            return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+                                                                                                            v);
+                                                                                                         })) : _U.badPort("an array",
+                                                                                                         v.inputs)} : _U.badPort("an object with fields \'name\', \'gateType\', \'status\', \'inputs\'",
+      v);
+   });
+   var inputGate = A5($Controller$InstantiationHelper.initGate,
+   inPort.name,
+   inPort.status,
+   inPort.inputs,
+   {ctor: "_Tuple2"
+   ,_0: -100
+   ,_1: 0},
+   {ctor: "_Tuple2"
+   ,_0: 75
+   ,_1: 75});
    var gates = _L.fromArray([inputGate
                             ,notGate
                             ,outputGate]);

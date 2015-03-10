@@ -3,6 +3,7 @@
 --}
 module Controller.InstantiationHelper where
 
+import Array
 import Dict
 import List ((::))
 import Signal (Channel, map)
@@ -13,6 +14,20 @@ import Model.Model (..)
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
+initGate : {name:String,gateType:String,status:Bool,inputs:Array.Array String}->Gate
+initGate p = 
+    { name = p.name
+    , gateType = InputGate -- TODO
+    , status = p.status
+    , inputs = p.inputs
+    , logic = inputLogic --TODO
+    , location = (0.0,0.0)
+    , imgName = inputOnName -- TODO
+    , imgOnName = inputOnName -- TODO
+    , imgOffName = inputOffName -- TODO
+    , imgSize = (0,0)
+    }
+
 instantiateGameState : List Gate -> List (String, Channel Bool) -> Dict.Dict String Bool -> String -> String -> String -> Int -> GameState
 instantiateGameState gates inputChannelsPreDict solutionDict dir clink nlink par = { 
       networkNames = extractGateNames gates

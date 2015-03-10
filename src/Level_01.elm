@@ -10,22 +10,12 @@ import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 
 -- input ports
---port inputGatePort : Signal { name:String, status:Bool, inputs:Array.Array String}
+port inPort : { name:String, gateType: String, status:Bool, inputs:Array.Array String }
+
 
 -- Set up gates
 inputGate : Gate
-inputGate = {
-      name = "inputGate"
-    , gateType = InputGate
-    , status = True
-    , inputs = Array.empty
-    , logic = inputLogic
-    , location = (-100,0)
-    , imgName = inputOnName
-    , imgOnName = inputOnName
-    , imgOffName = inputOffName
-    , imgSize = (75,75)
-  }
+inputGate = initGate inPort
 
 notGate : Gate
 notGate = {
