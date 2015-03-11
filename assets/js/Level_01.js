@@ -943,7 +943,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
          "between lines 70 and 73");
       }();
    };
-   var instantiateGameState = F3(function (gates,
+   var initGameState = F3(function (gates,
    inputChannelsPreDict,
    jsonPort) {
       return {_: {}
@@ -1012,7 +1012,7 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
    _elm.Controller.InstantiationHelper.values = {_op: _op
                                                 ,initGate: initGate
                                                 ,findImageName: findImageName
-                                                ,instantiateGameState: instantiateGameState
+                                                ,initGameState: initGameState
                                                 ,extractGateNames: extractGateNames
                                                 ,extractInputGateNames: extractInputGateNames
                                                 ,extractNonInputGateNames: extractNonInputGateNames
@@ -4084,7 +4084,7 @@ Elm.Level_01.make = function (_elm) {
    var inputSignalsPreDict = _L.fromArray([{ctor: "_Tuple2"
                                            ,_0: "inputGate"
                                            ,_1: inputChannel}]);
-   var gameState = A3($Controller$InstantiationHelper.instantiateGameState,
+   var gameState = A3($Controller$InstantiationHelper.initGameState,
    gates,
    inputSignalsPreDict,
    miscPort);

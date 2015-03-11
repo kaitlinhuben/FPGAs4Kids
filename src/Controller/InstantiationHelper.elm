@@ -42,8 +42,8 @@ findImageName status logicString =
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-instantiateGameState : List Gate -> List (String, Channel Bool) -> MiscInputJSON -> GameState
-instantiateGameState gates inputChannelsPreDict jsonPort = { 
+initGameState : List Gate -> List (String, Channel Bool) -> MiscInputJSON -> GameState
+initGameState gates inputChannelsPreDict jsonPort = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates

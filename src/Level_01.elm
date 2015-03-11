@@ -1,14 +1,11 @@
 module Level_01 where
 
-import Mouse
-import Array
 import Dict
-import Signal (Signal, Channel, channel, subscribe, map, map2, map3, foldp)
+import Signal (Signal, Channel, channel, subscribe, map)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
-
 
 -- input ports
 port inPort : InputJSON
@@ -35,7 +32,7 @@ inputSignalsPreDict = [ ("inputGate", inputChannel) ]
 
 -- put everything into initial GameState
 gameState : GameState
-gameState = instantiateGameState gates inputSignalsPreDict miscPort
+gameState = initGameState gates inputSignalsPreDict miscPort
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
