@@ -23,6 +23,7 @@ initGate jsonPort =
         if | jsonPort.logic == "inputLogic" -> inputLogic
            | jsonPort.logic == "notLogic" -> notLogic
            | jsonPort.logic == "outputLogic" -> outputLogic
+           | jsonPort.logic == "andLogic" -> andLogic
     , location = jsonPort.location
     , imgName = findImageName jsonPort.status jsonPort.logic
     , imgOnName = findImageName True jsonPort.logic
@@ -37,6 +38,7 @@ findImageName status logicString =
        | status == True  && logicString == "outputLogic" -> outputOnName
        | status == False && logicString == "outputLogic" -> outputOffName
        | logicString == "notLogic" -> notImageName
+       | logicString == "andLogic" -> andImageName
        | otherwise -> outputBadName
 {------------------------------------------------------------------------------
     main function to instantiate a game state; utilizes helper functions
