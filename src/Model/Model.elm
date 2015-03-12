@@ -22,8 +22,6 @@ type alias InputJSON = {
   }
 type alias MiscInputJSON = {
     solution: List (String, Bool)
-  , directions: String
-  , currentLink: String
   , nextLink: String
   , par: Int
   }
@@ -46,8 +44,6 @@ type alias GameState = {
   , inputChannels : Dict.Dict String (Channel Bool)
   , clicks : Int
   , completed : Bool
-  , directions : String
-  , currentLink : String
   , nextLink : String
   , clicksPar : Int
   }

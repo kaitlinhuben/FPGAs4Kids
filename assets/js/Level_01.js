@@ -953,8 +953,6 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
              ,clicks: 0
              ,clicksPar: jsonPort.par
              ,completed: false
-             ,currentLink: jsonPort.currentLink
-             ,directions: jsonPort.directions
              ,gameMode: $Model$Model.Schematic
              ,inputChannels: $Dict.fromList(inputChannelsPreDict)
              ,inputNames: extractInputGateNames(gates)
@@ -980,7 +978,8 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
       "outputLogic") ? $Model$Model.outputOnName : _U.eq(status,
       false) && _U.eq(logicString,
       "outputLogic") ? $Model$Model.outputOffName : _U.eq(logicString,
-      "notLogic") ? $Model$Model.notImageName : $Model$Model.outputBadName;
+      "notLogic") ? $Model$Model.notImageName : _U.eq(logicString,
+      "andLogic") ? $Model$Model.andImageName : $Model$Model.outputBadName;
    });
    var initGate = function (jsonPort) {
       return {_: {}
@@ -1004,8 +1003,9 @@ Elm.Controller.InstantiationHelper.make = function (_elm) {
              ,logic: _U.eq(jsonPort.logic,
              "inputLogic") ? $Model$Model.inputLogic : _U.eq(jsonPort.logic,
              "notLogic") ? $Model$Model.notLogic : _U.eq(jsonPort.logic,
-             "outputLogic") ? $Model$Model.outputLogic : _U.badIf($moduleName,
-             "between lines 23 and 25")
+             "outputLogic") ? $Model$Model.outputLogic : _U.eq(jsonPort.logic,
+             "andLogic") ? $Model$Model.andLogic : _U.badIf($moduleName,
+             "between lines 23 and 26")
              ,name: jsonPort.name
              ,status: jsonPort.status};
    };
@@ -3964,24 +3964,20 @@ Elm.Level_01.make = function (_elm) {
    };
    var miscPort = _P.portIn("miscPort",
    function (v) {
-      return typeof v === "object" && "solution" in v && "directions" in v && "currentLink" in v && "nextLink" in v && "par" in v ? {_: {}
-                                                                                                                                    ,solution: typeof v.solution === "object" && v.solution instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.solution.map(function (v) {
-                                                                                                                                       return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
-                                                                                                                                                                                            ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
-                                                                                                                                                                                            v[0])
-                                                                                                                                                                                            ,_1: typeof v[1] === "boolean" ? v[1] : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                            v[1])} : _U.badPort("an array",
-                                                                                                                                       v);
-                                                                                                                                    })) : _U.badPort("an array",
-                                                                                                                                    v.solution)
-                                                                                                                                    ,directions: typeof v.directions === "string" || typeof v.directions === "object" && v.directions instanceof String ? v.directions : _U.badPort("a string",
-                                                                                                                                    v.directions)
-                                                                                                                                    ,currentLink: typeof v.currentLink === "string" || typeof v.currentLink === "object" && v.currentLink instanceof String ? v.currentLink : _U.badPort("a string",
-                                                                                                                                    v.currentLink)
-                                                                                                                                    ,nextLink: typeof v.nextLink === "string" || typeof v.nextLink === "object" && v.nextLink instanceof String ? v.nextLink : _U.badPort("a string",
-                                                                                                                                    v.nextLink)
-                                                                                                                                    ,par: typeof v.par === "number" ? v.par : _U.badPort("a number",
-                                                                                                                                    v.par)} : _U.badPort("an object with fields \'solution\', \'directions\', \'currentLink\', \'nextLink\', \'par\'",
+      return typeof v === "object" && "solution" in v && "nextLink" in v && "par" in v ? {_: {}
+                                                                                         ,solution: typeof v.solution === "object" && v.solution instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.solution.map(function (v) {
+                                                                                            return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                 ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
+                                                                                                                                                 v[0])
+                                                                                                                                                 ,_1: typeof v[1] === "boolean" ? v[1] : _U.badPort("a boolean (true or false)",
+                                                                                                                                                 v[1])} : _U.badPort("an array",
+                                                                                            v);
+                                                                                         })) : _U.badPort("an array",
+                                                                                         v.solution)
+                                                                                         ,nextLink: typeof v.nextLink === "string" || typeof v.nextLink === "object" && v.nextLink instanceof String ? v.nextLink : _U.badPort("a string",
+                                                                                         v.nextLink)
+                                                                                         ,par: typeof v.par === "number" ? v.par : _U.badPort("a number",
+                                                                                         v.par)} : _U.badPort("an object with fields \'solution\', \'nextLink\', \'par\'",
       v);
    });
    var outPort = _P.portIn("outPort",
@@ -4843,26 +4839,20 @@ Elm.Model.Model.make = function (_elm) {
                                  return function (k) {
                                     return function (l) {
                                        return function (m) {
-                                          return function (n) {
-                                             return function (o) {
-                                                return {_: {}
-                                                       ,circuitState: e
-                                                       ,clicks: j
-                                                       ,clicksPar: o
-                                                       ,completed: k
-                                                       ,currentLink: m
-                                                       ,directions: l
-                                                       ,gameMode: f
-                                                       ,inputChannels: i
-                                                       ,inputNames: b
-                                                       ,inputStatuses: h
-                                                       ,mousePos: g
-                                                       ,networkNames: a
-                                                       ,nextLink: n
-                                                       ,nonInputNames: c
-                                                       ,solution: d};
-                                             };
-                                          };
+                                          return {_: {}
+                                                 ,circuitState: e
+                                                 ,clicks: j
+                                                 ,clicksPar: m
+                                                 ,completed: k
+                                                 ,gameMode: f
+                                                 ,inputChannels: i
+                                                 ,inputNames: b
+                                                 ,inputStatuses: h
+                                                 ,mousePos: g
+                                                 ,networkNames: a
+                                                 ,nextLink: l
+                                                 ,nonInputNames: c
+                                                 ,solution: d};
                                        };
                                     };
                                  };
@@ -4881,16 +4871,12 @@ Elm.Model.Model.make = function (_elm) {
    var UserInput = function (a) {
       return {_: {},inputBools: a};
    };
-   var MiscInputJSON = F5(function (a,
+   var MiscInputJSON = F3(function (a,
    b,
-   c,
-   d,
-   e) {
+   c) {
       return {_: {}
-             ,currentLink: c
-             ,directions: b
-             ,nextLink: d
-             ,par: e
+             ,nextLink: b
+             ,par: c
              ,solution: a};
    });
    var InputJSON = F7(function (a,
@@ -13118,7 +13104,7 @@ Elm.View.View.make = function (_elm) {
             case "[]":
             return _L.fromArray([]);}
          _U.badCase($moduleName,
-         "between lines 106 and 114");
+         "between lines 91 and 99");
       }();
    });
    var drawCircuit = F2(function (_v3,
@@ -13156,7 +13142,7 @@ Elm.View.View.make = function (_elm) {
                  allForms);
               }();}
          _U.badCase($moduleName,
-         "between lines 87 and 95");
+         "between lines 72 and 80");
       }();
    });
    var drawMainContent = F2(function (_v7,
@@ -13204,7 +13190,7 @@ Elm.View.View.make = function (_elm) {
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 61 and 80");
+         "between lines 46 and 65");
       }();
    });
    var drawNavBar = F2(function (_v11,
@@ -13219,35 +13205,13 @@ Elm.View.View.make = function (_elm) {
                  var clicksText = $Text.plainText(A2($Basics._op["++"],
                  "Clicks: ",
                  $Basics.toString(gameState.clicks)));
-                 var statsElement = A2($Graphics$Element.flow,
+                 return A2($Graphics$Element.flow,
                  $Graphics$Element.down,
                  _L.fromArray([parText
                               ,clicksText]));
-                 var directionsElement = $Text.plainText(gameState.directions);
-                 var navButtonSize = 50;
-                 var restartButton = A3($Html.toElement,
-                 navButtonSize,
-                 navButtonSize,
-                 A2($Html.a,
-                 _L.fromArray([$Html$Attributes.href(gameState.currentLink)]),
-                 _L.fromArray([A2($Html.img,
-                 _L.fromArray([$Html$Attributes.src($Model$Model.restartName)]),
-                 _L.fromArray([]))])));
-                 var extraWidth = _v11._0 - $Graphics$Element.widthOf(restartButton) - $Graphics$Element.widthOf(directionsElement) - $Graphics$Element.widthOf(statsElement);
-                 var spacerWidth = _U.cmp(extraWidth,
-                 50) < 0 ? 0 : extraWidth - 50;
-                 var emptySpacer = A2($Graphics$Element.spacer,
-                 spacerWidth,
-                 _v11._1);
-                 return A2($Graphics$Element.flow,
-                 $Graphics$Element.right,
-                 _L.fromArray([restartButton
-                              ,directionsElement
-                              ,emptySpacer
-                              ,statsElement]));
               }();}
          _U.badCase($moduleName,
-         "between lines 37 and 57");
+         "between lines 37 and 42");
       }();
    });
    var display = F2(function (_v15,

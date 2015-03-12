@@ -57,8 +57,6 @@ initGameState gates inputChannelsPreDict jsonPort = {
     , clicks = 0
     , completed = False
     , solution = Dict.fromList jsonPort.solution 
-    , directions = jsonPort.directions
-    , currentLink = jsonPort.currentLink
     , nextLink = jsonPort.nextLink
     , clicksPar = jsonPort.par
     }
