@@ -8,23 +8,28 @@ import Dict
 import Maybe (withDefault)
 import Signal (Channel, channel)
 
+
 {------------------------------------------------------------------------------
     Game and circuit type and type aliases
 ------------------------------------------------------------------------------}
-type alias InputJSON = { 
-    name: String
-  , gateType: String
-  , status: Bool
-  , inputs: Array.Array String
-  , logic: String
-  , location: (Float, Float)
-  , imgSize: (Int, Int)
-  }
-type alias MiscInputJSON = {
-    solution: List (String, Bool)
-  , nextLink: String
-  , par: Int
-  }
+type alias GateInfo = {
+    name     : String
+  , gateType : GateType --TODO gate type should be more than ternary 
+  , status   : Bool
+  , inputs   : List String
+  , logic    : String --TODO function or instantiate
+  , location : (Float, Float)
+  , imgSize  : (Int, Int)
+}
+
+type alias Level = {
+    name      : String
+  , solution  : List (String, Bool)
+  , nextLevel : String
+  , par       : Int
+  , directions : String
+  , gateInfo   : List GateInfo
+}
 
 type alias UserInput = {
     inputBools : Dict.Dict String Bool

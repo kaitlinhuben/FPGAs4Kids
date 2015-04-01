@@ -9,25 +9,6 @@ import Model.Model (..)
 import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 
-type alias GateInfo = {
-    name     : String
-  , gateType : GateType --TODO gate type should be more than ternary 
-  , status   : Bool
-  , inputs   : List String
-  , logic    : String --TODO function or instantiate
-  , location : (Float, Float)
-  , imgSize  : (Int, Int)
-}
-
-type alias Level = {
-    name      : String
-  , solution  : List (String, Bool)
-  , nextLevel : String
-  , par       : Int
-  , directions : String
-  , gates     : List GateInfo
-}
-
 levels : List Level
 levels = 
   [
@@ -37,7 +18,7 @@ levels =
     , nextLevel = "Level_02"
     , par = 1
     , directions = "Testing directions"
-    , gates = [
+    , gateInfo = [
         { name = "inputGate"
         , gateType = InputGate
         , status = True
@@ -66,40 +47,16 @@ levels =
     } -- end Level_01
   ]
 
-extractGates : List GateInfo -> List Gate
-extractGates gatesInfo = 
-    case gatesInfo of
-        [] -> []
-        gateInfo :: [] -> [initGate gateInfo]
-        gateInfo :: tl -> (initGate gateInfo) :: extractGates tl
-
--- TODO generalize
-level1_gates : List Gate
-level1_gates = 
-    let 
-        firstLevel = List.head levels 
-        firstLevelGateInfo = firstLevel.gates 
-    in 
-        extractGates firstLevelGateInfo
-
 -- instantiate game state
--- TODO this will change between levels
-inputGate = List.head level1_gates
--- set up all Inputs
-inputChannel : Channel Bool 
-inputChannel = channel inputGate.status
-
--- set up pre-dicts
-inputSignalsPreDict : List (String, Channel Bool)
-inputSignalsPreDict = [ ("inputGate", inputChannel) ]
+-- TODO this will change between levels - keep list of levels left
 
 -- put everything into initial GameState
 gameState : GameState
-gameState = initGameState level1_gates inputSignalsPreDict (List.head levels)
+gameState = initGameState (List.head levels)
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
-userInputs = map liftToDict (subscribe inputChannel)
+userInputs = map liftToDict (subscribe (channel True))
 
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
@@ -107,3 +64,4 @@ liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 -- Run main
 main : Signal Element
 main = mainDriver gameState (map UserInput userInputs)
+--main = Text.plainText "hello!"

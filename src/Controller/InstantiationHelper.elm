@@ -6,29 +6,9 @@ module Controller.InstantiationHelper where
 import Array
 import Dict
 import List ((::))
-import Signal (Channel, map)
+import Signal (Channel, channel, map)
 import Mouse (clicks)
 import Model.Model (..)
-
--- TODO put these in MOdel
-type alias GateInfo = {
-    name     : String
-  , gateType : GateType --TODO gate type should be more than ternary 
-  , status   : Bool
-  , inputs   : List String
-  , logic    : String --TODO function or instantiate
-  , location : (Float, Float)
-  , imgSize  : (Int, Int)
-}
-
-type alias Level = {
-    name      : String
-  , solution  : List (String, Bool)
-  , nextLevel : String
-  , par       : Int
-  , directions : String
-  , gates     : List GateInfo
-}
 
 initGate : GateInfo -> Gate
 initGate gateInfo = 
@@ -61,8 +41,19 @@ findImageName status logicString =
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-initGameState : List Gate -> List (String, Channel Bool) -> Level -> GameState
-initGameState gates inputChannelsPreDict level = { 
+extractGates : List GateInfo -> List Gate
+extractGates gatesInfo = 
+  case gatesInfo of
+    [] -> []
+    gateInfo :: [] -> [initGate gateInfo]
+    gateInfo :: tl -> (initGate gateInfo) :: extractGates tl
+
+initGameState : Level -> GameState
+initGameState level = 
+  let
+    gates = extractGates level.gateInfo
+  in
+    { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -70,7 +61,7 @@ initGameState gates inputChannelsPreDict level = {
     , gameMode = Schematic
     , mousePos = (0,0)
     , inputStatuses = extractInputStatuses gates Dict.empty
-    , inputChannels = Dict.fromList inputChannelsPreDict
+    , inputChannels = setupInputChannels gates
     , clicks = 0
     , completed = False
     , solution = Dict.fromList level.solution 
@@ -78,6 +69,16 @@ initGameState gates inputChannelsPreDict level = {
     , clicksPar = level.par
     }
 
+setupInputChannels : List Gate -> Dict.Dict String (Channel Bool) 
+setupInputChannels gates = 
+  case gates of
+    [] -> Dict.empty
+    gate :: [] -> 
+      if | gate.gateType == InputGate -> Dict.fromList [(gate.name, channel gate.status)]
+         | otherwise -> Dict.empty
+    gate :: tl ->
+      if | gate.gateType == InputGate -> Dict.insert gate.name (channel gate.status) (setupInputChannels tl)
+         | otherwise -> setupInputChannels tl
 {------------------------------------------------------------------------------
     helper extraction functions
 ------------------------------------------------------------------------------}
