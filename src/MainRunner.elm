@@ -2,7 +2,11 @@ module MainRunner where
 
 import Text
 import List
+import Dict
+import Signal (Signal, Channel, channel, subscribe, map)
+import Graphics.Element (Element)
 import Model.Model (..)
+import Controller.Controller (..)
 import Controller.InstantiationHelper (..)
 
 type alias GateInfo = {
@@ -80,6 +84,26 @@ level1_gates =
 
 -- instantiate game state
 -- TODO this will change between levels
+inputGate = List.head level1_gates
+-- set up all Inputs
+inputChannel : Channel Bool 
+inputChannel = channel inputGate.status
 
---  
-main = Text.plainText "hello!"
+-- set up pre-dicts
+inputSignalsPreDict : List (String, Channel Bool)
+inputSignalsPreDict = [ ("inputGate", inputChannel) ]
+
+-- put everything into initial GameState
+gameState : GameState
+gameState = initGameState level1_gates inputSignalsPreDict (List.head levels)
+
+-- lift input signals into user input
+userInputs : Signal (InputsState)
+userInputs = map liftToDict (subscribe inputChannel)
+
+liftToDict : Bool -> InputsState
+liftToDict bool = Dict.insert "inputGate" bool Dict.empty
+
+-- Run main
+main : Signal Element
+main = mainDriver gameState (map UserInput userInputs)

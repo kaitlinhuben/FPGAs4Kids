@@ -10,6 +10,7 @@ import Signal (Channel, map)
 import Mouse (clicks)
 import Model.Model (..)
 
+-- TODO put these in MOdel
 type alias GateInfo = {
     name     : String
   , gateType : GateType --TODO gate type should be more than ternary 
@@ -18,6 +19,15 @@ type alias GateInfo = {
   , logic    : String --TODO function or instantiate
   , location : (Float, Float)
   , imgSize  : (Int, Int)
+}
+
+type alias Level = {
+    name      : String
+  , solution  : List (String, Bool)
+  , nextLevel : String
+  , par       : Int
+  , directions : String
+  , gates     : List GateInfo
 }
 
 initGate : GateInfo -> Gate
@@ -51,8 +61,8 @@ findImageName status logicString =
     main function to instantiate a game state; utilizes helper functions
     to extract all needed information
 ------------------------------------------------------------------------------}
-initGameState : List Gate -> List (String, Channel Bool) -> MiscInputJSON -> GameState
-initGameState gates inputChannelsPreDict jsonPort = { 
+initGameState : List Gate -> List (String, Channel Bool) -> Level -> GameState
+initGameState gates inputChannelsPreDict level = { 
       networkNames = extractGateNames gates
     , inputNames = extractInputGateNames gates
     , nonInputNames = extractNonInputGateNames gates
@@ -63,9 +73,9 @@ initGameState gates inputChannelsPreDict jsonPort = {
     , inputChannels = Dict.fromList inputChannelsPreDict
     , clicks = 0
     , completed = False
-    , solution = Dict.fromList jsonPort.solution 
-    , nextLink = jsonPort.nextLink
-    , clicksPar = jsonPort.par
+    , solution = Dict.fromList level.solution 
+    , nextLink = "TODO"
+    , clicksPar = level.par
     }
 
 {------------------------------------------------------------------------------
