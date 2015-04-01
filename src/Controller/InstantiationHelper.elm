@@ -10,25 +10,32 @@ import Signal (Channel, map)
 import Mouse (clicks)
 import Model.Model (..)
 
-initGate : InputJSON -> Gate
-initGate jsonPort = 
-    { name = jsonPort.name
-    , gateType = 
-        if | jsonPort.gateType == "InputGate" -> InputGate
-           | jsonPort.gateType == "NormalGate" -> NormalGate
-           | jsonPort.gateType == "OutputGate" -> OutputGate
-    , status = jsonPort.status
-    , inputs = jsonPort.inputs
+type alias GateInfo = {
+    name     : String
+  , gateType : GateType --TODO gate type should be more than ternary 
+  , status   : Bool
+  , inputs   : List String
+  , logic    : String --TODO function or instantiate
+  , location : (Float, Float)
+  , imgSize  : (Int, Int)
+}
+
+initGate : GateInfo -> Gate
+initGate gateInfo = 
+    { name = gateInfo.name
+    , gateType = gateInfo.gateType
+    , status = gateInfo.status
+    , inputs = Array.fromList gateInfo.inputs
     , logic = 
-        if | jsonPort.logic == "inputLogic" -> inputLogic
-           | jsonPort.logic == "notLogic" -> notLogic
-           | jsonPort.logic == "outputLogic" -> outputLogic
-           | jsonPort.logic == "andLogic" -> andLogic
-    , location = jsonPort.location
-    , imgName = findImageName jsonPort.status jsonPort.logic
-    , imgOnName = findImageName True jsonPort.logic
-    , imgOffName = findImageName False jsonPort.logic
-    , imgSize = jsonPort.imgSize
+        if | gateInfo.logic == "inputLogic" -> inputLogic
+           | gateInfo.logic == "notLogic" -> notLogic
+           | gateInfo.logic == "outputLogic" -> outputLogic
+           | gateInfo.logic == "andLogic" -> andLogic
+    , location = gateInfo.location
+    , imgName = findImageName gateInfo.status gateInfo.logic
+    , imgOnName = findImageName True gateInfo.logic
+    , imgOffName = findImageName False gateInfo.logic
+    , imgSize = gateInfo.imgSize
     }
 
 findImageName : Bool -> String -> String
