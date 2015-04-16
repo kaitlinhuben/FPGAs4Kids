@@ -61,7 +61,7 @@ initGameState level =
     , gameMode = Schematic
     , mousePos = (0,0)
     , inputStatuses = extractInputStatuses gates Dict.empty
-    , inputChannels = setupInputChannels gates
+    , inputChannels = level.channels
     , clicks = 0
     , completed = False
     , solution = Dict.fromList level.solution 
@@ -69,16 +69,6 @@ initGameState level =
     , clicksPar = level.par
     }
 
-setupInputChannels : List Gate -> Dict.Dict String (Channel Bool) 
-setupInputChannels gates = 
-  case gates of
-    [] -> Dict.empty
-    gate :: [] -> 
-      if | gate.gateType == InputGate -> Dict.fromList [(gate.name, channel gate.status)]
-         | otherwise -> Dict.empty
-    gate :: tl ->
-      if | gate.gateType == InputGate -> Dict.insert gate.name (channel gate.status) (setupInputChannels tl)
-         | otherwise -> setupInputChannels tl
 {------------------------------------------------------------------------------
     helper extraction functions
 ------------------------------------------------------------------------------}

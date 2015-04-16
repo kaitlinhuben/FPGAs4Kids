@@ -3,6 +3,7 @@ module MainRunner where
 import Text
 import List
 import Dict
+import Maybe (withDefault)
 import Signal (Signal, Channel, channel, subscribe, map, map2)
 import Graphics.Element (Element)
 import Model.Model (..)
@@ -44,6 +45,7 @@ levels =
         , imgSize = (75,75)
         }
       ]
+    , channels = Dict.fromList [("inputGate", channel True)]
     } -- end Level_01
   ]
 
@@ -54,15 +56,19 @@ levels =
 gameState : GameState
 gameState = initGameState (List.head levels)
 
+firstLevel = List.head levels
+firstLevelChannels = firstLevel.channels
+firstLevelInputChannel = withDefault failedChannel (Dict.get "inputGate" firstLevelChannels)
+
 -- lift input signals into user input
 userInputs : Signal (InputsState)
-userInputs = map liftToDict (subscribe (channel True))
+userInputs = map liftToDict (subscribe firstLevelInputChannel) --TODO these channels are hardcoded
 
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
 userInputsTest : Signal (InputsState)
-userInputsTest = map2 liftAddToDict userInputs (subscribe (channel False))
+userInputsTest = map2 liftAddToDict userInputs (subscribe firstLevelInputChannel)
 
 liftAddToDict : InputsState -> Bool -> InputsState
 liftAddToDict inState bool = Dict.insert "test" bool inState
