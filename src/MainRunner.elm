@@ -3,7 +3,7 @@ module MainRunner where
 import Text
 import List
 import Dict
-import Signal (Signal, Channel, channel, subscribe, map)
+import Signal (Signal, Channel, channel, subscribe, map, map2)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
@@ -61,7 +61,13 @@ userInputs = map liftToDict (subscribe (channel True))
 liftToDict : Bool -> InputsState
 liftToDict bool = Dict.insert "inputGate" bool Dict.empty
 
+userInputsTest : Signal (InputsState)
+userInputsTest = map2 liftAddToDict userInputs (subscribe (channel False))
+
+liftAddToDict : InputsState -> Bool -> InputsState
+liftAddToDict inState bool = Dict.insert "test" bool inState
+
 -- Run main
 main : Signal Element
-main = mainDriver gameState (map UserInput userInputs)
+main = mainDriver gameState (map UserInput userInputsTest)
 --main = Text.plainText "hello!"
