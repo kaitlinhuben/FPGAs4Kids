@@ -21,6 +21,7 @@ initGate gateInfo =
            | gateInfo.logic == "notLogic" -> notLogic
            | gateInfo.logic == "outputLogic" -> outputLogic
            | gateInfo.logic == "andLogic" -> andLogic
+           | gateInfo.logic == "orLogic" -> orLogic
     , location = gateInfo.location
     , imgName = findImageName gateInfo.status gateInfo.logic
     , imgOnName = findImageName True gateInfo.logic
@@ -36,6 +37,7 @@ findImageName status logicString =
        | status == False && logicString == "outputLogic" -> outputOffName
        | logicString == "notLogic" -> notImageName
        | logicString == "andLogic" -> andImageName
+       | logicString == "orLogic" -> orImageName
        | otherwise -> outputBadName
 {------------------------------------------------------------------------------
     main function to instantiate a game state; utilizes helper functions
