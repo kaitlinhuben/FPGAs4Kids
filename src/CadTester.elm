@@ -53,7 +53,7 @@ levels =
         , imgSize = (75,75)
         }
       ]
-    , channels = Dict.fromList [("inputGate1", channel True)]
+    , channels = Dict.fromList [("inputGate1", channel False), ("inputGate2", channel False)]
     } -- end Level_01
   ]
 
