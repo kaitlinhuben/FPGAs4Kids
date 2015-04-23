@@ -29,7 +29,7 @@ type alias Level = {
   , par       : Int
   , directions : String
   , gateInfo   : List GateInfo
-  , channels   : Dict.Dict String (Channel Bool)
+  , channels   : List (String, Channel Bool)
 }
 
 type alias UserInput = {

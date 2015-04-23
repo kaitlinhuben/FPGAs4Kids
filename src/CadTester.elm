@@ -53,7 +53,7 @@ levels =
         , imgSize = (75,75)
         }
       ]
-    , channels = Dict.fromList [("inputGate1", channel False), ("inputGate2", channel False)]
+    , channels = [("inputGate1", channel False), ("inputGate2", channel False)]
     } -- end Level_01
   ]
 
@@ -67,7 +67,7 @@ gameState = initGameState (List.head levels)
 firstLevel = List.head levels
 
 userInputs : Signal (InputsState)
-userInputs = fillInputsState (Dict.toList firstLevel.channels) getEmptySignalInputsState
+userInputs = fillInputsState firstLevel.channels getEmptySignalInputsState
 
 -- Run main
 main : Signal Element

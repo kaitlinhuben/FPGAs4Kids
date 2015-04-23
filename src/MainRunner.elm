@@ -45,7 +45,7 @@ levels =
         , imgSize = (75,75)
         }
       ]
-    , channels = Dict.fromList [("inputGate", channel True)]
+    , channels = [("inputGate", channel True)]
     } -- end Level_01
   ]
 
@@ -60,7 +60,7 @@ firstLevel = List.head levels
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
-userInputs = fillInputsState (Dict.toList firstLevel.channels) getEmptySignalInputsState
+userInputs = fillInputsState firstLevel.channels getEmptySignalInputsState
 
 -- Run main
 main : Signal Element
