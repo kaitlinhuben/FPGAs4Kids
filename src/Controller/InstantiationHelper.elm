@@ -6,7 +6,7 @@ module Controller.InstantiationHelper where
 import Array
 import Dict
 import List ((::))
-import Signal (Channel, channel, map)
+import Signal (Signal, Channel, channel, subscribe, map, map2, map3, constant)
 import Mouse (clicks)
 import Model.Model (..)
 
@@ -132,4 +132,27 @@ extractInputStatuses gates dict =
             in 
                 if | gate.gateType == InputGate -> Dict.insert gate.name gate.status updatedDict
                    | otherwise -> updatedDict
-    
+
+{--
+  Create the initial inputs state from the given channels
+--}
+fillInputsState : List (String, Channel Bool) -> Signal (InputsState) -> Signal (InputsState)
+fillInputsState channelsList inState = 
+    case channelsList of
+        [] -> constant Dict.empty
+        (name,chan) :: [] -> 
+            map3 liftAddToDict (constant name) (subscribe chan) inState
+        (name,chan) :: tl -> 
+            let
+                newInState = map3 liftAddToDict (constant name) (subscribe chan) inState
+            in 
+                fillInputsState tl newInState
+
+liftToDict : String -> Bool -> InputsState
+liftToDict name bool = Dict.insert name bool Dict.empty
+
+liftAddToDict : String -> Bool -> InputsState -> InputsState
+liftAddToDict name bool inState = Dict.insert name bool inState
+
+getEmptySignalInputsState : Signal (InputsState)
+getEmptySignalInputsState = map2 liftToDict (constant "") (subscribe (channel False))

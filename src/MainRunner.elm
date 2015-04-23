@@ -4,7 +4,7 @@ import Text
 import List
 import Dict
 import Maybe (withDefault)
-import Signal (Signal, Channel, channel, subscribe, map, map2)
+import Signal (Signal, Channel, channel, map)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
@@ -57,23 +57,12 @@ gameState : GameState
 gameState = initGameState (List.head levels)
 
 firstLevel = List.head levels
-firstLevelChannels = firstLevel.channels
-firstLevelInputChannel = withDefault failedChannel (Dict.get "inputGate" firstLevelChannels)
 
 -- lift input signals into user input
 userInputs : Signal (InputsState)
-userInputs = map liftToDict (subscribe firstLevelInputChannel) --TODO these channels are hardcoded
-
-liftToDict : Bool -> InputsState
-liftToDict bool = Dict.insert "inputGate" bool Dict.empty
-
-userInputsTest : Signal (InputsState)
-userInputsTest = map2 liftAddToDict userInputs (subscribe firstLevelInputChannel)
-
-liftAddToDict : InputsState -> Bool -> InputsState
-liftAddToDict inState bool = Dict.insert "test" bool inState
+userInputs = fillInputsState (Dict.toList firstLevel.channels) getEmptySignalInputsState
 
 -- Run main
 main : Signal Element
-main = mainDriver gameState (map UserInput userInputsTest)
+main = mainDriver gameState (map UserInput userInputs)
 --main = Text.plainText "hello!"
