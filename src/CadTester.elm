@@ -4,7 +4,7 @@ import Text
 import List
 import Dict
 import Maybe (withDefault)
-import Signal (Signal, Channel, channel, subscribe, map, map2, map3)
+import Signal (Signal, Channel, channel, subscribe, map, map2, map3, constant)
 import Graphics.Element (Element)
 import Model.Model (..)
 import Controller.Controller (..)
@@ -65,7 +65,7 @@ gameState : GameState
 gameState = initGameState (List.head levels)
 
 firstLevel = List.head levels
-firstLevelChannels = firstLevel.channels
+{-firstLevelChannels = firstLevel.channels
 firstLevelInputChannel1 = withDefault failedChannel (Dict.get "inputGate1" firstLevelChannels)
 firstLevelInputChannel2 = withDefault failedChannel (Dict.get "inputGate2" firstLevelChannels)
 
@@ -81,6 +81,33 @@ userInputsTest = map3 liftAddToDict userInputs (subscribe firstLevelInputChannel
 
 liftAddToDict : InputsState -> Bool -> Bool -> InputsState
 liftAddToDict inState bool1 bool2 = Dict.insert "inputGate2" bool2 inState
+-}
+
+userInputsTest : Signal (InputsState)
+userInputsTest = 
+    let 
+        channelsList = Dict.toList firstLevel.channels
+        emptyDict = map2 liftToDict (constant "") (subscribe (channel False))
+    in 
+        fillInputsState channelsList emptyDict
+    
+fillInputsState : List (String, Channel Bool) -> Signal (InputsState) -> Signal (InputsState)
+fillInputsState channelsList inState = 
+    case channelsList of
+        [] -> constant Dict.empty
+        (name,chan) :: [] -> 
+            map3 liftAddToDict (constant name) (subscribe chan) inState
+        (name,chan) :: tl -> 
+            let
+                newInState = map3 liftAddToDict (constant name) (subscribe chan) inState
+            in 
+                fillInputsState tl newInState
+
+liftToDict : String -> Bool -> InputsState
+liftToDict name bool = Dict.insert name bool Dict.empty
+
+liftAddToDict : String -> Bool -> InputsState -> InputsState
+liftAddToDict name bool inState = Dict.insert name bool inState
 
 -- Run main
 main : Signal Element
