@@ -1,74 +1,47 @@
 module CadTester where
 
-import Text
-import List
-import Dict
-import Maybe (withDefault)
-import Signal (Signal, Channel, channel, map)
 import Graphics.Element (Element)
-import Model.Model (..)
-import Controller.Controller (..)
-import Controller.InstantiationHelper (..)
+import Mouse
+import Signal
+import Text
+import Window
 
-levels : List Level
-levels = 
-  [
-    {
-      name = "Level_01"
-    , solution = [("outputGate", True)]
-    , nextLevel = "Level_02"
-    , par = 1
-    , directions = "Testing directions"
-    , gateInfo = [
-        { name = "inputGate1"
-        , gateType = InputGate
-        , status = False
-        , inputs = []
-        , logic = "inputLogic"
-        , location = (-100,0)
-        , imgSize = (75,75)
-        }, 
-        { name = "inputGate2"
-        , gateType = InputGate
-        , status = False
-        , inputs = []
-        , logic = "inputLogic"
-        , location = (-100,-100)
-        , imgSize = (75,75)
-        }, 
-        { name = "orGate"
-        , gateType = NormalGate
-        , status = False
-        , inputs = ["inputGate1","inputGate2"]
-        , logic = "orLogic"
-        , location = (0,0)
-        , imgSize = (75,75)
-        },
-        { name = "outputGate"
-        , gateType = OutputGate
-        , status = False
-        , inputs = ["orGate"]
-        , logic = "outputLogic"
-        , location = (100,0)
-        , imgSize = (75,75)
-        }
-      ]
-    , channels = [("inputGate1", channel False), ("inputGate2", channel False)]
-    } -- end Level_01
-  ]
+-- +-------+
+-- | Model |
+-- +-------+
+type alias UserInput = {
+    mousePos : (Int, Int)
+  }
 
--- instantiate game state
--- TODO this will change between levels - keep list of levels left
+type alias CadFramework = {
+    gridSize : Int
+  }
 
--- put everything into initial GameState
-gameState : GameState
-gameState = initGameState (List.head levels)
+type alias CadState = {
+    mousePos : (Int, Int)
+  }
 
-firstLevel = List.head levels
+-- +------+
+-- | View |
+-- +------+
+display : (Int, Int) -> CadState -> Element
+display (w,h) cadState = 
+    Text.asText cadState
 
-userInputs : Signal (InputsState)
-userInputs = fillInputsState firstLevel.channels getEmptySignalInputsState
+-- +---------+
+-- | Updates |
+-- +---------+
 
+step : UserInput -> CadState -> CadState
+step userInput cadState = { cadState | mousePos <- userInput.mousePos}
+
+-- Driver
+mainDriver : CadState -> Signal UserInput -> Signal Element
+mainDriver cadFramework userInput = 
+  Signal.map2 display Window.dimensions (Signal.foldp step cadState userInput)
+
+cadFramework = { gridSize = 4 }
+cadState = {mousePos=(0,0)}
 -- Run main
 main : Signal Element
-main = mainDriver gameState (map UserInput userInputs)
+main = mainDriver cadState (Signal.map UserInput Mouse.position)
